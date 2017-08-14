@@ -11,7 +11,7 @@ using static RASL.Lib.Backend.WinAPI;
 using static RASL.Lib.Backend.PointReturns;
 using static RASL.Lib.Backend.GlobalVariables;
 
-namespace RSSP
+namespace DolphinScript
 {
     public partial class MainForm : Form
     {

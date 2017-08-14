@@ -5,7 +5,7 @@ using static RASL.Lib.Backend.GlobalVariables;
 
 using RASL.Lib.ScriptEventClasses;
 
-namespace RSSP
+namespace DolphinScript
 {
     public partial class KeyPressForm : Form
     {

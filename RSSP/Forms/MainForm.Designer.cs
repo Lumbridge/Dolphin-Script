@@ -1,4 +1,4 @@
-﻿namespace RSSP
+﻿namespace DolphinScript
 {
     partial class MainForm
     {
@@ -328,7 +328,7 @@
             this.MainMenuStrip = this.MenuStrip_MainForm;
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "RSSP";
+            this.Text = "Dolphin Script";
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MouseSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TrackBar_MouseSpeed)).EndInit();

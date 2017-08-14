@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RSSP
+namespace DolphinScript
 {
     public partial class InfoForm : Form
     {

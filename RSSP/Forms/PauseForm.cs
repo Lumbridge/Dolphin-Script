@@ -10,7 +10,7 @@ using static RASL.Lib.Backend.ColourEvent;
 using RASL.Lib.ScriptEventClasses;
 using System.Drawing;
 
-namespace RSSP
+namespace DolphinScript
 {
     public partial class PauseForm : Form
     {

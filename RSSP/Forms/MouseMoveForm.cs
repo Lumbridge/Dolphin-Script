@@ -12,7 +12,7 @@ using RASL.Lib.ScriptEventClasses;
 using System.Drawing;
 using System.Collections.Generic;
 
-namespace RSSP
+namespace DolphinScript
 {
     public partial class MouseMoveForm : Form
     {

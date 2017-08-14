@@ -1,4 +1,4 @@
-﻿namespace RSSP
+﻿namespace DolphinScript
 {
     partial class MouseClickForm
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RSSP.Properties {
+namespace DolphinScript.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace RSSP.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RSSP.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DolphinScript.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,16 +66,6 @@ namespace RSSP.Properties {
         internal static System.Drawing.Bitmap dolphin {
             get {
                 object obj = ResourceManager.GetObject("dolphin", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dolphin1 {
-            get {
-                object obj = ResourceManager.GetObject("dolphin1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

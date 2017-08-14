@@ -7,8 +7,8 @@
     <ProjectGuid>{F5653194-6EFB-43AA-8947-7E7D4918EAFD}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RSSP</RootNamespace>
-    <AssemblyName>RSSP</AssemblyName>
+    <RootNamespace>DolphinScript</RootNamespace>
+    <AssemblyName>DolphinScript</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

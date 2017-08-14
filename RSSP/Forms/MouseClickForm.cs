@@ -6,7 +6,7 @@ using static RASL.Lib.Backend.WinAPI;
 
 using RASL.Lib.ScriptEventClasses;
 
-namespace RSSP
+namespace DolphinScript
 {
     public partial class MouseClickForm : Form
     {
