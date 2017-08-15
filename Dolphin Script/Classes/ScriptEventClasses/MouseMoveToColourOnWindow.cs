@@ -31,8 +31,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
             RECT NewSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
 
             MoveMouseToColour(NewSearchArea, SearchColour);
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

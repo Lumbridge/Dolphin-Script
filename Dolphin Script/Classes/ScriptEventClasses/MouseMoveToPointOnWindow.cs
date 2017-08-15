@@ -29,18 +29,16 @@ namespace DolphinScript.Lib.ScriptEventClasses
             }
 
             POINT NewClickPoint = new POINT(
-                GetWindowPosition(WindowToClickHandle).Left + DestinationPoint.X,
-                GetWindowPosition(WindowToClickHandle).Top + DestinationPoint.Y);
+                GetWindowPosition(WindowToClickHandle).Left + PositionToMoveTo.X,
+                GetWindowPosition(WindowToClickHandle).Top + PositionToMoveTo.Y);
 
             MoveMouse(NewClickPoint);
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)
-                return "Move mouse to Point X: " + DestinationPoint.X + " Y: " + DestinationPoint.Y + " on " + WindowToClickTitle + " window.";
+                return "Move mouse to Point X: " + PositionToMoveTo.X + " Y: " + PositionToMoveTo.Y + " on " + WindowToClickTitle + " window.";
             else
                 return "[Group " + GroupID + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }

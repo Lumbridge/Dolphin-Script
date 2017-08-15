@@ -20,8 +20,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
                 Write("Search window not found, waiting 3 seconds before searching again.");
                 Thread.Sleep(TimeSpan.FromSeconds(3.0));
             }
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

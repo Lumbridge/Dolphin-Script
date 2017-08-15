@@ -20,8 +20,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
             Write("Waiting for " + delay + " seconds.");
 
             Thread.Sleep(TimeSpan.FromSeconds(delay));
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

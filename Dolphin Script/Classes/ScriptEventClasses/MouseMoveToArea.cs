@@ -22,8 +22,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public override void DoEvent()
         {
             MoveMouseToArea(ClickArea);
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

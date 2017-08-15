@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
-using static DolphinScript.Lib.Backend.MouseMoveMaths;
+using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.RandomNumber;
+using static DolphinScript.Lib.Backend.MouseMoveMath;
 using static DolphinScript.Lib.Backend.GlobalVariables;
-using static DolphinScript.Lib.Backend.WinAPI;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
     class MouseMove : ScriptEvent
     {
+        [DllImport("User32.Dll")]
+        public static extern long SetCursorPos(int x, int y);
+
         // mouse movement variables
+        //
         private static double
             _Gravity = 9.0,
             _PushForce = 3.0,
@@ -25,12 +30,22 @@ namespace DolphinScript.Lib.ScriptEventClasses
             EventType = Event.Mouse_Move;
         }
 
+        /// <summary>
+        /// moves the mouse from it's current location to the end point passed in
+        /// </summary>
+        /// <param name="end"></param>
         public static void MoveMouse(POINT end)
         {
+            // store the current mouse position to pass into the core mouse move loop
+            //
             POINT start = GetCursorPosition();
 
+            // generate a random mouse speed close to the one set on the form
+            //
             double randomSpeed = Math.Max((GetRandomNumber(0, MouseSpeed) / 2.0 + MouseSpeed) / 10.0, 0.1);
 
+            // call the main mouse move loop and pass in the global params
+            //
             MouseMoveCoreLoop(
                 start,
                 end,
@@ -42,6 +57,17 @@ namespace DolphinScript.Lib.ScriptEventClasses
                 _TargetArea * randomSpeed);
         }
 
+        /// <summary>
+        /// this function is the core mouse moving method, needs to be cleaned up...
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="gravity"></param>
+        /// <param name="pushForce"></param>
+        /// <param name="minWait"></param>
+        /// <param name="maxWait"></param>
+        /// <param name="maxStep"></param>
+        /// <param name="targetArea"></param>
         public static void MouseMoveCoreLoop(
             POINT start,
             POINT end,
@@ -129,19 +155,20 @@ namespace DolphinScript.Lib.ScriptEventClasses
                 SetCursorPos(endX, endY);
         }
 
+        /// <summary>
+        /// overriden event method, moves the mouse to this event's position to move to
+        /// </summary>
         public override void DoEvent()
         {
-            MoveMouse(DestinationPoint);
-
-            base.DoEvent();
+            MoveMouse(PositionToMoveTo);
         }
 
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)
-                return "Move mouse to Point X: " + DestinationPoint.X + " Y: " + DestinationPoint.Y + ".";
+                return "Move mouse to Point X: " + PositionToMoveTo.X + " Y: " + PositionToMoveTo.Y + ".";
             else
-                return "[Group " + GroupID + "] Move mouse to Point X: " + DestinationPoint.X + " Y: " + DestinationPoint.Y + ".";
+                return "[Group " + GroupID + "] Move mouse to Point X: " + PositionToMoveTo.X + " Y: " + PositionToMoveTo.Y + ".";
         }
     }
 }

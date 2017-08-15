@@ -47,8 +47,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public override void DoEvent()
         {
             MoveMouseToColour(ColourSearchArea, SearchColour);
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

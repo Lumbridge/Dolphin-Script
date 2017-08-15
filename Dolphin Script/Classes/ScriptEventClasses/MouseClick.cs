@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+
 using static DolphinScript.Lib.Backend.RandomNumber;
 using static DolphinScript.Lib.Backend.WinAPI;
 
@@ -8,6 +10,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
 {
     class MouseClick : ScriptEvent
     {
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
+
         public MouseClick()
         {
             switch(MouseButton)

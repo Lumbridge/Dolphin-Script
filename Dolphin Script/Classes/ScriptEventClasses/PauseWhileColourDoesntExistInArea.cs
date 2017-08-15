@@ -29,8 +29,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
                 Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(1.0)));
             }
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

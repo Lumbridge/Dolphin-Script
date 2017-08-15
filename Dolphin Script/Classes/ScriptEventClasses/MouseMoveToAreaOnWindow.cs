@@ -39,8 +39,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
             RECT NewClickArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
 
             MoveMouseToAreaOnWindow(NewClickArea);
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

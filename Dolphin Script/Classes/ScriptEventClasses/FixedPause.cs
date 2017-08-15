@@ -13,7 +13,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public override void DoEvent()
         {
             Thread.Sleep(TimeSpan.FromSeconds(DelayDuration));
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

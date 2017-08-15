@@ -10,26 +10,8 @@ namespace DolphinScript.Lib.Backend
         [DllImport("user32.dll")]
         public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetDesktopWindow();
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetWindowDC(IntPtr window);
-
-        [DllImport("gdi32.dll", SetLastError = true)]
-        public static extern uint GetPixel(IntPtr dc, int x, int y);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern int ReleaseDC(IntPtr window, IntPtr dc);
-
         [DllImport("user32.dll")]
         public static extern short GetAsyncKeyState(VirtualKeyStates vKey);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
-
-        [DllImport("User32.Dll")]
-        public static extern long SetCursorPos(int x, int y);
 
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(out POINT lpPoint);
@@ -40,8 +22,20 @@ namespace DolphinScript.Lib.Backend
         [DllImport("user32.dll")]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
-        // gets the title of the currently active window
+        // minimise/maximise window flags
         //
+        public static int SW_SHOWNORMAL = 1;
+        public static int SW_SHOWMINIMIZED = 2;
+        public static int SW_SHOWMAXIMIZED = 3;
+
+        // keypressed mem state
+        //
+        public const int KEY_PRESSED = 0x8000;
+
+        /// <summary>
+        /// gets the title of the currently active window
+        /// </summary>
+        /// <returns></returns>
         public static string GetActiveWindowTitle()
         {
             // set the max number of characters
@@ -70,8 +64,11 @@ namespace DolphinScript.Lib.Backend
             return null;
         }
 
-        // returns the title of the window handle passed in
-        //
+        /// <summary>
+        /// returns the title of the window handle passed in
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <returns></returns>
         public static string GetWindowTitle(IntPtr handle)
         {
             // set the max number of characters
@@ -189,14 +186,6 @@ namespace DolphinScript.Lib.Backend
                 return new Point(point.X, point.Y);
             }
         }
-
-        // minimise/maximise window flags
-        public static int SW_SHOWNORMAL = 1;
-        public static int SW_SHOWMINIMIZED = 2;
-        public static int SW_SHOWMAXIMIZED = 3;
-        
-        // keypressed mem state
-        public const int KEY_PRESSED = 0x8000;
 
         /// <summary>
         /// stores the different mouse states the mouse can take

@@ -534,7 +534,7 @@ namespace DolphinScript
                         AllEvents[c].WindowToClickHandle    = (IntPtr)int.Parse(lines[i + 1]);
                         AllEvents[c].WindowToClickLocation  = ConfigStringToRECT(lines[i + 2]);
                         AllEvents[c].WindowToClickTitle     = lines[i + 3];
-                        AllEvents[c].DestinationPoint       = ConfigStringToPOINT(lines[i + 4]);
+                        AllEvents[c].PositionToMoveTo       = ConfigStringToPOINT(lines[i + 4]);
                         AllEvents[c].ClickArea              = ConfigStringToRECT(lines[i + 5]);
                         AllEvents[c].MouseButton            = (VirtualMouseStates)Enum.Parse(typeof(VirtualMouseStates), lines[i + 6]);
                         AllEvents[c].KeyboardKey            = lines[i + 7];

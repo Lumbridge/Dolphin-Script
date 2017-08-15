@@ -6,7 +6,7 @@ using static DolphinScript.Lib.Backend.GlobalVariables;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
-    class ScriptEvent
+    abstract class ScriptEvent
     {
         public enum Event
         {
@@ -50,15 +50,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
             None
         }
 
-        public virtual void DoEvent()
-        {
-            Write("Completed " + EventType + " event.");
-        }
+        public abstract void DoEvent();
 
-        public virtual string GetEventListBoxString()
-        {
-            return string.Empty;
-        }
+        public abstract string GetEventListBoxString();
 
         // generic event variable
         public Event EventType { get; set; }
@@ -69,7 +63,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public string WindowToClickTitle { get; set; }
 
         // fixed click position
-        public POINT DestinationPoint { get; set; }
+        public POINT PositionToMoveTo { get; set; }
 
         // area cick
         public RECT ClickArea { get; set; }
@@ -103,7 +97,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             WindowToClickHandle = IntPtr.Zero;
             WindowToClickLocation = new RECT();
             WindowToClickTitle = "NoWindow";
-            DestinationPoint = new POINT();
+            PositionToMoveTo = new POINT();
             ClickArea = new RECT();
             MouseButton = VirtualMouseStates.None;
             KeyboardKey = "NoKey";
@@ -127,7 +121,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
                 + WindowToClickHandle + Environment.NewLine
                 + WindowToClickLocation.GetConfigString() + Environment.NewLine
                 + WindowToClickTitle + Environment.NewLine
-                + DestinationPoint.GetConfigString() + Environment.NewLine
+                + PositionToMoveTo.GetConfigString() + Environment.NewLine
                 + ClickArea.GetConfigString() + Environment.NewLine
                 + MouseButton + Environment.NewLine
                 + KeyboardKey + Environment.NewLine
@@ -142,30 +136,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
                 + GroupID + Environment.NewLine
                 + NumberOfCycles + Environment.NewLine;
         }
-
-        //public string SaveConfigString()
-        //{
-        //    return ""
-        //        + EventType + Environment.NewLine
-        //        + WindowToClickHandle + Environment.NewLine
-        //        + WindowToClickLocation.GetConfigString() + Environment.NewLine
-        //        + WindowToClickTitle + Environment.NewLine
-        //        + DestinationPoint.GetConfigString() + Environment.NewLine
-        //        + ClickArea.GetConfigString() + Environment.NewLine
-        //        + MouseButton + Environment.NewLine
-        //        + KeyboardKey + Environment.NewLine
-        //        + DelayDuration + Environment.NewLine
-        //        + DelayMinimum + Environment.NewLine
-        //        + DelayMaximum + Environment.NewLine
-        //        + SearchColour + Environment.NewLine
-        //        + SearchColours + Environment.NewLine
-        //        + SearchColoursListToString(SearchColours) + Environment.NewLine
-        //        + ColourWasFound + Environment.NewLine
-        //        + EventsInGroup + Environment.NewLine
-        //        + IsPartOfGroup + Environment.NewLine
-        //        + GroupID + Environment.NewLine
-        //        + NumberOfCycles + Environment.NewLine;
-        //}
 
         static public string SearchColoursListToString(List<int> SearchColours)
         {

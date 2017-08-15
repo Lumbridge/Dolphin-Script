@@ -101,8 +101,8 @@
     <Compile Include="Classes\Backend\Benchmark.cs" />
     <Compile Include="Classes\Backend\ColourEvent.cs" />
     <Compile Include="Classes\Backend\GlobalVariables.cs" />
-    <Compile Include="Classes\Backend\MouseMoveMaths.cs" />
-    <Compile Include="Classes\Backend\MouseMoveToMultiColourOnWindow.cs" />
+    <Compile Include="Classes\Backend\MouseMoveMath.cs" />
+    <Compile Include="Classes\ScriptEventClasses\MouseMoveToMultiColourOnWindow.cs" />
     <Compile Include="Classes\Backend\PointReturns.cs" />
     <Compile Include="Classes\Backend\RandomNumber.cs" />
     <Compile Include="Classes\Backend\ScreenCapture.cs" />

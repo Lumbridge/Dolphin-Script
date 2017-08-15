@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
@@ -11,6 +7,16 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public KeyboardHoldKey()
         {
             EventType = Event.Keyboard_HoldKey;
+        }
+
+        public override void DoEvent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetEventListBoxString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

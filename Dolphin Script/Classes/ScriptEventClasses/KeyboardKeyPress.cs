@@ -12,7 +12,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public override void DoEvent()
         {
             SendKeys.SendWait(KeyboardKey);
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

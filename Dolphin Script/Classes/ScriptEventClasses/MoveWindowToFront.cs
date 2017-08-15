@@ -13,7 +13,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public override void DoEvent()
         {
             SetWindowTopMostIfExists(WindowClass, WindowTitle);
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

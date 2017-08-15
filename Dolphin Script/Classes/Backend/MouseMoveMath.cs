@@ -4,7 +4,7 @@ using static DolphinScript.Lib.Backend.WinAPI;
 
 namespace DolphinScript.Lib.Backend
 {
-    class MouseMoveMaths
+    class MouseMoveMath
     {
         static public double Hypot(double dx, double dy)
         {

@@ -29,8 +29,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
                 Thread.Sleep(TimeSpan.FromSeconds(1.0));
             }
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

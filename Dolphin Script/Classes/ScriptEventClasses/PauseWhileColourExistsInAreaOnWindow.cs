@@ -46,8 +46,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
                 NewSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
             }
-
-            base.DoEvent();
         }
 
         public override string GetEventListBoxString()

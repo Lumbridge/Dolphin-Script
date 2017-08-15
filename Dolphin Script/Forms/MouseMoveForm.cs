@@ -84,7 +84,7 @@ namespace DolphinScript
                 {
                     p1 = GetCursorPosition();
 
-                    AllEvents.Add(new MouseMove() { DestinationPoint = p1 });
+                    AllEvents.Add(new MouseMove() { PositionToMoveTo = p1 });
 
                     MainFormHandle.UpdateListBox(MainFormHandle);
 
@@ -160,7 +160,7 @@ namespace DolphinScript
                 {
                     p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-                    AllEvents.Add(new MouseMoveToPointOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), DestinationPoint = p1 });
+                    AllEvents.Add(new MouseMoveToPointOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), PositionToMoveTo = p1 });
 
                     MainFormHandle.UpdateListBox(MainFormHandle);
 
