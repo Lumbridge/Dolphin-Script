@@ -84,7 +84,7 @@ namespace DolphinScript
                 {
                     p1 = GetCursorPosition();
 
-                    AllEvents.Add(new MouseMove() { PositionToMoveTo = p1 });
+                    AllEvents.Add(new MouseMove() { CoordsToMoveTo = p1 });
 
                     MainFormHandle.UpdateListBox(MainFormHandle);
 
@@ -160,7 +160,7 @@ namespace DolphinScript
                 {
                     p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-                    AllEvents.Add(new MouseMoveToPointOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), PositionToMoveTo = p1 });
+                    AllEvents.Add(new MouseMoveToPointOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), CoordsToMoveTo = p1 });
 
                     MainFormHandle.UpdateListBox(MainFormHandle);
 
@@ -349,7 +349,7 @@ namespace DolphinScript
             Button_InsertColourSearchAreaWindowEvent.Text = temp;
         }
 
-        List<int> SearchColours = new List<int>();
+        List<int> searchColours = new List<int>();
         async Task MouseMoveToMutliColourInAreaOnWindowLoop()
         {
             await Task.Delay(0);
@@ -393,9 +393,9 @@ namespace DolphinScript
                     {
                         if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
                         {
-                            SearchColours.Add(GetColorAt(Cursor.Position).ToArgb());
+                            searchColours.Add(GetColorAt(Cursor.Position).ToArgb());
                             
-                            ColourSelectionScreenshot = SetMatchingColourPixels(ColourSelectionScreenshot, SearchColours[SearchColours.Count - 1], Color.Red);
+                            ColourSelectionScreenshot = SetMatchingColourPixels(ColourSelectionScreenshot, searchColours[searchColours.Count - 1], Color.Red);
 
                             Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
                             
@@ -421,7 +421,7 @@ namespace DolphinScript
                                 }
                             }
 
-                            AllEvents.Add(new MouseMoveToMultiColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColours = SearchColours });
+                            AllEvents.Add(new MouseMoveToMultiColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColours = new List<int>(searchColours) });
 
                             MainFormHandle.UpdateListBox(MainFormHandle);
 
@@ -429,7 +429,7 @@ namespace DolphinScript
 
                             IsRegistering = false;
 
-                            SearchColours.Clear();
+                            searchColours.Clear();
 
                             return;
                         }
@@ -450,7 +450,10 @@ namespace DolphinScript
 
         #endregion
 
-        // updates the cursor position & current active window title in form text boxes
+        /// <summary>
+        /// updates the cursor position & current active window title in form text boxes
+        /// </summary>
+        /// <returns></returns>
         public async Task UpdateMouse()
         {
             while (!IsDisposed)

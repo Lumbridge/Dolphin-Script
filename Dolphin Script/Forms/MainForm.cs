@@ -8,24 +8,34 @@ using DolphinScript.Lib.ScriptEventClasses;
 using static DolphinScript.Lib.ScriptEventClasses.ScriptEvent;
 
 using static DolphinScript.Lib.Backend.WinAPI;
+using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.GlobalVariables;
+using System.Threading;
 
 namespace DolphinScript
 {
     public partial class MainForm : Form
     {
-        // give access over controls to other forms
+        // create other form handles
+        //
         private PauseForm               _PauseFormHandle;
         private MouseMoveForm           _MouseMoveFormHandle;
         private KeyPressForm            _KeyPressFormHandle;
         private MouseClickForm          _MouseClickFormHandle;
         private InfoForm                _InfoFormHandle;
         
+        /// <summary>
+        /// entry point for the program
+        /// </summary>
         public MainForm()
         {
             InitializeComponent();
-            
+
+            // run the cursor position callback
+            //
+            Task.Run(() => UpdateMouse());
+
             _PauseFormHandle = new PauseForm(this);
             _MouseMoveFormHandle = new MouseMoveForm(this);
             _KeyPressFormHandle = new KeyPressForm(this);
@@ -33,39 +43,9 @@ namespace DolphinScript
             _InfoFormHandle = new InfoForm();
         }
 
-        private void startButton_Click(object sender, EventArgs e)
-        {
-            // check that there are events in the list before starting
-            //
-            if (AllEvents.Count > 0)
-            {
-                // set is running to true
-                //
-                IsRunning = true;
-
-                // change script button text while running
-                //
-                button_StartScript.Text = "Script Running (F5 to stop)...";
-
-                // disable controls while script is running
-                //
-                ToggleControls(false);
-
-                // run the main loop
-                //
-                Task.Run(() => MainLoop());
-            }
-            else
-            {
-                // if the user clicks start when there are no events then
-                // we show them this message box
-                //
-                MessageBox.Show("No events have been added.");
-            }
-        }
-
-        // main loop which runs all of the script events in the event list
-        //
+        /// <summary>
+        /// main loop which runs all of the script events in the event list
+        /// </summary>
         private void MainLoop()
         {
             // loop while the IsRunning varaible is true
@@ -92,6 +72,10 @@ namespace DolphinScript
             ToggleControls(true);
         }
 
+        /// <summary>
+        /// toggles certain controls on the form between enabled and disabled
+        /// </summary>
+        /// <param name="State"></param>
         private void ToggleControls(bool State)
         {
             // start button
@@ -140,6 +124,78 @@ namespace DolphinScript
             //
             foreach (var scriptevent in AllEvents)
                 ListBox_Events.Items.Add(scriptevent.GetEventListBoxString());
+        }
+
+        /// <summary>
+        /// updates the cursor position & current active window title in form text boxes
+        /// </summary>
+        /// <returns></returns>
+        private void UpdateMouse()
+        {
+            // stop updating if the form is being disposed
+            //
+            while (!IsDisposed && !Disposing)
+            {
+                // update the colour button with the colour of the pixel underneath the cursor position
+                //
+                Button_ColourPreview.BackColor = GetColorAt(GetCursorPosition());
+
+                // update the position of the cursor in screen coordinates
+                //
+                TextBox_MousePosX.Text = Cursor.Position.X.ToString();
+                TextBox_MousePosY.Text = Cursor.Position.Y.ToString();
+
+                // update the active window title box
+                //
+                TextBox_ActiveWindowTitle.Text = GetActiveWindowTitle();
+
+                // update the position of the cursor inside the currently active window
+                //
+                TextBox_ActiveWindowMouseX.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
+                TextBox_ActiveWindowMouseY.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
+
+                // add a delay to minimise CPU usage
+                //
+                Thread.Sleep(50);
+            }
+        }
+
+        #region Form Control Events
+
+        /// <summary>
+        /// button which starts the script
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            // check that there are events in the list before starting
+            //
+            if (AllEvents.Count > 0)
+            {
+                // set is running to true
+                //
+                IsRunning = true;
+
+                // change script button text while running
+                //
+                button_StartScript.Text = "Script Running (F5 to stop)...";
+
+                // disable controls while script is running
+                //
+                ToggleControls(false);
+
+                // run the main loop
+                //
+                Task.Run(() => MainLoop());
+            }
+            else
+            {
+                // if the user clicks start when there are no events then
+                // we show them this message box
+                //
+                MessageBox.Show("No events have been added.");
+            }
         }
 
         /// <summary>
@@ -206,6 +262,11 @@ namespace DolphinScript
             }
         }
 
+        /// <summary>
+        /// called when an item in the events listbox is selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListBox_Events_SelectedIndexChanged(object sender, EventArgs e)
         {
             // disable the move item up button if it's already at the top
@@ -275,7 +336,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mouseSpeedNumberBox_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown_MouseSpeed_ValueChanged(object sender, EventArgs e)
         {
             // update the global mouse speed variable
             //
@@ -291,7 +352,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mouseSpeedTrackBar_Scroll(object sender, EventArgs e)
+        private void TrackBar_MouseSpeed_Scroll(object sender, EventArgs e)
         {
             // update the global mouse speed variable
             //
@@ -348,6 +409,11 @@ namespace DolphinScript
             }
         }
         
+        /// <summary>
+        /// shows the pause form window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_ShowPauseForm_Click(object sender, EventArgs e)
         {
             // this if statement prevents multiple windows appearing if one already exists
@@ -357,6 +423,11 @@ namespace DolphinScript
             _PauseFormHandle.Show();
         }
 
+        /// <summary>
+        /// shows the keyboard event form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_ShowKeyPressForm_Click(object sender, EventArgs e)
         {
             // this if statement prevents multiple windows appearing if one already exists
@@ -366,6 +437,11 @@ namespace DolphinScript
             _KeyPressFormHandle.Show();
         }
 
+        /// <summary>
+        /// shows the mouse click event form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_ShowMouseClickForm_Click(object sender, EventArgs e)
         {
             // this if statement prevents multiple windows appearing if one already exists
@@ -375,6 +451,11 @@ namespace DolphinScript
             _MouseClickFormHandle.Show();
         }
 
+        /// <summary>
+        /// shows the mouse move event form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_ShowMouseMoveForm_Click(object sender, EventArgs e)
         {
             // this if statement prevents multiple windows appearing if one already exists
@@ -385,6 +466,11 @@ namespace DolphinScript
             _MouseMoveFormHandle.Show();
         }
 
+        /// <summary>
+        /// shows the information window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_ShowInfoForm_Click(object sender, EventArgs e)
         {
             // this if statement prevents multiple windows appearing if one already exists
@@ -394,6 +480,11 @@ namespace DolphinScript
             _InfoFormHandle.Show();
         }
 
+        /// <summary>
+        /// this will be called when the save script button is pressed on the form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void saveScriptToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //
@@ -440,6 +531,11 @@ namespace DolphinScript
             }
         }
 
+        /// <summary>
+        /// this will be called when the load script button is pressed on the form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void loadScriptToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //
@@ -475,15 +571,25 @@ namespace DolphinScript
                 // get all lines in the file
                 //
                 string[] lines = File.ReadAllLines(ofd.FileName);
-                
+
+                // get everything after the equals symbol on the parse line
+                //
+                for (int l = 0; l < lines.Length; l++)
+                {
+                    if (lines[l].Contains("="))
+                    {
+                        lines[l] = lines[l].Substring(lines[l].LastIndexOf('=') + 1);
+                    }
+                }
+
                 // we have to go through all the lines of the config file and save the events to the event list
                 //
-                for(int i = 0; i < lines.Length; i++)
+                for (int i = 0; i < lines.Length; i++)
                 {
                     // every 18 lines we'll find a script event title & the next 17 lines
                     // will be the configuration for that particular script event e.g. click event mouse button, mouse move coordinates etc..
                     //
-                    if (i % 18 == 0)
+                    if (i % 19 == 0)
                     {
                         //
                         // check the script event title on this line and create a new object depending on the name of the scrip event we found
@@ -501,6 +607,8 @@ namespace DolphinScript
                             AllEvents.Add(new MouseMoveToColour());
                         else if (lines[i] == Event.Mouse_Move_To_Colour_On_Window.ToString())
                             AllEvents.Add(new MouseMoveToColourOnWindow());
+                        else if (lines[i] == Event.Mouse_Move_To_Multi_Colour_On_Window.ToString())
+                            AllEvents.Add(new MouseMoveToMultiColourOnWindow());
                         else if (lines[i] == Event.Random_Pause_In_Range.ToString())
                             AllEvents.Add(new RandomPauseInRange());
                         else if (lines[i] == Event.Fixed_Pause.ToString())
@@ -534,20 +642,21 @@ namespace DolphinScript
                         AllEvents[c].WindowToClickHandle    = (IntPtr)int.Parse(lines[i + 1]);
                         AllEvents[c].WindowToClickLocation  = ConfigStringToRECT(lines[i + 2]);
                         AllEvents[c].WindowToClickTitle     = lines[i + 3];
-                        AllEvents[c].PositionToMoveTo       = ConfigStringToPOINT(lines[i + 4]);
+                        AllEvents[c].CoordsToMoveTo         = ConfigStringToPOINT(lines[i + 4]);
                         AllEvents[c].ClickArea              = ConfigStringToRECT(lines[i + 5]);
                         AllEvents[c].MouseButton            = (VirtualMouseStates)Enum.Parse(typeof(VirtualMouseStates), lines[i + 6]);
-                        AllEvents[c].KeyboardKey            = lines[i + 7];
+                        AllEvents[c].KeyboardKeys           = lines[i + 7];
                         AllEvents[c].DelayDuration          = double.Parse(lines[i + 8]);
                         AllEvents[c].DelayMinimum           = double.Parse(lines[i + 9]);
                         AllEvents[c].DelayMaximum           = double.Parse(lines[i + 10]);
                         AllEvents[c].SearchColour           = int.Parse(lines[i + 11]);
-                        AllEvents[c].ColourSearchArea       = ConfigStringToRECT(lines[i + 12]);
-                        AllEvents[c].ColourWasFound         = bool.Parse(lines[i + 13]);
+                        AllEvents[c].SearchColours          = ConfigStringToList(lines[i + 12]);
+                        AllEvents[c].ColourSearchArea       = ConfigStringToRECT(lines[i + 13]);
+                        AllEvents[c].ColourWasFound         = bool.Parse(lines[i + 14]);
                         AllEvents[c].EventsInGroup          = new System.Collections.Generic.List<ScriptEvent>();
-                        AllEvents[c].IsPartOfGroup          = bool.Parse(lines[i + 15]);
-                        AllEvents[c].GroupID                = int.Parse(lines[i + 16]);
-                        AllEvents[c].NumberOfCycles         = int.Parse(lines[i + 17]);
+                        AllEvents[c].IsPartOfGroup          = bool.Parse(lines[i + 16]);
+                        AllEvents[c].GroupID                = int.Parse(lines[i + 17]);
+                        AllEvents[c].NumberOfCycles         = int.Parse(lines[i + 18]);
                     }
                 }
             }
@@ -556,5 +665,7 @@ namespace DolphinScript
             //
             UpdateListBox(this);
         }
+
+        #endregion Form Control Events
     }
 }

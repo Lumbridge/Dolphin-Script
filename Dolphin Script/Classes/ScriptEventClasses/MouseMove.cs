@@ -160,15 +160,15 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// </summary>
         public override void DoEvent()
         {
-            MoveMouse(PositionToMoveTo);
+            MoveMouse(CoordsToMoveTo);
         }
 
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)
-                return "Move mouse to Point X: " + PositionToMoveTo.X + " Y: " + PositionToMoveTo.Y + ".";
+                return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
             else
-                return "[Group " + GroupID + "] Move mouse to Point X: " + PositionToMoveTo.X + " Y: " + PositionToMoveTo.Y + ".";
+                return "[Group " + GroupID + "] Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
         }
     }
 }

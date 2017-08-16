@@ -63,7 +63,7 @@ namespace DolphinScript.Lib.Backend
         public static string GetSubstringByString(string a, string b, string c)
         {
             try { return c.Substring((c.IndexOf(a) + a.Length), (c.IndexOf(b) - c.IndexOf(a) - a.Length)); }
-            catch { Console.WriteLine("ERROR CREATING SUBSTRING"); return "ERROR CREATING SUBSTRING"; }
+            catch { Console.WriteLine("ERROR CREATING SUBSTRING BETWEEN STRINGS {0} AND {1}", a, b); return "ERROR CREATING SUBSTRING"; }
         }
     }
 }

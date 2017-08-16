@@ -22,7 +22,7 @@ namespace DolphinScript
 
         private void Button_AddKeypressEvent_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new KeyboardKeyPress { KeyboardKey = KeyPressEventTextBox.Text });
+            AllEvents.Add(new KeyboardKeyPress { KeyboardKeys = KeyPressEventTextBox.Text });
 
             MainFormHandle.UpdateListBox(MainFormHandle);
         }

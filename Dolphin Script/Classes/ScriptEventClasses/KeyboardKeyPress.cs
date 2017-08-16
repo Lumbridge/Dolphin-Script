@@ -11,15 +11,15 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
         public override void DoEvent()
         {
-            SendKeys.SendWait(KeyboardKey);
+            SendKeys.SendWait(KeyboardKeys);
         }
 
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)
-                return "Keypress (Key(s): " + KeyboardKey + ")";
+                return "Keypress (Key(s): " + KeyboardKeys + ")";
             else
-                return "[Group " + GroupID + "] Keypress (Key: " + KeyboardKey + ").";
+                return "[Group " + GroupID + "] Keypress (Key: " + KeyboardKeys + ").";
         }
     }
 }
