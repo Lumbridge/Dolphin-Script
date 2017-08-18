@@ -35,50 +35,115 @@
             this.statusLabel = new System.Windows.Forms.Label();
             this.lastActionLabel = new System.Windows.Forms.Label();
             this.button_RemoveEvent = new System.Windows.Forms.Button();
-            this.button_ShowKeyboardEventForm = new System.Windows.Forms.Button();
-            this.button_About = new System.Windows.Forms.Button();
+            this.Button_About = new System.Windows.Forms.Button();
             this.button_AddRepeatGroup = new System.Windows.Forms.Button();
             this.NumericUpDown_RepeatAmount = new System.Windows.Forms.NumericUpDown();
-            this.repeatGroupLabel = new System.Windows.Forms.Label();
-            this.button_ShowPauseEventForm = new System.Windows.Forms.Button();
-            this.button_ShowMouseMoveForm = new System.Windows.Forms.Button();
-            this.button_ShowMouseClickForm = new System.Windows.Forms.Button();
             this.MenuStrip_MainForm = new System.Windows.Forms.MenuStrip();
             this.ToolStripMenuItem_File = new System.Windows.Forms.ToolStripMenuItem();
             this.saveScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadScriptToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl_ScriptEvents = new System.Windows.Forms.TabControl();
             this.tabPage_PauseEvent = new System.Windows.Forms.TabPage();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow = new System.Windows.Forms.Button();
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow = new System.Windows.Forms.Button();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.Button_InsertPauseWhileColourDoesntExistInArea = new System.Windows.Forms.Button();
+            this.Button_InsertPauseWhileColourExistsInArea = new System.Windows.Forms.Button();
+            this.Button_ColourPreview1 = new System.Windows.Forms.Button();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.Button_AddFixedPause = new System.Windows.Forms.Button();
+            this.fixedDelayNumberBox = new System.Windows.Forms.NumericUpDown();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.Button_AddRandomPause = new System.Windows.Forms.Button();
+            this.upperRandomDelayNumberBox = new System.Windows.Forms.NumericUpDown();
+            this.lowerRandomDelayNumberBox = new System.Windows.Forms.NumericUpDown();
             this.tabPage2_KeyboardEvent = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.Button_AddSpecialButton = new System.Windows.Forms.Button();
+            this.RichTextBox_KeyboardEvent = new System.Windows.Forms.RichTextBox();
+            this.ComboBox_SpecialKeys = new System.Windows.Forms.ComboBox();
+            this.Button_AddKeypressEvent = new System.Windows.Forms.Button();
             this.tabPage_MouseMoveEvent = new System.Windows.Forms.TabPage();
-            this.Button_ColourPreview = new System.Windows.Forms.Button();
+            this.groupBox20 = new System.Windows.Forms.GroupBox();
+            this.Button_ColourPreview2 = new System.Windows.Forms.Button();
             this.groupBox_RelativeToScreen = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.TextBox_MousePosY = new System.Windows.Forms.TextBox();
-            this.TextBox_MousePosX = new System.Windows.Forms.TextBox();
-            this.button_InsertMouseMoveToAreaEvent = new System.Windows.Forms.Button();
-            this.button_InsertMouseMoveEvent = new System.Windows.Forms.Button();
+            this.TextBox_MousePosY_1 = new System.Windows.Forms.TextBox();
+            this.TextBox_MousePosX_1 = new System.Windows.Forms.TextBox();
+            this.Button_InsertMouseMoveToAreaEvent = new System.Windows.Forms.Button();
+            this.Button_InsertMouseMoveEvent = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.TextBox_ActiveWindowTitle = new System.Windows.Forms.TextBox();
-            this.button_InsertMouseMoveToAreaOnWindowEvent = new System.Windows.Forms.Button();
-            this.button_InsertMouseMoveToPointOnWindowEvent = new System.Windows.Forms.Button();
+            this.TextBox_ActiveWindowTitle_1 = new System.Windows.Forms.TextBox();
+            this.Button_InsertMouseMoveToAreaOnWindowEvent = new System.Windows.Forms.Button();
+            this.Button_InsertMouseMoveToPointOnWindowEvent = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.TextBox_ActiveWindowMouseY = new System.Windows.Forms.TextBox();
-            this.TextBox_ActiveWindowMouseX = new System.Windows.Forms.TextBox();
+            this.TextBox_ActiveWindowMouseY_1 = new System.Windows.Forms.TextBox();
+            this.TextBox_ActiveWindowMouseX_1 = new System.Windows.Forms.TextBox();
             this.groupBox_MouseSpeed = new System.Windows.Forms.GroupBox();
             this.TrackBar_MouseSpeed = new System.Windows.Forms.TrackBar();
             this.NumericUpDown_MouseSpeed = new System.Windows.Forms.NumericUpDown();
+            this.tabPage_MouseMoveToColour = new System.Windows.Forms.TabPage();
+            this.groupBox23 = new System.Windows.Forms.GroupBox();
+            this.Button_InsertMultiColourSearchAreaWindowEvent = new System.Windows.Forms.Button();
+            this.groupBox22 = new System.Windows.Forms.GroupBox();
+            this.Button_InsertColourSearchAreaWindowEvent = new System.Windows.Forms.Button();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.groupBox21 = new System.Windows.Forms.GroupBox();
+            this.Button_ColourPreview3 = new System.Windows.Forms.Button();
+            this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.TextBox_ActiveWindowMouseY_2 = new System.Windows.Forms.TextBox();
+            this.TextBox_ActiveWindowMouseX_2 = new System.Windows.Forms.TextBox();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.TextBox_ActiveWindowTitle_2 = new System.Windows.Forms.TextBox();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.TextBox_MousePosY_2 = new System.Windows.Forms.TextBox();
+            this.TextBox_MousePosX_2 = new System.Windows.Forms.TextBox();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.Button_InsertColourSearchAreaEvent = new System.Windows.Forms.Button();
             this.tabPage_MouseClick = new System.Windows.Forms.TabPage();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.Button_InsertRMBUp = new System.Windows.Forms.Button();
+            this.Button_InsertMMBUp = new System.Windows.Forms.Button();
+            this.Button_InsertLMBUp = new System.Windows.Forms.Button();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.Button_InsertRMBDown = new System.Windows.Forms.Button();
+            this.Button_InsertLMBDown = new System.Windows.Forms.Button();
+            this.Button_InsertMMBDown = new System.Windows.Forms.Button();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.Button_InsertLeftClickEvent = new System.Windows.Forms.Button();
+            this.Button_InsertRightClickEvent = new System.Windows.Forms.Button();
+            this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).BeginInit();
             this.MenuStrip_MainForm.SuspendLayout();
             this.tabControl_ScriptEvents.SuspendLayout();
+            this.tabPage_PauseEvent.SuspendLayout();
+            this.groupBox12.SuspendLayout();
+            this.groupBox14.SuspendLayout();
+            this.groupBox13.SuspendLayout();
+            this.groupBox11.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fixedDelayNumberBox)).BeginInit();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upperRandomDelayNumberBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lowerRandomDelayNumberBox)).BeginInit();
+            this.tabPage2_KeyboardEvent.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.tabPage_MouseMoveEvent.SuspendLayout();
+            this.groupBox20.SuspendLayout();
             this.groupBox_RelativeToScreen.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -87,6 +152,19 @@
             this.groupBox_MouseSpeed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TrackBar_MouseSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MouseSpeed)).BeginInit();
+            this.tabPage_MouseMoveToColour.SuspendLayout();
+            this.groupBox23.SuspendLayout();
+            this.groupBox22.SuspendLayout();
+            this.groupBox16.SuspendLayout();
+            this.groupBox21.SuspendLayout();
+            this.groupBox19.SuspendLayout();
+            this.groupBox18.SuspendLayout();
+            this.groupBox17.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            this.tabPage_MouseClick.SuspendLayout();
+            this.groupBox10.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_StartScript
@@ -135,7 +213,7 @@
             // statusLabel
             // 
             this.statusLabel.AutoSize = true;
-            this.statusLabel.Location = new System.Drawing.Point(15, 713);
+            this.statusLabel.Location = new System.Drawing.Point(12, 619);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(60, 13);
             this.statusLabel.TabIndex = 14;
@@ -144,7 +222,7 @@
             // lastActionLabel
             // 
             this.lastActionLabel.AutoSize = true;
-            this.lastActionLabel.Location = new System.Drawing.Point(15, 700);
+            this.lastActionLabel.Location = new System.Drawing.Point(12, 606);
             this.lastActionLabel.Name = "lastActionLabel";
             this.lastActionLabel.Size = new System.Drawing.Size(103, 13);
             this.lastActionLabel.TabIndex = 15;
@@ -161,39 +239,29 @@
             this.button_RemoveEvent.UseVisualStyleBackColor = true;
             this.button_RemoveEvent.Click += new System.EventHandler(this.removeEventButton_Click);
             // 
-            // button_ShowKeyboardEventForm
+            // Button_About
             // 
-            this.button_ShowKeyboardEventForm.Location = new System.Drawing.Point(93, 635);
-            this.button_ShowKeyboardEventForm.Name = "button_ShowKeyboardEventForm";
-            this.button_ShowKeyboardEventForm.Size = new System.Drawing.Size(75, 62);
-            this.button_ShowKeyboardEventForm.TabIndex = 10;
-            this.button_ShowKeyboardEventForm.Text = "Keyboard Event";
-            this.button_ShowKeyboardEventForm.UseVisualStyleBackColor = true;
-            this.button_ShowKeyboardEventForm.Click += new System.EventHandler(this.Button_ShowKeyPressForm_Click);
-            // 
-            // button_About
-            // 
-            this.button_About.Location = new System.Drawing.Point(540, 141);
-            this.button_About.Name = "button_About";
-            this.button_About.Size = new System.Drawing.Size(56, 37);
-            this.button_About.TabIndex = 27;
-            this.button_About.Text = "About";
-            this.button_About.UseVisualStyleBackColor = true;
-            this.button_About.Click += new System.EventHandler(this.Button_ShowInfoForm_Click);
+            this.Button_About.Location = new System.Drawing.Point(540, 141);
+            this.Button_About.Name = "Button_About";
+            this.Button_About.Size = new System.Drawing.Size(56, 37);
+            this.Button_About.TabIndex = 27;
+            this.Button_About.Text = "About";
+            this.Button_About.UseVisualStyleBackColor = true;
+            this.Button_About.Click += new System.EventHandler(this.Button_About_Click);
             // 
             // button_AddRepeatGroup
             // 
-            this.button_AddRepeatGroup.Location = new System.Drawing.Point(394, 685);
+            this.button_AddRepeatGroup.Location = new System.Drawing.Point(602, 69);
             this.button_AddRepeatGroup.Name = "button_AddRepeatGroup";
-            this.button_AddRepeatGroup.Size = new System.Drawing.Size(206, 35);
+            this.button_AddRepeatGroup.Size = new System.Drawing.Size(42, 24);
             this.button_AddRepeatGroup.TabIndex = 8;
-            this.button_AddRepeatGroup.Text = "Add repeat group";
+            this.button_AddRepeatGroup.Text = "RG";
             this.button_AddRepeatGroup.UseVisualStyleBackColor = true;
             this.button_AddRepeatGroup.Click += new System.EventHandler(this.repeatGroupButton_Click);
             // 
             // NumericUpDown_RepeatAmount
             // 
-            this.NumericUpDown_RepeatAmount.Location = new System.Drawing.Point(394, 659);
+            this.NumericUpDown_RepeatAmount.Location = new System.Drawing.Point(602, 43);
             this.NumericUpDown_RepeatAmount.Maximum = new decimal(new int[] {
             99999999,
             0,
@@ -205,7 +273,7 @@
             0,
             0});
             this.NumericUpDown_RepeatAmount.Name = "NumericUpDown_RepeatAmount";
-            this.NumericUpDown_RepeatAmount.Size = new System.Drawing.Size(206, 20);
+            this.NumericUpDown_RepeatAmount.Size = new System.Drawing.Size(42, 20);
             this.NumericUpDown_RepeatAmount.TabIndex = 7;
             this.NumericUpDown_RepeatAmount.Value = new decimal(new int[] {
             2,
@@ -213,53 +281,13 @@
             0,
             0});
             // 
-            // repeatGroupLabel
-            // 
-            this.repeatGroupLabel.AutoSize = true;
-            this.repeatGroupLabel.Location = new System.Drawing.Point(394, 606);
-            this.repeatGroupLabel.Name = "repeatGroupLabel";
-            this.repeatGroupLabel.Size = new System.Drawing.Size(202, 52);
-            this.repeatGroupLabel.TabIndex = 31;
-            this.repeatGroupLabel.Text = "Add selected events to a repeat group\r\nand how many times should  this group of\r\n" +
-    "actions repeat before carrying on with the\r\nrest of the script..";
-            // 
-            // button_ShowPauseEventForm
-            // 
-            this.button_ShowPauseEventForm.Location = new System.Drawing.Point(12, 635);
-            this.button_ShowPauseEventForm.Name = "button_ShowPauseEventForm";
-            this.button_ShowPauseEventForm.Size = new System.Drawing.Size(75, 62);
-            this.button_ShowPauseEventForm.TabIndex = 41;
-            this.button_ShowPauseEventForm.Text = "Pause Event";
-            this.button_ShowPauseEventForm.UseVisualStyleBackColor = true;
-            this.button_ShowPauseEventForm.Click += new System.EventHandler(this.Button_ShowPauseForm_Click);
-            // 
-            // button_ShowMouseMoveForm
-            // 
-            this.button_ShowMouseMoveForm.Location = new System.Drawing.Point(174, 635);
-            this.button_ShowMouseMoveForm.Name = "button_ShowMouseMoveForm";
-            this.button_ShowMouseMoveForm.Size = new System.Drawing.Size(75, 62);
-            this.button_ShowMouseMoveForm.TabIndex = 43;
-            this.button_ShowMouseMoveForm.Text = "Mouse Move Event";
-            this.button_ShowMouseMoveForm.UseVisualStyleBackColor = true;
-            this.button_ShowMouseMoveForm.Click += new System.EventHandler(this.Button_ShowMouseMoveForm_Click);
-            // 
-            // button_ShowMouseClickForm
-            // 
-            this.button_ShowMouseClickForm.Location = new System.Drawing.Point(255, 635);
-            this.button_ShowMouseClickForm.Name = "button_ShowMouseClickForm";
-            this.button_ShowMouseClickForm.Size = new System.Drawing.Size(75, 62);
-            this.button_ShowMouseClickForm.TabIndex = 44;
-            this.button_ShowMouseClickForm.Text = "Mouse Click Event";
-            this.button_ShowMouseClickForm.UseVisualStyleBackColor = true;
-            this.button_ShowMouseClickForm.Click += new System.EventHandler(this.Button_ShowMouseClickForm_Click);
-            // 
             // MenuStrip_MainForm
             // 
             this.MenuStrip_MainForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ToolStripMenuItem_File});
             this.MenuStrip_MainForm.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip_MainForm.Name = "MenuStrip_MainForm";
-            this.MenuStrip_MainForm.Size = new System.Drawing.Size(651, 24);
+            this.MenuStrip_MainForm.Size = new System.Drawing.Size(653, 24);
             this.MenuStrip_MainForm.TabIndex = 46;
             this.MenuStrip_MainForm.Text = "File";
             // 
@@ -291,6 +319,7 @@
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_PauseEvent);
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage2_KeyboardEvent);
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseMoveEvent);
+            this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseMoveToColour);
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseClick);
             this.tabControl_ScriptEvents.Location = new System.Drawing.Point(12, 184);
             this.tabControl_ScriptEvents.Name = "tabControl_ScriptEvents";
@@ -300,6 +329,8 @@
             // 
             // tabPage_PauseEvent
             // 
+            this.tabPage_PauseEvent.Controls.Add(this.groupBox12);
+            this.tabPage_PauseEvent.Controls.Add(this.groupBox11);
             this.tabPage_PauseEvent.Location = new System.Drawing.Point(4, 22);
             this.tabPage_PauseEvent.Name = "tabPage_PauseEvent";
             this.tabPage_PauseEvent.Padding = new System.Windows.Forms.Padding(3);
@@ -308,8 +339,216 @@
             this.tabPage_PauseEvent.Text = "Pause Event";
             this.tabPage_PauseEvent.UseVisualStyleBackColor = true;
             // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.groupBox14);
+            this.groupBox12.Controls.Add(this.groupBox13);
+            this.groupBox12.Controls.Add(this.Button_ColourPreview1);
+            this.groupBox12.Location = new System.Drawing.Point(6, 144);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(432, 211);
+            this.groupBox12.TabIndex = 67;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Colour Pauses";
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow);
+            this.groupBox14.Controls.Add(this.Button_InsertPauseWhileColourExistsInAreaOnWindow);
+            this.groupBox14.Location = new System.Drawing.Point(152, 19);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(144, 186);
+            this.groupBox14.TabIndex = 1;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "Specific Window Check";
+            // 
+            // Button_InsertPauseWhileColourDoesntExistInAreaOnWindow
+            // 
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Location = new System.Drawing.Point(17, 108);
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Name = "Button_InsertPauseWhileColourDoesntExistInAreaOnWindow";
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Size = new System.Drawing.Size(102, 66);
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.TabIndex = 62;
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = "Pause While Colour Doesn\'t Exist in an Area on a Window";
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.UseVisualStyleBackColor = true;
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Click += new System.EventHandler(this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow_Click);
+            // 
+            // Button_InsertPauseWhileColourExistsInAreaOnWindow
+            // 
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Location = new System.Drawing.Point(17, 26);
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Name = "Button_InsertPauseWhileColourExistsInAreaOnWindow";
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Size = new System.Drawing.Size(102, 66);
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.TabIndex = 63;
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = "Pause While Colour Exists in an Area on a Window";
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.UseVisualStyleBackColor = true;
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Click += new System.EventHandler(this.Button_InsertPauseWhileColourExistsInAreaOnWindow_Click);
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.Button_InsertPauseWhileColourDoesntExistInArea);
+            this.groupBox13.Controls.Add(this.Button_InsertPauseWhileColourExistsInArea);
+            this.groupBox13.Location = new System.Drawing.Point(6, 19);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(140, 186);
+            this.groupBox13.TabIndex = 0;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Entire Screen Check";
+            // 
+            // Button_InsertPauseWhileColourDoesntExistInArea
+            // 
+            this.Button_InsertPauseWhileColourDoesntExistInArea.Location = new System.Drawing.Point(13, 98);
+            this.Button_InsertPauseWhileColourDoesntExistInArea.Name = "Button_InsertPauseWhileColourDoesntExistInArea";
+            this.Button_InsertPauseWhileColourDoesntExistInArea.Size = new System.Drawing.Size(102, 66);
+            this.Button_InsertPauseWhileColourDoesntExistInArea.TabIndex = 64;
+            this.Button_InsertPauseWhileColourDoesntExistInArea.Text = "Pause While Colour Doesn\'t Exist in an Area";
+            this.Button_InsertPauseWhileColourDoesntExistInArea.UseVisualStyleBackColor = true;
+            this.Button_InsertPauseWhileColourDoesntExistInArea.Click += new System.EventHandler(this.Button_InsertPauseWhileColourDoesntExistInArea_Click);
+            // 
+            // Button_InsertPauseWhileColourExistsInArea
+            // 
+            this.Button_InsertPauseWhileColourExistsInArea.Location = new System.Drawing.Point(13, 26);
+            this.Button_InsertPauseWhileColourExistsInArea.Name = "Button_InsertPauseWhileColourExistsInArea";
+            this.Button_InsertPauseWhileColourExistsInArea.Size = new System.Drawing.Size(102, 66);
+            this.Button_InsertPauseWhileColourExistsInArea.TabIndex = 65;
+            this.Button_InsertPauseWhileColourExistsInArea.Text = "Pause While Colour Exists in an Area";
+            this.Button_InsertPauseWhileColourExistsInArea.UseVisualStyleBackColor = true;
+            this.Button_InsertPauseWhileColourExistsInArea.Click += new System.EventHandler(this.Button_InsertPauseWhileColourExistsInArea_Click);
+            // 
+            // Button_ColourPreview1
+            // 
+            this.Button_ColourPreview1.Location = new System.Drawing.Point(302, 19);
+            this.Button_ColourPreview1.Name = "Button_ColourPreview1";
+            this.Button_ColourPreview1.Size = new System.Drawing.Size(124, 186);
+            this.Button_ColourPreview1.TabIndex = 61;
+            this.Button_ColourPreview1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.groupBox5);
+            this.groupBox11.Controls.Add(this.groupBox6);
+            this.groupBox11.Location = new System.Drawing.Point(6, 6);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(296, 132);
+            this.groupBox11.TabIndex = 66;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Time Pauses";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.Button_AddFixedPause);
+            this.groupBox5.Controls.Add(this.fixedDelayNumberBox);
+            this.groupBox5.Location = new System.Drawing.Point(6, 19);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(96, 96);
+            this.groupBox5.TabIndex = 0;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Fixed Pause";
+            // 
+            // Button_AddFixedPause
+            // 
+            this.Button_AddFixedPause.Location = new System.Drawing.Point(6, 47);
+            this.Button_AddFixedPause.Name = "Button_AddFixedPause";
+            this.Button_AddFixedPause.Size = new System.Drawing.Size(79, 35);
+            this.Button_AddFixedPause.TabIndex = 52;
+            this.Button_AddFixedPause.Text = "Add Fixed Pause";
+            this.Button_AddFixedPause.UseVisualStyleBackColor = true;
+            this.Button_AddFixedPause.Click += new System.EventHandler(this.Button_AddFixedPause_Click);
+            // 
+            // fixedDelayNumberBox
+            // 
+            this.fixedDelayNumberBox.DecimalPlaces = 1;
+            this.fixedDelayNumberBox.Location = new System.Drawing.Point(6, 21);
+            this.fixedDelayNumberBox.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
+            this.fixedDelayNumberBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.fixedDelayNumberBox.Name = "fixedDelayNumberBox";
+            this.fixedDelayNumberBox.Size = new System.Drawing.Size(79, 20);
+            this.fixedDelayNumberBox.TabIndex = 51;
+            this.fixedDelayNumberBox.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            65536});
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.Button_AddRandomPause);
+            this.groupBox6.Controls.Add(this.upperRandomDelayNumberBox);
+            this.groupBox6.Controls.Add(this.lowerRandomDelayNumberBox);
+            this.groupBox6.Location = new System.Drawing.Point(108, 19);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(177, 96);
+            this.groupBox6.TabIndex = 53;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Random Pause within Range";
+            // 
+            // Button_AddRandomPause
+            // 
+            this.Button_AddRandomPause.Location = new System.Drawing.Point(6, 47);
+            this.Button_AddRandomPause.Name = "Button_AddRandomPause";
+            this.Button_AddRandomPause.Size = new System.Drawing.Size(157, 39);
+            this.Button_AddRandomPause.TabIndex = 56;
+            this.Button_AddRandomPause.Text = "Add Random Delay Between Min and Max";
+            this.Button_AddRandomPause.UseVisualStyleBackColor = true;
+            this.Button_AddRandomPause.Click += new System.EventHandler(this.Button_AddRandomPause_Click);
+            // 
+            // upperRandomDelayNumberBox
+            // 
+            this.upperRandomDelayNumberBox.DecimalPlaces = 1;
+            this.upperRandomDelayNumberBox.Location = new System.Drawing.Point(87, 21);
+            this.upperRandomDelayNumberBox.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
+            this.upperRandomDelayNumberBox.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            65536});
+            this.upperRandomDelayNumberBox.Name = "upperRandomDelayNumberBox";
+            this.upperRandomDelayNumberBox.Size = new System.Drawing.Size(76, 20);
+            this.upperRandomDelayNumberBox.TabIndex = 55;
+            this.upperRandomDelayNumberBox.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            65536});
+            this.upperRandomDelayNumberBox.ValueChanged += new System.EventHandler(this.upperRandomDelayNumberBox_ValueChanged);
+            // 
+            // lowerRandomDelayNumberBox
+            // 
+            this.lowerRandomDelayNumberBox.DecimalPlaces = 1;
+            this.lowerRandomDelayNumberBox.Location = new System.Drawing.Point(6, 21);
+            this.lowerRandomDelayNumberBox.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
+            this.lowerRandomDelayNumberBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.lowerRandomDelayNumberBox.Name = "lowerRandomDelayNumberBox";
+            this.lowerRandomDelayNumberBox.Size = new System.Drawing.Size(75, 20);
+            this.lowerRandomDelayNumberBox.TabIndex = 54;
+            this.lowerRandomDelayNumberBox.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            65536});
+            this.lowerRandomDelayNumberBox.ValueChanged += new System.EventHandler(this.lowerRandomDelayNumberBox_ValueChanged);
+            // 
             // tabPage2_KeyboardEvent
             // 
+            this.tabPage2_KeyboardEvent.Controls.Add(this.groupBox7);
             this.tabPage2_KeyboardEvent.Location = new System.Drawing.Point(4, 22);
             this.tabPage2_KeyboardEvent.Name = "tabPage2_KeyboardEvent";
             this.tabPage2_KeyboardEvent.Padding = new System.Windows.Forms.Padding(3);
@@ -318,9 +557,59 @@
             this.tabPage2_KeyboardEvent.Text = "Keyboard Event";
             this.tabPage2_KeyboardEvent.UseVisualStyleBackColor = true;
             // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.Button_AddSpecialButton);
+            this.groupBox7.Controls.Add(this.RichTextBox_KeyboardEvent);
+            this.groupBox7.Controls.Add(this.ComboBox_SpecialKeys);
+            this.groupBox7.Controls.Add(this.Button_AddKeypressEvent);
+            this.groupBox7.Location = new System.Drawing.Point(6, 6);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(343, 252);
+            this.groupBox7.TabIndex = 0;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "The keyboard event will repeat everything in the box below";
+            // 
+            // Button_AddSpecialButton
+            // 
+            this.Button_AddSpecialButton.Location = new System.Drawing.Point(26, 148);
+            this.Button_AddSpecialButton.Name = "Button_AddSpecialButton";
+            this.Button_AddSpecialButton.Size = new System.Drawing.Size(282, 30);
+            this.Button_AddSpecialButton.TabIndex = 32;
+            this.Button_AddSpecialButton.Text = "Add Special Button";
+            this.Button_AddSpecialButton.UseVisualStyleBackColor = true;
+            this.Button_AddSpecialButton.Click += new System.EventHandler(this.Button_AddSpecialButton_Click);
+            // 
+            // RichTextBox_KeyboardEvent
+            // 
+            this.RichTextBox_KeyboardEvent.Location = new System.Drawing.Point(26, 19);
+            this.RichTextBox_KeyboardEvent.Multiline = false;
+            this.RichTextBox_KeyboardEvent.Name = "RichTextBox_KeyboardEvent";
+            this.RichTextBox_KeyboardEvent.Size = new System.Drawing.Size(282, 96);
+            this.RichTextBox_KeyboardEvent.TabIndex = 31;
+            this.RichTextBox_KeyboardEvent.Text = "";
+            // 
+            // ComboBox_SpecialKeys
+            // 
+            this.ComboBox_SpecialKeys.FormattingEnabled = true;
+            this.ComboBox_SpecialKeys.Location = new System.Drawing.Point(26, 121);
+            this.ComboBox_SpecialKeys.Name = "ComboBox_SpecialKeys";
+            this.ComboBox_SpecialKeys.Size = new System.Drawing.Size(282, 21);
+            this.ComboBox_SpecialKeys.TabIndex = 29;
+            // 
+            // Button_AddKeypressEvent
+            // 
+            this.Button_AddKeypressEvent.Location = new System.Drawing.Point(26, 184);
+            this.Button_AddKeypressEvent.Name = "Button_AddKeypressEvent";
+            this.Button_AddKeypressEvent.Size = new System.Drawing.Size(282, 48);
+            this.Button_AddKeypressEvent.TabIndex = 30;
+            this.Button_AddKeypressEvent.Text = "Add Keypess Event To Event List";
+            this.Button_AddKeypressEvent.UseVisualStyleBackColor = true;
+            this.Button_AddKeypressEvent.Click += new System.EventHandler(this.Button_AddKeypressEvent_Click);
+            // 
             // tabPage_MouseMoveEvent
             // 
-            this.tabPage_MouseMoveEvent.Controls.Add(this.Button_ColourPreview);
+            this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox20);
             this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox_RelativeToScreen);
             this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox1);
             this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox_MouseSpeed);
@@ -331,32 +620,42 @@
             this.tabPage_MouseMoveEvent.Text = "Mouse Move Event";
             this.tabPage_MouseMoveEvent.UseVisualStyleBackColor = true;
             // 
-            // Button_ColourPreview
+            // groupBox20
             // 
-            this.Button_ColourPreview.Location = new System.Drawing.Point(467, 302);
-            this.Button_ColourPreview.Name = "Button_ColourPreview";
-            this.Button_ColourPreview.Size = new System.Drawing.Size(74, 76);
-            this.Button_ColourPreview.TabIndex = 62;
-            this.Button_ColourPreview.UseVisualStyleBackColor = true;
+            this.groupBox20.Controls.Add(this.Button_ColourPreview2);
+            this.groupBox20.Location = new System.Drawing.Point(418, 4);
+            this.groupBox20.Name = "groupBox20";
+            this.groupBox20.Size = new System.Drawing.Size(159, 120);
+            this.groupBox20.TabIndex = 63;
+            this.groupBox20.TabStop = false;
+            this.groupBox20.Text = "Pixel Colour Under Mouse";
+            // 
+            // Button_ColourPreview2
+            // 
+            this.Button_ColourPreview2.Location = new System.Drawing.Point(6, 18);
+            this.Button_ColourPreview2.Name = "Button_ColourPreview2";
+            this.Button_ColourPreview2.Size = new System.Drawing.Size(147, 96);
+            this.Button_ColourPreview2.TabIndex = 62;
+            this.Button_ColourPreview2.UseVisualStyleBackColor = true;
             // 
             // groupBox_RelativeToScreen
             // 
             this.groupBox_RelativeToScreen.Controls.Add(this.groupBox2);
-            this.groupBox_RelativeToScreen.Controls.Add(this.button_InsertMouseMoveToAreaEvent);
-            this.groupBox_RelativeToScreen.Controls.Add(this.button_InsertMouseMoveEvent);
+            this.groupBox_RelativeToScreen.Controls.Add(this.Button_InsertMouseMoveToAreaEvent);
+            this.groupBox_RelativeToScreen.Controls.Add(this.Button_InsertMouseMoveEvent);
             this.groupBox_RelativeToScreen.Location = new System.Drawing.Point(3, 3);
             this.groupBox_RelativeToScreen.Name = "groupBox_RelativeToScreen";
             this.groupBox_RelativeToScreen.Size = new System.Drawing.Size(409, 121);
             this.groupBox_RelativeToScreen.TabIndex = 42;
             this.groupBox_RelativeToScreen.TabStop = false;
-            this.groupBox_RelativeToScreen.Text = "Move Mouse To Coordinates On Screen";
+            this.groupBox_RelativeToScreen.Text = "Move mouse cursor to coordinates on screen";
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.TextBox_MousePosY);
-            this.groupBox2.Controls.Add(this.TextBox_MousePosX);
+            this.groupBox2.Controls.Add(this.TextBox_MousePosY_1);
+            this.groupBox2.Controls.Add(this.TextBox_MousePosX_1);
             this.groupBox2.Location = new System.Drawing.Point(170, 30);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(221, 56);
@@ -382,61 +681,63 @@
             this.label1.TabIndex = 16;
             this.label1.Text = "X:";
             // 
-            // TextBox_MousePosY
+            // TextBox_MousePosY_1
             // 
-            this.TextBox_MousePosY.Enabled = false;
-            this.TextBox_MousePosY.Location = new System.Drawing.Point(123, 22);
-            this.TextBox_MousePosY.Name = "TextBox_MousePosY";
-            this.TextBox_MousePosY.ReadOnly = true;
-            this.TextBox_MousePosY.Size = new System.Drawing.Size(66, 20);
-            this.TextBox_MousePosY.TabIndex = 15;
-            this.TextBox_MousePosY.TabStop = false;
+            this.TextBox_MousePosY_1.Enabled = false;
+            this.TextBox_MousePosY_1.Location = new System.Drawing.Point(123, 22);
+            this.TextBox_MousePosY_1.Name = "TextBox_MousePosY_1";
+            this.TextBox_MousePosY_1.ReadOnly = true;
+            this.TextBox_MousePosY_1.Size = new System.Drawing.Size(66, 20);
+            this.TextBox_MousePosY_1.TabIndex = 15;
+            this.TextBox_MousePosY_1.TabStop = false;
             // 
-            // TextBox_MousePosX
+            // TextBox_MousePosX_1
             // 
-            this.TextBox_MousePosX.Enabled = false;
-            this.TextBox_MousePosX.Location = new System.Drawing.Point(28, 22);
-            this.TextBox_MousePosX.Name = "TextBox_MousePosX";
-            this.TextBox_MousePosX.ReadOnly = true;
-            this.TextBox_MousePosX.Size = new System.Drawing.Size(66, 20);
-            this.TextBox_MousePosX.TabIndex = 14;
-            this.TextBox_MousePosX.TabStop = false;
+            this.TextBox_MousePosX_1.Enabled = false;
+            this.TextBox_MousePosX_1.Location = new System.Drawing.Point(28, 22);
+            this.TextBox_MousePosX_1.Name = "TextBox_MousePosX_1";
+            this.TextBox_MousePosX_1.ReadOnly = true;
+            this.TextBox_MousePosX_1.Size = new System.Drawing.Size(66, 20);
+            this.TextBox_MousePosX_1.TabIndex = 14;
+            this.TextBox_MousePosX_1.TabStop = false;
             // 
-            // button_InsertMouseMoveToAreaEvent
+            // Button_InsertMouseMoveToAreaEvent
             // 
-            this.button_InsertMouseMoveToAreaEvent.Location = new System.Drawing.Point(7, 63);
-            this.button_InsertMouseMoveToAreaEvent.Name = "button_InsertMouseMoveToAreaEvent";
-            this.button_InsertMouseMoveToAreaEvent.Size = new System.Drawing.Size(142, 38);
-            this.button_InsertMouseMoveToAreaEvent.TabIndex = 1;
-            this.button_InsertMouseMoveToAreaEvent.Text = "Move To a Random Point in an Area";
-            this.button_InsertMouseMoveToAreaEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMouseMoveToAreaEvent.Location = new System.Drawing.Point(7, 63);
+            this.Button_InsertMouseMoveToAreaEvent.Name = "Button_InsertMouseMoveToAreaEvent";
+            this.Button_InsertMouseMoveToAreaEvent.Size = new System.Drawing.Size(142, 38);
+            this.Button_InsertMouseMoveToAreaEvent.TabIndex = 1;
+            this.Button_InsertMouseMoveToAreaEvent.Text = "Move To a Random Point in an Area";
+            this.Button_InsertMouseMoveToAreaEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMouseMoveToAreaEvent.Click += new System.EventHandler(this.button_InsertMouseMoveToAreaEvent_Click);
             // 
-            // button_InsertMouseMoveEvent
+            // Button_InsertMouseMoveEvent
             // 
-            this.button_InsertMouseMoveEvent.Location = new System.Drawing.Point(7, 19);
-            this.button_InsertMouseMoveEvent.Name = "button_InsertMouseMoveEvent";
-            this.button_InsertMouseMoveEvent.Size = new System.Drawing.Size(142, 38);
-            this.button_InsertMouseMoveEvent.TabIndex = 0;
-            this.button_InsertMouseMoveEvent.Text = "Move To Fixed Point";
-            this.button_InsertMouseMoveEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMouseMoveEvent.Location = new System.Drawing.Point(7, 19);
+            this.Button_InsertMouseMoveEvent.Name = "Button_InsertMouseMoveEvent";
+            this.Button_InsertMouseMoveEvent.Size = new System.Drawing.Size(142, 38);
+            this.Button_InsertMouseMoveEvent.TabIndex = 0;
+            this.Button_InsertMouseMoveEvent.Text = "Move To Fixed Point";
+            this.Button_InsertMouseMoveEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMouseMoveEvent.Click += new System.EventHandler(this.button_InsertMouseMoveEvent_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.groupBox4);
-            this.groupBox1.Controls.Add(this.button_InsertMouseMoveToAreaOnWindowEvent);
-            this.groupBox1.Controls.Add(this.button_InsertMouseMoveToPointOnWindowEvent);
+            this.groupBox1.Controls.Add(this.Button_InsertMouseMoveToAreaOnWindowEvent);
+            this.groupBox1.Controls.Add(this.Button_InsertMouseMoveToPointOnWindowEvent);
             this.groupBox1.Controls.Add(this.groupBox3);
             this.groupBox1.Location = new System.Drawing.Point(3, 130);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(409, 160);
             this.groupBox1.TabIndex = 43;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Move Mouse To Coordinates Inside a Window";
+            this.groupBox1.Text = "Move mouse cursor to coordinates inside a window";
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Controls.Add(this.TextBox_ActiveWindowTitle);
+            this.groupBox4.Controls.Add(this.TextBox_ActiveWindowTitle_1);
             this.groupBox4.Location = new System.Drawing.Point(170, 19);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(221, 60);
@@ -453,40 +754,42 @@
             this.label6.TabIndex = 16;
             this.label6.Text = "X:";
             // 
-            // TextBox_ActiveWindowTitle
+            // TextBox_ActiveWindowTitle_1
             // 
-            this.TextBox_ActiveWindowTitle.Enabled = false;
-            this.TextBox_ActiveWindowTitle.Location = new System.Drawing.Point(26, 25);
-            this.TextBox_ActiveWindowTitle.Name = "TextBox_ActiveWindowTitle";
-            this.TextBox_ActiveWindowTitle.ReadOnly = true;
-            this.TextBox_ActiveWindowTitle.Size = new System.Drawing.Size(161, 20);
-            this.TextBox_ActiveWindowTitle.TabIndex = 15;
-            this.TextBox_ActiveWindowTitle.TabStop = false;
+            this.TextBox_ActiveWindowTitle_1.Enabled = false;
+            this.TextBox_ActiveWindowTitle_1.Location = new System.Drawing.Point(26, 25);
+            this.TextBox_ActiveWindowTitle_1.Name = "TextBox_ActiveWindowTitle_1";
+            this.TextBox_ActiveWindowTitle_1.ReadOnly = true;
+            this.TextBox_ActiveWindowTitle_1.Size = new System.Drawing.Size(161, 20);
+            this.TextBox_ActiveWindowTitle_1.TabIndex = 15;
+            this.TextBox_ActiveWindowTitle_1.TabStop = false;
             // 
-            // button_InsertMouseMoveToAreaOnWindowEvent
+            // Button_InsertMouseMoveToAreaOnWindowEvent
             // 
-            this.button_InsertMouseMoveToAreaOnWindowEvent.Location = new System.Drawing.Point(6, 92);
-            this.button_InsertMouseMoveToAreaOnWindowEvent.Name = "button_InsertMouseMoveToAreaOnWindowEvent";
-            this.button_InsertMouseMoveToAreaOnWindowEvent.Size = new System.Drawing.Size(142, 38);
-            this.button_InsertMouseMoveToAreaOnWindowEvent.TabIndex = 5;
-            this.button_InsertMouseMoveToAreaOnWindowEvent.Text = "Move To Random Point in Area on Window";
-            this.button_InsertMouseMoveToAreaOnWindowEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.Location = new System.Drawing.Point(6, 92);
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.Name = "Button_InsertMouseMoveToAreaOnWindowEvent";
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.Size = new System.Drawing.Size(142, 38);
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.TabIndex = 5;
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.Text = "Move To Random Point in Area on Window";
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.Click += new System.EventHandler(this.button_InsertMouseMoveToAreaOnWindowEvent_Click);
             // 
-            // button_InsertMouseMoveToPointOnWindowEvent
+            // Button_InsertMouseMoveToPointOnWindowEvent
             // 
-            this.button_InsertMouseMoveToPointOnWindowEvent.Location = new System.Drawing.Point(6, 34);
-            this.button_InsertMouseMoveToPointOnWindowEvent.Name = "button_InsertMouseMoveToPointOnWindowEvent";
-            this.button_InsertMouseMoveToPointOnWindowEvent.Size = new System.Drawing.Size(142, 38);
-            this.button_InsertMouseMoveToPointOnWindowEvent.TabIndex = 4;
-            this.button_InsertMouseMoveToPointOnWindowEvent.Text = "Move To Fixed Point on Window";
-            this.button_InsertMouseMoveToPointOnWindowEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMouseMoveToPointOnWindowEvent.Location = new System.Drawing.Point(6, 34);
+            this.Button_InsertMouseMoveToPointOnWindowEvent.Name = "Button_InsertMouseMoveToPointOnWindowEvent";
+            this.Button_InsertMouseMoveToPointOnWindowEvent.Size = new System.Drawing.Size(142, 38);
+            this.Button_InsertMouseMoveToPointOnWindowEvent.TabIndex = 4;
+            this.Button_InsertMouseMoveToPointOnWindowEvent.Text = "Move To Fixed Point on Window";
+            this.Button_InsertMouseMoveToPointOnWindowEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMouseMoveToPointOnWindowEvent.Click += new System.EventHandler(this.button_InsertMouseMoveToPointOnWindowEvent_Click);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.label4);
-            this.groupBox3.Controls.Add(this.TextBox_ActiveWindowMouseY);
-            this.groupBox3.Controls.Add(this.TextBox_ActiveWindowMouseX);
+            this.groupBox3.Controls.Add(this.TextBox_ActiveWindowMouseY_1);
+            this.groupBox3.Controls.Add(this.TextBox_ActiveWindowMouseX_1);
             this.groupBox3.Location = new System.Drawing.Point(170, 85);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(221, 60);
@@ -512,25 +815,25 @@
             this.label4.TabIndex = 16;
             this.label4.Text = "X:";
             // 
-            // TextBox_ActiveWindowMouseY
+            // TextBox_ActiveWindowMouseY_1
             // 
-            this.TextBox_ActiveWindowMouseY.Enabled = false;
-            this.TextBox_ActiveWindowMouseY.Location = new System.Drawing.Point(121, 25);
-            this.TextBox_ActiveWindowMouseY.Name = "TextBox_ActiveWindowMouseY";
-            this.TextBox_ActiveWindowMouseY.ReadOnly = true;
-            this.TextBox_ActiveWindowMouseY.Size = new System.Drawing.Size(66, 20);
-            this.TextBox_ActiveWindowMouseY.TabIndex = 15;
-            this.TextBox_ActiveWindowMouseY.TabStop = false;
+            this.TextBox_ActiveWindowMouseY_1.Enabled = false;
+            this.TextBox_ActiveWindowMouseY_1.Location = new System.Drawing.Point(121, 25);
+            this.TextBox_ActiveWindowMouseY_1.Name = "TextBox_ActiveWindowMouseY_1";
+            this.TextBox_ActiveWindowMouseY_1.ReadOnly = true;
+            this.TextBox_ActiveWindowMouseY_1.Size = new System.Drawing.Size(66, 20);
+            this.TextBox_ActiveWindowMouseY_1.TabIndex = 15;
+            this.TextBox_ActiveWindowMouseY_1.TabStop = false;
             // 
-            // TextBox_ActiveWindowMouseX
+            // TextBox_ActiveWindowMouseX_1
             // 
-            this.TextBox_ActiveWindowMouseX.Enabled = false;
-            this.TextBox_ActiveWindowMouseX.Location = new System.Drawing.Point(26, 25);
-            this.TextBox_ActiveWindowMouseX.Name = "TextBox_ActiveWindowMouseX";
-            this.TextBox_ActiveWindowMouseX.ReadOnly = true;
-            this.TextBox_ActiveWindowMouseX.Size = new System.Drawing.Size(66, 20);
-            this.TextBox_ActiveWindowMouseX.TabIndex = 14;
-            this.TextBox_ActiveWindowMouseX.TabStop = false;
+            this.TextBox_ActiveWindowMouseX_1.Enabled = false;
+            this.TextBox_ActiveWindowMouseX_1.Location = new System.Drawing.Point(26, 25);
+            this.TextBox_ActiveWindowMouseX_1.Name = "TextBox_ActiveWindowMouseX_1";
+            this.TextBox_ActiveWindowMouseX_1.ReadOnly = true;
+            this.TextBox_ActiveWindowMouseX_1.Size = new System.Drawing.Size(66, 20);
+            this.TextBox_ActiveWindowMouseX_1.TabIndex = 14;
+            this.TextBox_ActiveWindowMouseX_1.TabStop = false;
             // 
             // groupBox_MouseSpeed
             // 
@@ -577,8 +880,247 @@
             0});
             this.NumericUpDown_MouseSpeed.ValueChanged += new System.EventHandler(this.NumericUpDown_MouseSpeed_ValueChanged);
             // 
+            // tabPage_MouseMoveToColour
+            // 
+            this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox23);
+            this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox22);
+            this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox16);
+            this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox15);
+            this.tabPage_MouseMoveToColour.Location = new System.Drawing.Point(4, 22);
+            this.tabPage_MouseMoveToColour.Name = "tabPage_MouseMoveToColour";
+            this.tabPage_MouseMoveToColour.Size = new System.Drawing.Size(580, 393);
+            this.tabPage_MouseMoveToColour.TabIndex = 4;
+            this.tabPage_MouseMoveToColour.Text = "Mouse Move to Colour Event";
+            this.tabPage_MouseMoveToColour.UseVisualStyleBackColor = true;
+            // 
+            // groupBox23
+            // 
+            this.groupBox23.Controls.Add(this.Button_InsertMultiColourSearchAreaWindowEvent);
+            this.groupBox23.Location = new System.Drawing.Point(3, 261);
+            this.groupBox23.Name = "groupBox23";
+            this.groupBox23.Size = new System.Drawing.Size(332, 123);
+            this.groupBox23.TabIndex = 71;
+            this.groupBox23.TabStop = false;
+            this.groupBox23.Text = "Move cursor to any matching colour in an area on a window";
+            // 
+            // Button_InsertMultiColourSearchAreaWindowEvent
+            // 
+            this.Button_InsertMultiColourSearchAreaWindowEvent.Location = new System.Drawing.Point(6, 19);
+            this.Button_InsertMultiColourSearchAreaWindowEvent.Name = "Button_InsertMultiColourSearchAreaWindowEvent";
+            this.Button_InsertMultiColourSearchAreaWindowEvent.Size = new System.Drawing.Size(320, 98);
+            this.Button_InsertMultiColourSearchAreaWindowEvent.TabIndex = 68;
+            this.Button_InsertMultiColourSearchAreaWindowEvent.Text = "Multi Colour Search Area on Specific Window";
+            this.Button_InsertMultiColourSearchAreaWindowEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertMultiColourSearchAreaWindowEvent.Click += new System.EventHandler(this.Button_InsertMultiColourSearchAreaWindowEvent_Click);
+            // 
+            // groupBox22
+            // 
+            this.groupBox22.Controls.Add(this.Button_InsertColourSearchAreaWindowEvent);
+            this.groupBox22.Location = new System.Drawing.Point(3, 132);
+            this.groupBox22.Name = "groupBox22";
+            this.groupBox22.Size = new System.Drawing.Size(332, 123);
+            this.groupBox22.TabIndex = 70;
+            this.groupBox22.TabStop = false;
+            this.groupBox22.Text = "Move cursor to a colour in an area on a window";
+            // 
+            // Button_InsertColourSearchAreaWindowEvent
+            // 
+            this.Button_InsertColourSearchAreaWindowEvent.Location = new System.Drawing.Point(6, 19);
+            this.Button_InsertColourSearchAreaWindowEvent.Name = "Button_InsertColourSearchAreaWindowEvent";
+            this.Button_InsertColourSearchAreaWindowEvent.Size = new System.Drawing.Size(320, 98);
+            this.Button_InsertColourSearchAreaWindowEvent.TabIndex = 66;
+            this.Button_InsertColourSearchAreaWindowEvent.Text = "Colour Search Area on Specific Window";
+            this.Button_InsertColourSearchAreaWindowEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertColourSearchAreaWindowEvent.Click += new System.EventHandler(this.Button_InsertColourSearchAreaWindowEvent_Click);
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.groupBox21);
+            this.groupBox16.Controls.Add(this.groupBox19);
+            this.groupBox16.Controls.Add(this.groupBox18);
+            this.groupBox16.Controls.Add(this.groupBox17);
+            this.groupBox16.Location = new System.Drawing.Point(341, 3);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(236, 387);
+            this.groupBox16.TabIndex = 70;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "Cursor and Window Information";
+            // 
+            // groupBox21
+            // 
+            this.groupBox21.Controls.Add(this.Button_ColourPreview3);
+            this.groupBox21.Location = new System.Drawing.Point(6, 213);
+            this.groupBox21.Name = "groupBox21";
+            this.groupBox21.Size = new System.Drawing.Size(221, 120);
+            this.groupBox21.TabIndex = 71;
+            this.groupBox21.TabStop = false;
+            this.groupBox21.Text = "Pixel Colour Under Mouse";
+            // 
+            // Button_ColourPreview3
+            // 
+            this.Button_ColourPreview3.Location = new System.Drawing.Point(6, 18);
+            this.Button_ColourPreview3.Name = "Button_ColourPreview3";
+            this.Button_ColourPreview3.Size = new System.Drawing.Size(209, 96);
+            this.Button_ColourPreview3.TabIndex = 62;
+            this.Button_ColourPreview3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox19
+            // 
+            this.groupBox19.Controls.Add(this.label9);
+            this.groupBox19.Controls.Add(this.label10);
+            this.groupBox19.Controls.Add(this.TextBox_ActiveWindowMouseY_2);
+            this.groupBox19.Controls.Add(this.TextBox_ActiveWindowMouseX_2);
+            this.groupBox19.Location = new System.Drawing.Point(6, 147);
+            this.groupBox19.Name = "groupBox19";
+            this.groupBox19.Size = new System.Drawing.Size(221, 60);
+            this.groupBox19.TabIndex = 20;
+            this.groupBox19.TabStop = false;
+            this.groupBox19.Text = "Cursor Location on Active Window";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(98, 28);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(17, 13);
+            this.label9.TabIndex = 17;
+            this.label9.Text = "Y:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(4, 28);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(17, 13);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "X:";
+            // 
+            // TextBox_ActiveWindowMouseY_2
+            // 
+            this.TextBox_ActiveWindowMouseY_2.Enabled = false;
+            this.TextBox_ActiveWindowMouseY_2.Location = new System.Drawing.Point(121, 25);
+            this.TextBox_ActiveWindowMouseY_2.Name = "TextBox_ActiveWindowMouseY_2";
+            this.TextBox_ActiveWindowMouseY_2.ReadOnly = true;
+            this.TextBox_ActiveWindowMouseY_2.Size = new System.Drawing.Size(66, 20);
+            this.TextBox_ActiveWindowMouseY_2.TabIndex = 15;
+            this.TextBox_ActiveWindowMouseY_2.TabStop = false;
+            // 
+            // TextBox_ActiveWindowMouseX_2
+            // 
+            this.TextBox_ActiveWindowMouseX_2.Enabled = false;
+            this.TextBox_ActiveWindowMouseX_2.Location = new System.Drawing.Point(26, 25);
+            this.TextBox_ActiveWindowMouseX_2.Name = "TextBox_ActiveWindowMouseX_2";
+            this.TextBox_ActiveWindowMouseX_2.ReadOnly = true;
+            this.TextBox_ActiveWindowMouseX_2.Size = new System.Drawing.Size(66, 20);
+            this.TextBox_ActiveWindowMouseX_2.TabIndex = 14;
+            this.TextBox_ActiveWindowMouseX_2.TabStop = false;
+            // 
+            // groupBox18
+            // 
+            this.groupBox18.Controls.Add(this.label8);
+            this.groupBox18.Controls.Add(this.TextBox_ActiveWindowTitle_2);
+            this.groupBox18.Location = new System.Drawing.Point(6, 81);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(221, 60);
+            this.groupBox18.TabIndex = 19;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "Active Window Title";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(4, 28);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(17, 13);
+            this.label8.TabIndex = 16;
+            this.label8.Text = "X:";
+            // 
+            // TextBox_ActiveWindowTitle_2
+            // 
+            this.TextBox_ActiveWindowTitle_2.Enabled = false;
+            this.TextBox_ActiveWindowTitle_2.Location = new System.Drawing.Point(26, 25);
+            this.TextBox_ActiveWindowTitle_2.Name = "TextBox_ActiveWindowTitle_2";
+            this.TextBox_ActiveWindowTitle_2.ReadOnly = true;
+            this.TextBox_ActiveWindowTitle_2.Size = new System.Drawing.Size(161, 20);
+            this.TextBox_ActiveWindowTitle_2.TabIndex = 15;
+            this.TextBox_ActiveWindowTitle_2.TabStop = false;
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.Controls.Add(this.label5);
+            this.groupBox17.Controls.Add(this.label7);
+            this.groupBox17.Controls.Add(this.TextBox_MousePosY_2);
+            this.groupBox17.Controls.Add(this.TextBox_MousePosX_2);
+            this.groupBox17.Location = new System.Drawing.Point(6, 19);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(221, 56);
+            this.groupBox17.TabIndex = 3;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "Cursor Location on Screen";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(100, 25);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(17, 13);
+            this.label5.TabIndex = 17;
+            this.label5.Text = "Y:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 25);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(17, 13);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "X:";
+            // 
+            // TextBox_MousePosY_2
+            // 
+            this.TextBox_MousePosY_2.Enabled = false;
+            this.TextBox_MousePosY_2.Location = new System.Drawing.Point(123, 22);
+            this.TextBox_MousePosY_2.Name = "TextBox_MousePosY_2";
+            this.TextBox_MousePosY_2.ReadOnly = true;
+            this.TextBox_MousePosY_2.Size = new System.Drawing.Size(66, 20);
+            this.TextBox_MousePosY_2.TabIndex = 15;
+            this.TextBox_MousePosY_2.TabStop = false;
+            // 
+            // TextBox_MousePosX_2
+            // 
+            this.TextBox_MousePosX_2.Enabled = false;
+            this.TextBox_MousePosX_2.Location = new System.Drawing.Point(28, 22);
+            this.TextBox_MousePosX_2.Name = "TextBox_MousePosX_2";
+            this.TextBox_MousePosX_2.ReadOnly = true;
+            this.TextBox_MousePosX_2.Size = new System.Drawing.Size(66, 20);
+            this.TextBox_MousePosX_2.TabIndex = 14;
+            this.TextBox_MousePosX_2.TabStop = false;
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.Button_InsertColourSearchAreaEvent);
+            this.groupBox15.Location = new System.Drawing.Point(3, 3);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(332, 123);
+            this.groupBox15.TabIndex = 69;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "Move cursor to a colour in an area on screen";
+            // 
+            // Button_InsertColourSearchAreaEvent
+            // 
+            this.Button_InsertColourSearchAreaEvent.Location = new System.Drawing.Point(6, 19);
+            this.Button_InsertColourSearchAreaEvent.Name = "Button_InsertColourSearchAreaEvent";
+            this.Button_InsertColourSearchAreaEvent.Size = new System.Drawing.Size(320, 98);
+            this.Button_InsertColourSearchAreaEvent.TabIndex = 67;
+            this.Button_InsertColourSearchAreaEvent.Text = "Register a Screen Area Colour Search event";
+            this.Button_InsertColourSearchAreaEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertColourSearchAreaEvent.Click += new System.EventHandler(this.Button_InsertColourSearchAreaEvent_Click);
+            // 
             // tabPage_MouseClick
             // 
+            this.tabPage_MouseClick.Controls.Add(this.groupBox10);
+            this.tabPage_MouseClick.Controls.Add(this.groupBox9);
+            this.tabPage_MouseClick.Controls.Add(this.groupBox8);
             this.tabPage_MouseClick.Location = new System.Drawing.Point(4, 22);
             this.tabPage_MouseClick.Name = "tabPage_MouseClick";
             this.tabPage_MouseClick.Size = new System.Drawing.Size(580, 393);
@@ -586,21 +1128,142 @@
             this.tabPage_MouseClick.Text = "Mouse Click Event";
             this.tabPage_MouseClick.UseVisualStyleBackColor = true;
             // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.Button_InsertRMBUp);
+            this.groupBox10.Controls.Add(this.Button_InsertMMBUp);
+            this.groupBox10.Controls.Add(this.Button_InsertLMBUp);
+            this.groupBox10.Location = new System.Drawing.Point(3, 216);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(251, 96);
+            this.groupBox10.TabIndex = 67;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Release Mouse Buttons";
+            // 
+            // Button_InsertRMBUp
+            // 
+            this.Button_InsertRMBUp.Location = new System.Drawing.Point(168, 19);
+            this.Button_InsertRMBUp.Name = "Button_InsertRMBUp";
+            this.Button_InsertRMBUp.Size = new System.Drawing.Size(75, 62);
+            this.Button_InsertRMBUp.TabIndex = 73;
+            this.Button_InsertRMBUp.Text = "Release Right Mouse Button";
+            this.Button_InsertRMBUp.UseVisualStyleBackColor = true;
+            this.Button_InsertRMBUp.Click += new System.EventHandler(this.Button_InsertRMBUp_Click);
+            // 
+            // Button_InsertMMBUp
+            // 
+            this.Button_InsertMMBUp.Location = new System.Drawing.Point(87, 19);
+            this.Button_InsertMMBUp.Name = "Button_InsertMMBUp";
+            this.Button_InsertMMBUp.Size = new System.Drawing.Size(75, 62);
+            this.Button_InsertMMBUp.TabIndex = 72;
+            this.Button_InsertMMBUp.Text = "Release Middle Mouse Button";
+            this.Button_InsertMMBUp.UseVisualStyleBackColor = true;
+            this.Button_InsertMMBUp.Click += new System.EventHandler(this.Button_InsertMMBUp_Click);
+            // 
+            // Button_InsertLMBUp
+            // 
+            this.Button_InsertLMBUp.Location = new System.Drawing.Point(6, 19);
+            this.Button_InsertLMBUp.Name = "Button_InsertLMBUp";
+            this.Button_InsertLMBUp.Size = new System.Drawing.Size(75, 62);
+            this.Button_InsertLMBUp.TabIndex = 71;
+            this.Button_InsertLMBUp.Text = "Release Left Mouse Button";
+            this.Button_InsertLMBUp.UseVisualStyleBackColor = true;
+            this.Button_InsertLMBUp.Click += new System.EventHandler(this.Button_InsertLMBUp_Click);
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.Button_InsertRMBDown);
+            this.groupBox9.Controls.Add(this.Button_InsertLMBDown);
+            this.groupBox9.Controls.Add(this.Button_InsertMMBDown);
+            this.groupBox9.Location = new System.Drawing.Point(3, 109);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(250, 101);
+            this.groupBox9.TabIndex = 66;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Hold Mouse Buttons";
+            // 
+            // Button_InsertRMBDown
+            // 
+            this.Button_InsertRMBDown.Location = new System.Drawing.Point(168, 19);
+            this.Button_InsertRMBDown.Name = "Button_InsertRMBDown";
+            this.Button_InsertRMBDown.Size = new System.Drawing.Size(75, 62);
+            this.Button_InsertRMBDown.TabIndex = 69;
+            this.Button_InsertRMBDown.Text = "Hold Right Mouse Button Down";
+            this.Button_InsertRMBDown.UseVisualStyleBackColor = true;
+            this.Button_InsertRMBDown.Click += new System.EventHandler(this.Button_InsertRMBDown_Click);
+            // 
+            // Button_InsertLMBDown
+            // 
+            this.Button_InsertLMBDown.Location = new System.Drawing.Point(6, 19);
+            this.Button_InsertLMBDown.Name = "Button_InsertLMBDown";
+            this.Button_InsertLMBDown.Size = new System.Drawing.Size(75, 62);
+            this.Button_InsertLMBDown.TabIndex = 65;
+            this.Button_InsertLMBDown.Text = "Hold Left Mouse Button Down";
+            this.Button_InsertLMBDown.UseVisualStyleBackColor = true;
+            this.Button_InsertLMBDown.Click += new System.EventHandler(this.Button_InsertLMBDown_Click);
+            // 
+            // Button_InsertMMBDown
+            // 
+            this.Button_InsertMMBDown.Location = new System.Drawing.Point(87, 19);
+            this.Button_InsertMMBDown.Name = "Button_InsertMMBDown";
+            this.Button_InsertMMBDown.Size = new System.Drawing.Size(75, 62);
+            this.Button_InsertMMBDown.TabIndex = 67;
+            this.Button_InsertMMBDown.Text = "Hold Middle Mouse Button Down";
+            this.Button_InsertMMBDown.UseVisualStyleBackColor = true;
+            this.Button_InsertMMBDown.Click += new System.EventHandler(this.Button_InsertMMBDown_Click);
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.Button_InsertLeftClickEvent);
+            this.groupBox8.Controls.Add(this.Button_InsertRightClickEvent);
+            this.groupBox8.Controls.Add(this.Buton_InsertMiddleMouseClickEvent);
+            this.groupBox8.Location = new System.Drawing.Point(3, 3);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(256, 100);
+            this.groupBox8.TabIndex = 65;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Mouse Clicks";
+            // 
+            // Button_InsertLeftClickEvent
+            // 
+            this.Button_InsertLeftClickEvent.Location = new System.Drawing.Point(6, 19);
+            this.Button_InsertLeftClickEvent.Name = "Button_InsertLeftClickEvent";
+            this.Button_InsertLeftClickEvent.Size = new System.Drawing.Size(75, 62);
+            this.Button_InsertLeftClickEvent.TabIndex = 56;
+            this.Button_InsertLeftClickEvent.Text = "Left Click";
+            this.Button_InsertLeftClickEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertLeftClickEvent.Click += new System.EventHandler(this.Button_InsertLeftClickEvent_Click);
+            // 
+            // Button_InsertRightClickEvent
+            // 
+            this.Button_InsertRightClickEvent.Location = new System.Drawing.Point(168, 19);
+            this.Button_InsertRightClickEvent.Name = "Button_InsertRightClickEvent";
+            this.Button_InsertRightClickEvent.Size = new System.Drawing.Size(75, 62);
+            this.Button_InsertRightClickEvent.TabIndex = 57;
+            this.Button_InsertRightClickEvent.Text = "Right Click";
+            this.Button_InsertRightClickEvent.UseVisualStyleBackColor = true;
+            this.Button_InsertRightClickEvent.Click += new System.EventHandler(this.Button_InsertRightClickEvent_Click);
+            // 
+            // Buton_InsertMiddleMouseClickEvent
+            // 
+            this.Buton_InsertMiddleMouseClickEvent.Location = new System.Drawing.Point(87, 19);
+            this.Buton_InsertMiddleMouseClickEvent.Name = "Buton_InsertMiddleMouseClickEvent";
+            this.Buton_InsertMiddleMouseClickEvent.Size = new System.Drawing.Size(75, 62);
+            this.Buton_InsertMiddleMouseClickEvent.TabIndex = 58;
+            this.Buton_InsertMiddleMouseClickEvent.Text = "Middle Mouse Click";
+            this.Buton_InsertMiddleMouseClickEvent.UseVisualStyleBackColor = true;
+            this.Buton_InsertMiddleMouseClickEvent.Click += new System.EventHandler(this.Buton_InsertMiddleMouseClickEvent_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 732);
+            this.ClientSize = new System.Drawing.Size(653, 643);
             this.Controls.Add(this.tabControl_ScriptEvents);
             this.Controls.Add(this.MenuStrip_MainForm);
-            this.Controls.Add(this.button_ShowMouseClickForm);
-            this.Controls.Add(this.button_ShowMouseMoveForm);
-            this.Controls.Add(this.button_ShowPauseEventForm);
-            this.Controls.Add(this.repeatGroupLabel);
             this.Controls.Add(this.NumericUpDown_RepeatAmount);
             this.Controls.Add(this.button_AddRepeatGroup);
-            this.Controls.Add(this.button_About);
-            this.Controls.Add(this.button_ShowKeyboardEventForm);
+            this.Controls.Add(this.Button_About);
             this.Controls.Add(this.button_RemoveEvent);
             this.Controls.Add(this.lastActionLabel);
             this.Controls.Add(this.statusLabel);
@@ -617,7 +1280,20 @@
             this.MenuStrip_MainForm.ResumeLayout(false);
             this.MenuStrip_MainForm.PerformLayout();
             this.tabControl_ScriptEvents.ResumeLayout(false);
+            this.tabPage_PauseEvent.ResumeLayout(false);
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fixedDelayNumberBox)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.upperRandomDelayNumberBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lowerRandomDelayNumberBox)).EndInit();
+            this.tabPage2_KeyboardEvent.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.tabPage_MouseMoveEvent.ResumeLayout(false);
+            this.groupBox20.ResumeLayout(false);
             this.groupBox_RelativeToScreen.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -630,6 +1306,22 @@
             this.groupBox_MouseSpeed.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TrackBar_MouseSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MouseSpeed)).EndInit();
+            this.tabPage_MouseMoveToColour.ResumeLayout(false);
+            this.groupBox23.ResumeLayout(false);
+            this.groupBox22.ResumeLayout(false);
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox21.ResumeLayout(false);
+            this.groupBox19.ResumeLayout(false);
+            this.groupBox19.PerformLayout();
+            this.groupBox18.ResumeLayout(false);
+            this.groupBox18.PerformLayout();
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
+            this.groupBox15.ResumeLayout(false);
+            this.tabPage_MouseClick.ResumeLayout(false);
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -642,17 +1334,12 @@
         private System.Windows.Forms.Button button_MoveEventDown;
         public System.Windows.Forms.ListBox ListBox_Events;
         private System.Windows.Forms.Button button_RemoveEvent;
-        private System.Windows.Forms.Button button_ShowKeyboardEventForm;
-        private System.Windows.Forms.Button button_About;
+        private System.Windows.Forms.Button Button_About;
         public System.Windows.Forms.Label lastActionLabel;
         public System.Windows.Forms.Label statusLabel;
         public System.Windows.Forms.Button registerClickLocationsButton;
         private System.Windows.Forms.Button button_AddRepeatGroup;
         private System.Windows.Forms.NumericUpDown NumericUpDown_RepeatAmount;
-        private System.Windows.Forms.Label repeatGroupLabel;
-        private System.Windows.Forms.Button button_ShowPauseEventForm;
-        private System.Windows.Forms.Button button_ShowMouseMoveForm;
-        private System.Windows.Forms.Button button_ShowMouseClickForm;
         private System.Windows.Forms.MenuStrip MenuStrip_MainForm;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_File;
         private System.Windows.Forms.ToolStripMenuItem saveScriptToolStripMenuItem;
@@ -668,23 +1355,80 @@
         private System.Windows.Forms.GroupBox groupBox_RelativeToScreen;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button button_InsertMouseMoveToAreaEvent;
-        private System.Windows.Forms.Button button_InsertMouseMoveEvent;
+        private System.Windows.Forms.Button Button_InsertMouseMoveToAreaEvent;
+        private System.Windows.Forms.Button Button_InsertMouseMoveEvent;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox TextBox_MousePosY;
-        private System.Windows.Forms.TextBox TextBox_MousePosX;
+        private System.Windows.Forms.TextBox TextBox_MousePosY_1;
+        private System.Windows.Forms.TextBox TextBox_MousePosX_1;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox TextBox_ActiveWindowTitle;
-        private System.Windows.Forms.Button button_InsertMouseMoveToAreaOnWindowEvent;
-        private System.Windows.Forms.Button button_InsertMouseMoveToPointOnWindowEvent;
+        private System.Windows.Forms.TextBox TextBox_ActiveWindowTitle_1;
+        private System.Windows.Forms.Button Button_InsertMouseMoveToAreaOnWindowEvent;
+        private System.Windows.Forms.Button Button_InsertMouseMoveToPointOnWindowEvent;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox TextBox_ActiveWindowMouseY;
-        private System.Windows.Forms.TextBox TextBox_ActiveWindowMouseX;
-        private System.Windows.Forms.Button Button_ColourPreview;
+        private System.Windows.Forms.TextBox TextBox_ActiveWindowMouseY_1;
+        private System.Windows.Forms.TextBox TextBox_ActiveWindowMouseX_1;
+        private System.Windows.Forms.Button Button_ColourPreview2;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Button Button_AddFixedPause;
+        private System.Windows.Forms.NumericUpDown fixedDelayNumberBox;
+        private System.Windows.Forms.Button Button_AddRandomPause;
+        private System.Windows.Forms.NumericUpDown upperRandomDelayNumberBox;
+        private System.Windows.Forms.NumericUpDown lowerRandomDelayNumberBox;
+        private System.Windows.Forms.Button Button_InsertPauseWhileColourExistsInArea;
+        private System.Windows.Forms.Button Button_InsertPauseWhileColourDoesntExistInArea;
+        private System.Windows.Forms.Button Button_InsertPauseWhileColourExistsInAreaOnWindow;
+        private System.Windows.Forms.Button Button_InsertPauseWhileColourDoesntExistInAreaOnWindow;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Button Button_AddSpecialButton;
+        private System.Windows.Forms.RichTextBox RichTextBox_KeyboardEvent;
+        private System.Windows.Forms.ComboBox ComboBox_SpecialKeys;
+        private System.Windows.Forms.Button Button_AddKeypressEvent;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Button Button_InsertRMBUp;
+        private System.Windows.Forms.Button Button_InsertMMBUp;
+        private System.Windows.Forms.Button Button_InsertLMBUp;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.Button Button_InsertRMBDown;
+        private System.Windows.Forms.Button Button_InsertLMBDown;
+        private System.Windows.Forms.Button Button_InsertMMBDown;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button Button_InsertLeftClickEvent;
+        private System.Windows.Forms.Button Button_InsertRightClickEvent;
+        private System.Windows.Forms.Button Buton_InsertMiddleMouseClickEvent;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.Button Button_ColourPreview1;
+        private System.Windows.Forms.TabPage tabPage_MouseMoveToColour;
+        private System.Windows.Forms.GroupBox groupBox15;
+        private System.Windows.Forms.Button Button_InsertColourSearchAreaEvent;
+        private System.Windows.Forms.Button Button_InsertMultiColourSearchAreaWindowEvent;
+        private System.Windows.Forms.Button Button_InsertColourSearchAreaWindowEvent;
+        private System.Windows.Forms.GroupBox groupBox16;
+        private System.Windows.Forms.GroupBox groupBox20;
+        private System.Windows.Forms.GroupBox groupBox21;
+        private System.Windows.Forms.Button Button_ColourPreview3;
+        private System.Windows.Forms.GroupBox groupBox19;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox TextBox_ActiveWindowMouseY_2;
+        private System.Windows.Forms.TextBox TextBox_ActiveWindowMouseX_2;
+        private System.Windows.Forms.GroupBox groupBox18;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox TextBox_ActiveWindowTitle_2;
+        private System.Windows.Forms.GroupBox groupBox17;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox TextBox_MousePosY_2;
+        private System.Windows.Forms.TextBox TextBox_MousePosX_2;
+        private System.Windows.Forms.GroupBox groupBox23;
+        private System.Windows.Forms.GroupBox groupBox22;
     }
 }
 

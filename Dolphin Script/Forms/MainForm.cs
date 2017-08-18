@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using DolphinScript.Lib.ScriptEventClasses;
 
@@ -11,19 +14,58 @@ using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.GlobalVariables;
-using System.Threading;
 
 namespace DolphinScript
 {
     public partial class MainForm : Form
     {
-        // create other form handles
+        // list of special sendkey codes
         //
-        private PauseForm               _PauseFormHandle;
-        private MouseMoveForm           _MouseMoveFormHandle;
-        private KeyPressForm            _KeyPressFormHandle;
-        private MouseClickForm          _MouseClickFormHandle;
-        private InfoForm                _InfoFormHandle;
+        public static List<string> SpecialKeys = new List<string>()
+        {
+            "+",
+            "%",
+            "{LEFT}",
+            "{RIGHT}",
+            "{UP}",
+            "{DOWN}",
+            "{BACKSPACE}",
+            "{BREAK}",
+            "{CAPSLOCK}",
+            "{DELETE}",
+            "{END}",
+            "{ENTER}",
+            "{ESC}",
+            "{HELP}",
+            "{HOME}",
+            "{INSERT}",
+            "{NUMLOCK}",
+            "{PGDN}",
+            "{PGUP}",
+            "{PRTSC}",
+            "{SCROLLLOCK}",
+            "{TAB}",
+            "{F1}",
+            "{F2}",
+            "{F3}",
+            "{F4}",
+            "{F5}",
+            "{F6}",
+            "{F7}",
+            "{F8}",
+            "{F9}",
+            "{F10}",
+            "{F11}",
+            "{F12}",
+            "{F13}",
+            "{F14}",
+            "{F15}",
+            "{F16}",
+            "{ADD}",
+            "{SUBTRACT}",
+            "{MULTIPLY}",
+            "{DIVIDE}"
+        };
         
         /// <summary>
         /// entry point for the program
@@ -32,15 +74,18 @@ namespace DolphinScript
         {
             InitializeComponent();
 
+            // add all keys to the key event combo box
+            //
+            foreach (string key in SpecialKeys)
+                ComboBox_SpecialKeys.Items.Add(key);
+
+            // set the default index for the keys combo box
+            //
+            ComboBox_SpecialKeys.SelectedIndex = 17;
+
             // run the cursor position callback
             //
             Task.Run(() => UpdateMouse());
-
-            _PauseFormHandle = new PauseForm(this);
-            _MouseMoveFormHandle = new MouseMoveForm(this);
-            _KeyPressFormHandle = new KeyPressForm(this);
-            _MouseClickFormHandle = new MouseClickForm(this);
-            _InfoFormHandle = new InfoForm();
         }
 
         /// <summary>
@@ -82,13 +127,6 @@ namespace DolphinScript
             //
             button_StartScript.Enabled = State;
 
-            // display form buttons
-            //
-            button_ShowPauseEventForm.Enabled = State;
-            button_ShowKeyboardEventForm.Enabled = State;
-            button_ShowMouseMoveForm.Enabled = State;
-            button_ShowMouseClickForm.Enabled = State;
-
             // move element buttons
             //
             button_MoveEventUp.Enabled = State;
@@ -102,7 +140,7 @@ namespace DolphinScript
 
             // about button
             //
-            button_About.Enabled = State;
+            Button_About.Enabled = State;
 
             // repeat group toggles
             //
@@ -114,7 +152,7 @@ namespace DolphinScript
         /// clears the contents of the main form listbox and updates it with the items in the event list
         /// </summary>
         /// <param name="mf"></param>
-        public void UpdateListBox(MainForm mf)
+        public void UpdateListBox()
         {
             // clear the listbox
             //
@@ -136,23 +174,31 @@ namespace DolphinScript
             //
             while (!IsDisposed && !Disposing)
             {
-                // update the colour button with the colour of the pixel underneath the cursor position
+                // update the colour buttons with the colour of the pixel underneath the cursor position
                 //
-                Button_ColourPreview.BackColor = GetColorAt(GetCursorPosition());
+                Button_ColourPreview1.BackColor = GetColorAt(GetCursorPosition());
+                Button_ColourPreview2.BackColor = GetColorAt(GetCursorPosition());
+                Button_ColourPreview3.BackColor = GetColorAt(GetCursorPosition());
 
                 // update the position of the cursor in screen coordinates
                 //
-                TextBox_MousePosX.Text = Cursor.Position.X.ToString();
-                TextBox_MousePosY.Text = Cursor.Position.Y.ToString();
+                TextBox_MousePosX_1.Text = Cursor.Position.X.ToString();
+                TextBox_MousePosY_1.Text = Cursor.Position.Y.ToString();
+                TextBox_MousePosX_2.Text = Cursor.Position.X.ToString();
+                TextBox_MousePosY_2.Text = Cursor.Position.Y.ToString();
 
                 // update the active window title box
                 //
-                TextBox_ActiveWindowTitle.Text = GetActiveWindowTitle();
+                TextBox_ActiveWindowTitle_1.Text = GetActiveWindowTitle();
+                TextBox_ActiveWindowTitle_2.Text = GetActiveWindowTitle();
 
                 // update the position of the cursor inside the currently active window
                 //
-                TextBox_ActiveWindowMouseX.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
-                TextBox_ActiveWindowMouseY.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
+                TextBox_ActiveWindowMouseX_1.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
+                TextBox_ActiveWindowMouseY_1.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
+                TextBox_ActiveWindowMouseX_2.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
+                TextBox_ActiveWindowMouseY_2.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
+
 
                 // add a delay to minimise CPU usage
                 //
@@ -219,7 +265,7 @@ namespace DolphinScript
 
                 // update the listbox to show the change
                 //
-                UpdateListBox(this);
+                UpdateListBox();
 
                 // select the item again after it's moved so the user can move it again if needed
                 //
@@ -251,7 +297,7 @@ namespace DolphinScript
 
                 // update the listbox to show the change
                 //
-                UpdateListBox(this);
+                UpdateListBox();
 
                 // select the item again after it's moved so the user can move it again if needed
                 //
@@ -312,7 +358,7 @@ namespace DolphinScript
 
                 // update the listbox to show the changes
                 //
-                UpdateListBox(this);
+                UpdateListBox();
 
                 // select the item next to the one we removed so the user quickly delete multiple events if needed
                 //
@@ -399,7 +445,7 @@ namespace DolphinScript
 
                 // update the listbox to show any changes
                 //
-                UpdateListBox(this);
+                UpdateListBox();
             }
             else
             {
@@ -409,77 +455,6 @@ namespace DolphinScript
             }
         }
         
-        /// <summary>
-        /// shows the pause form window
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_ShowPauseForm_Click(object sender, EventArgs e)
-        {
-            // this if statement prevents multiple windows appearing if one already exists
-            //
-            if (_PauseFormHandle == null || _PauseFormHandle.IsDisposed)
-                _PauseFormHandle = new PauseForm(this);
-            _PauseFormHandle.Show();
-        }
-
-        /// <summary>
-        /// shows the keyboard event form
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_ShowKeyPressForm_Click(object sender, EventArgs e)
-        {
-            // this if statement prevents multiple windows appearing if one already exists
-            //
-            if (_KeyPressFormHandle == null || _KeyPressFormHandle.IsDisposed)
-                _KeyPressFormHandle = new KeyPressForm(this);
-            _KeyPressFormHandle.Show();
-        }
-
-        /// <summary>
-        /// shows the mouse click event form
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_ShowMouseClickForm_Click(object sender, EventArgs e)
-        {
-            // this if statement prevents multiple windows appearing if one already exists
-            //
-            if (_MouseClickFormHandle == null || _MouseClickFormHandle.IsDisposed)
-                _MouseClickFormHandle = new MouseClickForm(this);
-            _MouseClickFormHandle.Show();
-        }
-
-        /// <summary>
-        /// shows the mouse move event form
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_ShowMouseMoveForm_Click(object sender, EventArgs e)
-        {
-            // this if statement prevents multiple windows appearing if one already exists
-            //
-            if (_MouseMoveFormHandle == null || _MouseMoveFormHandle.IsDisposed)
-                _MouseMoveFormHandle = new MouseMoveForm(this);
-
-            _MouseMoveFormHandle.Show();
-        }
-
-        /// <summary>
-        /// shows the information window
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_ShowInfoForm_Click(object sender, EventArgs e)
-        {
-            // this if statement prevents multiple windows appearing if one already exists
-            //
-            if (_InfoFormHandle == null || _InfoFormHandle.IsDisposed)
-                _InfoFormHandle = new InfoForm();
-            _InfoFormHandle.Show();
-        }
-
         /// <summary>
         /// this will be called when the save script button is pressed on the form
         /// </summary>
@@ -663,9 +638,937 @@ namespace DolphinScript
 
             // show the changes in the listbox
             //
-            UpdateListBox(this);
+            UpdateListBox();
+        }
+
+        /// <summary>
+        /// the primary function here is to make sure that the lower bound value doesn't go above the upper bound value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lowerRandomDelayNumberBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (lowerRandomDelayNumberBox.Value > upperRandomDelayNumberBox.Value)
+                // if the lower bound value is above the upper bound value then
+                // add 0.2 to the upper bound value to make it higher than the lower
+                // bound value...
+                //
+                upperRandomDelayNumberBox.Value += (decimal)0.2;
+        }
+
+        /// <summary>
+        /// the primary function here is to make sure that the upper bound value doesn't go below the lower bound value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void upperRandomDelayNumberBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (upperRandomDelayNumberBox.Value < lowerRandomDelayNumberBox.Value)
+                // if the upper bound value is below the lower bound value then
+                // minus 0.2 from the lower bound value to lower than the upper
+                // bound value...
+                //
+                lowerRandomDelayNumberBox.Value -= (decimal)0.2;
+        }
+
+        /// <summary>
+        /// simple information button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_About_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Created by Ryan Sainty @ https://github.com/Lumbridge");
         }
 
         #endregion Form Control Events
+
+        #region Pause Event Buttons
+
+        private void Button_AddFixedPause_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new FixedPause() { DelayDuration = (double)fixedDelayNumberBox.Value });
+
+            UpdateListBox();
+        }
+
+        private void Button_AddRandomPause_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new RandomPauseInRange() { DelayMinimum = (double)lowerRandomDelayNumberBox.Value, DelayMaximum = (double)upperRandomDelayNumberBox.Value });
+
+            UpdateListBox();
+        }
+
+        private void Button_InsertPauseWhileColourExistsInArea_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => PauseWhileColourExistsInAreaLoop());
+        }
+
+        private void Button_InsertPauseWhileColourDoesntExistInArea_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => PauseWhileColourDoesntExistInAreaLoop());
+        }
+
+        private void Button_InsertPauseWhileColourExistsInAreaOnWindow_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => PauseWhileColourExistsInAreaOnWindowLoop());
+        }
+
+        private void Button_InsertPauseWhileColourDoesntExistInAreaOnWindow_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => PauseWhileColourDoesntExistInAreaOnWindowLoop());
+        }
+
+        #endregion
+
+        #region Keyboard Event Buttons
+
+        private void Button_AddSpecialButton_Click(object sender, EventArgs e)
+        {
+            // add the selected special key to the keyboard event text box
+            //
+            RichTextBox_KeyboardEvent.AppendText(ComboBox_SpecialKeys.SelectedItem.ToString());
+        }
+
+        private void Button_AddKeypressEvent_Click(object sender, EventArgs e)
+        {
+            // add the keyboard event to the event list
+            //
+            AllEvents.Add(new KeyboardKeyPress { KeyboardKeys = RichTextBox_KeyboardEvent.Text });
+
+            // update the event list box with the new event
+            //
+            UpdateListBox();
+        }
+
+        #endregion
+
+        #region Mouse Move Button Events
+
+        private void button_InsertMouseMoveEvent_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => MouseMoveToFixedPointLoop());
+        }
+
+        private void button_InsertMouseMoveToAreaEvent_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => MouseMoveToAreaLoop());
+        }
+
+        private void button_InsertMouseMoveToPointOnWindowEvent_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => MouseMoveToPointOnWindowLoop());
+        }
+
+        private void button_InsertMouseMoveToAreaOnWindowEvent_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => MouseMoveToAreaOnWindowLoop());
+        }
+
+        #endregion
+
+        #region Mouse Move To Colour Button Events
+
+        private void Button_InsertColourSearchAreaEvent_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => MouseMoveToColourInAreaLoop());
+        }
+
+        private void Button_InsertColourSearchAreaWindowEvent_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => MouseMoveToColourInAreaOnWindowLoop());
+        }
+
+        private void Button_InsertMultiColourSearchAreaWindowEvent_Click(object sender, EventArgs e)
+        {
+            //Task.Run(() => MouseMoveToMutliColourInAreaOnWindowLoop());
+        }
+
+        #endregion
+
+        #region Mouse Click Button Events
+
+        private void Button_InsertLeftClickEvent_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.Left_Click });
+
+            UpdateListBox();
+        }
+
+        private void Buton_InsertMiddleMouseClickEvent_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.Middle_Click });
+
+            UpdateListBox();
+        }
+
+        private void Button_InsertRightClickEvent_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.Right_Click });
+
+            UpdateListBox();
+        }
+
+        private void Button_InsertLMBDown_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.LMB_Down });
+
+            UpdateListBox();
+        }
+
+        private void Button_InsertMMBDown_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.MMB_Down });
+
+            UpdateListBox();
+        }
+
+        private void Button_InsertRMBDown_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.RMB_Down });
+
+            UpdateListBox();
+        }
+
+        private void Button_InsertLMBUp_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.LMB_Up });
+
+            UpdateListBox();
+        }
+
+        private void Button_InsertMMBUp_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.MMB_Up });
+
+            UpdateListBox();
+        }
+
+        private void Button_InsertRMBUp_Click(object sender, EventArgs e)
+        {
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.RMB_Up });
+
+            UpdateListBox();
+        }
+
+
+        #endregion Mouse Click Button Events
+
+        #region Pause Event Register Loops
+
+        /// <summary>
+        /// this function will be called when the user is registering a
+        /// pause while colour exists in area event, it should be run in a thread
+        /// to prevent the UI from locking up...
+        /// </summary>
+        void PauseWhileColourExistsInAreaLoop()
+        {
+            POINT p1 = new POINT(), p2 = new POINT();
+            Color SearchColour = Color.Empty;
+
+            bool xChosen = false, yChosen = false, colourChosen = false;
+
+            string temp = Button_InsertPauseWhileColourExistsInArea.Text;
+
+            Button_InsertPauseWhileColourExistsInArea.Text = "Selecting area to search... (F5 to cancel).";
+
+            while (xChosen == false)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPosition();
+
+                    xChosen = true;
+
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertPauseWhileColourExistsInArea.Text = temp;
+                    return;
+                }
+
+                while (yChosen == false && xChosen == true)
+                {
+                    p2 = GetCursorPosition();
+
+                    break;
+                }
+            }
+
+            Button_InsertPauseWhileColourExistsInArea.Text = "Selecting colour to search for in area... (F5 to cancel).";
+
+            while (!colourChosen)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    SearchColour = GetColorAt(Cursor.Position);
+                    colourChosen = true;
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertPauseWhileColourExistsInArea.Text = temp;
+                    return;
+                }
+            }
+
+            AllEvents.Add(new PauseWhileColourExistsInArea() { ColourSearchArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+
+            UpdateListBox();
+
+            Button_InsertPauseWhileColourExistsInArea.Text = temp;
+        }
+
+        /// <summary>
+        /// this function will be called when the user is registering a
+        /// pause while colour doesn't exist in area event, it should be run in a thread
+        /// to prevent the UI from locking up...
+        /// </summary>
+        void PauseWhileColourDoesntExistInAreaLoop()
+        {
+            POINT p1 = new POINT(), p2 = new POINT();
+            Color SearchColour = Color.Empty;
+
+            bool xChosen = false, yChosen = false, colourChosen = false;
+
+            string temp = Button_InsertPauseWhileColourDoesntExistInArea.Text;
+
+            Button_InsertPauseWhileColourDoesntExistInArea.Text = "Selecting area to search... (F5 to cancel).";
+
+            while (xChosen == false)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPosition();
+
+                    xChosen = true;
+
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
+                    return;
+                }
+
+                while (yChosen == false && xChosen == true)
+                {
+                    p2 = GetCursorPosition();
+
+                    break;
+                }
+            }
+
+            Button_InsertPauseWhileColourDoesntExistInArea.Text = "Selecting colour to search for in area... (F5 to cancel).";
+
+            while (!colourChosen)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    SearchColour = GetColorAt(Cursor.Position);
+                    colourChosen = true;
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
+                    return;
+                }
+            }
+
+            AllEvents.Add(new PauseWhileColourDoesntExistInArea() { ColourSearchArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+
+            UpdateListBox();
+
+            Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
+        }
+
+        /// <summary>
+        /// this function will be called when the user is registering a
+        /// pause while colour exists in area on window event, it should be run in a thread
+        /// to prevent the UI from locking up...
+        /// </summary>
+        void PauseWhileColourExistsInAreaOnWindowLoop()
+        {
+            POINT p1 = new POINT(), p2 = new POINT();
+            Color SearchColour = Color.Empty;
+
+            bool xChosen = false, yChosen = false, colourChosen = false;
+
+            string temp = Button_InsertPauseWhileColourExistsInAreaOnWindow.Text;
+
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = "Selecting area to search... (F5 to cancel).";
+
+            while (xChosen == false)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    xChosen = true;
+
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
+                    return;
+                }
+
+                while (yChosen == false && xChosen == true)
+                {
+                    p2 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    break;
+                }
+            }
+
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = "Selecting colour to search for in area... (F5 to cancel).";
+
+            while (!colourChosen)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    SearchColour = GetColorAt(Cursor.Position);
+                    colourChosen = true;
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
+                    return;
+                }
+            }
+
+            AllEvents.Add(new PauseWhileColourExistsInAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+
+            UpdateListBox();
+
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
+        }
+
+        /// <summary>
+        /// this function will be called when the user is registering a
+        /// pause while colour doesn't exist in area on window event, it should be run in a thread
+        /// to prevent the UI from locking up...
+        /// </summary>
+        void PauseWhileColourDoesntExistInAreaOnWindowLoop()
+        {
+            POINT p1 = new POINT(), p2 = new POINT();
+            Color SearchColour = Color.Empty;
+
+            bool xChosen = false, yChosen = false, colourChosen = false;
+
+            string temp = Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text;
+
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = "Selecting area to search... (F5 to cancel).";
+
+            while (xChosen == false)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    xChosen = true;
+
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
+                    return;
+                }
+
+                while (yChosen == false && xChosen == true)
+                {
+                    p2 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    break;
+                }
+            }
+
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = "Selecting colour to search for in area... (F5 to cancel).";
+
+            while (!colourChosen)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    SearchColour = GetColorAt(Cursor.Position);
+                    colourChosen = true;
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
+                    return;
+                }
+            }
+
+            AllEvents.Add(new PauseWhileColourDoesntExistInAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+
+            UpdateListBox();
+
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
+        }
+
+        #endregion
+
+        #region Mouse Move Event Register Loops
+
+        void MouseMoveToFixedPointLoop()
+        {
+            POINT p1 = new POINT();
+
+            IsRegistering = true;
+
+            string temp = Button_InsertMouseMoveEvent.Text;
+
+            Button_InsertMouseMoveEvent.Text = "Selecting points to click... (F5 to finish).";
+
+            while (IsRegistering)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPosition();
+
+                    AllEvents.Add(new MouseMove() { CoordsToMoveTo = p1 });
+
+                    UpdateListBox();
+
+                    Thread.Sleep(200);
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertMouseMoveEvent.Text = temp;
+                    IsRegistering = false;
+                    return;
+                }
+            }
+
+            Button_InsertMouseMoveEvent.Text = temp;
+        }
+
+        void MouseMoveToAreaLoop()
+        {
+            POINT p1 = new POINT(), p2 = new POINT();
+
+            IsRegistering = true;
+
+            string temp = Button_InsertMouseMoveToAreaEvent.Text;
+
+            Button_InsertMouseMoveToAreaEvent.Text = "Selecting area to click... (F5 to cancel).";
+
+            while (IsRegistering)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPosition();
+
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+
+                    p2 = GetCursorPosition();
+
+                    AllEvents.Add(new MouseMoveToArea() { ClickArea = new RECT(p1, p2) });
+
+                    UpdateListBox();
+
+                    Thread.Sleep(200);
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertMouseMoveToAreaEvent.Text = temp;
+
+                    IsRegistering = false;
+
+                    return;
+                }
+            }
+
+            Button_InsertMouseMoveToAreaEvent.Text = temp;
+        }
+
+        void MouseMoveToPointOnWindowLoop()
+        {
+            POINT p1 = new POINT();
+
+            IsRegistering = true;
+
+            string temp = Button_InsertMouseMoveToPointOnWindowEvent.Text;
+
+            Button_InsertMouseMoveToPointOnWindowEvent.Text = "Selecting point to click... (F5 to cancel).";
+
+            while (IsRegistering)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    AllEvents.Add(new MouseMoveToPointOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), CoordsToMoveTo = p1 });
+
+                    UpdateListBox();
+
+                    Thread.Sleep(200);
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertMouseMoveToPointOnWindowEvent.Text = temp;
+                    IsRegistering = false;
+                    return;
+                }
+            }
+
+            Button_InsertMouseMoveToPointOnWindowEvent.Text = temp;
+        }
+
+        void MouseMoveToAreaOnWindowLoop()
+        {
+            POINT p1 = new POINT(), p2 = new POINT();
+
+            IsRegistering = true;
+
+            string temp = Button_InsertMouseMoveToAreaOnWindowEvent.Text;
+
+            Button_InsertMouseMoveToAreaOnWindowEvent.Text = "Selecting area to click... (F5 to cancel).";
+
+            while (IsRegistering)
+            {
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+
+                    p2 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    AllEvents.Add(new MouseMoveToAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ClickArea = new RECT(p1, p2) });
+
+                    UpdateListBox();
+
+                    Thread.Sleep(200);
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertMouseMoveToAreaOnWindowEvent.Text = temp;
+
+                    IsRegistering = false;
+
+                    return;
+                }
+            }
+
+            Button_InsertMouseMoveToAreaOnWindowEvent.Text = temp;
+        }
+
+        void MouseMoveToColourInAreaLoop()
+        {
+            POINT p1 = new POINT(), p2 = new POINT();
+            Color SearchColour = Color.White;
+
+            IsRegistering = true;
+
+            string temp = Button_InsertColourSearchAreaEvent.Text;
+
+            Button_InsertColourSearchAreaEvent.Text = "Selecting area to search... (F5 to cancel).";
+
+            while (IsRegistering)
+            {
+                bool ColourPicked = false;
+
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPosition();
+
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+
+                    p2 = GetCursorPosition();
+
+                    Button_InsertColourSearchAreaEvent.Text = "Selecting colour to search for in area... (F5 to cancel).";
+
+                    while (!ColourPicked)
+                    {
+                        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                        {
+                            ColourPicked = true;
+
+                            Button_InsertColourSearchAreaEvent.Text = "Selecting area to search... (F5 to cancel).";
+
+                            SearchColour = GetColorAt(Cursor.Position);
+
+                            AllEvents.Add(new MouseMoveToColour() { ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+
+                            UpdateListBox();
+
+                            Thread.Sleep(200);
+                        }
+                        else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                        {
+                            Button_InsertColourSearchAreaEvent.Text = temp;
+
+                            IsRegistering = false;
+
+                            return;
+                        }
+                    }
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertColourSearchAreaEvent.Text = temp;
+
+                    IsRegistering = false;
+
+                    return;
+                }
+            }
+
+            Button_InsertColourSearchAreaEvent.Text = temp;
+        }
+
+        void MouseMoveToColourInAreaOnWindowLoop()
+        {
+            POINT p1 = new POINT(), p2 = new POINT();
+            Color SearchColour = Color.White;
+
+            IsRegistering = true;
+
+            string temp = Button_InsertColourSearchAreaWindowEvent.Text;
+
+            Button_InsertColourSearchAreaWindowEvent.Text = "Selecting area to search... (F5 to cancel).";
+
+            while (IsRegistering)
+            {
+                bool ColourPicked = false;
+
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+
+                    p2 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+                    Button_InsertColourSearchAreaWindowEvent.Text = "Selecting colour to search for in area... (F5 to cancel).";
+
+                    while (!ColourPicked)
+                    {
+                        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                        {
+                            ColourPicked = true;
+                            Button_InsertColourSearchAreaWindowEvent.Text = "Selecting area to search... (F5 to cancel).";
+
+                            SearchColour = GetColorAt(Cursor.Position);
+
+                            AllEvents.Add(new MouseMoveToColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+
+                            UpdateListBox();
+
+                            Thread.Sleep(200);
+                        }
+                        else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                        {
+                            Button_InsertColourSearchAreaWindowEvent.Text = temp;
+
+                            IsRegistering = false;
+
+                            return;
+                        }
+                    }
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                {
+                    Button_InsertColourSearchAreaWindowEvent.Text = temp;
+
+                    IsRegistering = false;
+
+                    return;
+                }
+            }
+
+            Button_InsertColourSearchAreaWindowEvent.Text = temp;
+        }
+
+        //void MouseMoveToMutliColourInAreaOnWindowLoop()
+        //{
+        //    // will store the colours we will be searching for
+        //    //
+        //    List<int> searchColours = new List<int>();
+
+        //    // will store the two points used for the search area
+        //    //
+        //    POINT p1 = new POINT(), p2 = new POINT();
+
+        //    // will store the screenshot we take of the search area
+        //    //
+        //    Bitmap ColourSelectionScreenshot;
+
+        //    // set global registering to true
+        //    //
+        //    IsRegistering = true;
+
+        //    // these will be used to control register flow later
+        //    //
+        //    bool DonePickingColours = false, AreaPicked = false;
+
+        //    // store the original text of the button we just clicked
+        //    //
+        //    string temp = Button_InsertMultiColourSearchAreaWindowEvent.Text;
+
+        //    // change the button text to show we're currently registering
+        //    //
+        //    Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area to search... (F6 to cancel).";
+
+        //    // register loop
+        //    //
+        //    while (IsRegistering)
+        //    {
+        //        // listen for the left shift key
+        //        //
+        //        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+        //        {
+        //            // store the top left of the search area
+        //            //
+        //            p1 = GetCursorPosition();
+
+        //            // pause here while the user is still holding shift
+        //            //
+        //            while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+
+        //            // store bottom left of search area after user lets go of shift key
+        //            //
+        //            p2 = GetCursorPosition();
+
+        //            // calculate the width and height of the search area
+        //            //
+        //            int w = p2.X - p1.X,
+        //                h = p2.Y - p1.Y;
+
+        //            // change the size of the window to show the search area screenshot
+        //            //
+        //            Size = new Size(Size.Width + w + 10, Size.Height + h + 10);
+
+        //            // set the size of the picture box we're going to use to display the search area
+        //            //
+        //            Picturebox_ColourSelectionArea.Size = new Size(w, h);
+
+        //            // take a screenshot of the search area and store it in our bitmap
+        //            //
+        //            ColourSelectionScreenshot = ScreenshotArea(p1, p2);
+
+        //            // set the picturebox image to the screenshot we took
+        //            //
+        //            Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
+
+        //            // change the button text to show we've moved on to selecting the search colours
+        //            //
+        //            Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting colours to search for in area... (F5 to continue).";
+
+        //            // loop here while we're not done selecting colours to search for
+        //            //
+        //            while (!DonePickingColours)
+        //            {
+        //                // listen for the shift key
+        //                //
+        //                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+        //                {
+        //                    // each time we hit shift key we add the colour under the mouse to the search colours list
+        //                    //
+        //                    searchColours.Add(GetColorAt(Cursor.Position).ToArgb());
+
+        //                    // change the colour we selected on the screenshot to red to show we've added it to the search list
+        //                    //
+        //                    ColourSelectionScreenshot = SetMatchingColourPixels(ColourSelectionScreenshot, searchColours[searchColours.Count - 1], Color.Red);
+
+        //                    // override the original picturebox image with the new one to show the selected colours
+        //                    //
+        //                    Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
+
+        //                    // sleep here so we don't add more than one colour when we press shift once
+        //                    //
+        //                    Thread.Sleep(200);
+        //                }
+        //                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+        //                {
+        //                    // if we click F5 then the colour selection process is marked as complete
+        //                    //
+        //                    DonePickingColours = true;
+
+        //                    // we change the button text to ask the user to choose the area on the window they'd like to search for these colours on
+        //                    //
+        //                    Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area & window to search for colour in.... (Make sure window is top-most)";
+
+        //                    // loop here while the area hasn't been selected
+        //                    //
+        //                    while (!AreaPicked)
+        //                    {
+        //                        // listen for the shift key
+        //                        //
+        //                        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+        //                        {
+        //                            // set the top left of the search area to the point under the mouse
+        //                            //
+        //                            p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+        //                            // wait here while the user holds shift key
+        //                            //
+        //                            while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+
+        //                            // set the bottom right of the search area to the point under the mouse
+        //                            //
+        //                            p2 = GetCursorPositionOnWindow(GetForegroundWindow());
+
+        //                            // set the area marked as complete
+        //                            //
+        //                            AreaPicked = true;
+        //                        }
+        //                    }
+
+        //                    // add the event to the event list
+        //                    //
+        //                    AllEvents.Add(new MouseMoveToMultiColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColours = new List<int>(searchColours) });
+
+        //                    // update the event listbox to show the new event
+        //                    //
+        //                    UpdateListBox();
+
+        //                    // set the button text back to normal
+        //                    //
+        //                    Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
+
+        //                    // set global registering as false
+        //                    //
+        //                    IsRegistering = false;
+
+        //                    // clear the search colours list
+        //                    //
+        //                    searchColours.Clear();
+
+        //                    // we're done here
+        //                    //
+        //                    return;
+        //                }
+        //            }
+        //        }
+        //        else if (GetAsyncKeyState(VirtualKeyStates.VK_F6) < 0)
+        //        {
+        //            //
+        //            // user can cancel the operation early by pressing F6
+        //            //
+
+        //            // set the button text back to normal
+        //            //
+        //            Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
+
+        //            // set global registering as false
+        //            //
+        //            IsRegistering = false;
+
+        //            // we're done here
+        //            //
+        //            return;
+        //        }
+        //    }
+
+        //    // set the button text back to normal if the normal operation fails somehow
+        //    //
+        //    Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
+        //}
+
+        #endregion
     }
 }

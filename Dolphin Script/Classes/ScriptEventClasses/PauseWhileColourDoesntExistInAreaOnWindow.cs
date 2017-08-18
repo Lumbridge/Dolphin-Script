@@ -6,6 +6,7 @@ using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.WindowControl;
 using static DolphinScript.Lib.Backend.GlobalVariables;
+using System.Threading;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
@@ -26,7 +27,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
                 if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
                 {
                     IsRunning = false;
-                    Write("Status: Idle");
                     return;
                 }
 
@@ -40,9 +40,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
                     Task.WaitAll(Task.Delay(100));
                 }
 
-                Write("Search colour not found in search area, Idling for 1 second...");
-
-                Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(1.0)));
+                Thread.Sleep(TimeSpan.FromSeconds(1.0));
 
                 NewSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
             }

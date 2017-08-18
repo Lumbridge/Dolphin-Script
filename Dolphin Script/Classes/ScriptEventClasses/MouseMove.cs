@@ -94,7 +94,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
                 if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
                 {
                     IsRunning = false;
-                    Write("Status: Idle");
                     return;
                 }
 
