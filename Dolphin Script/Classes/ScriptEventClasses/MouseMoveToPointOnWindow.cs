@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.PointReturns;
@@ -8,6 +9,7 @@ using static DolphinScript.Lib.ScriptEventClasses.MouseMove;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class MouseMoveToPointOnWindow : ScriptEvent
     {
         public MouseMoveToPointOnWindow()
@@ -40,7 +42,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + " on " + WindowToClickTitle + " window.";
             else
-                return "[Group " + GroupID + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }
     }
 }

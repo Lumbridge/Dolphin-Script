@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.PointReturns;
@@ -8,6 +9,7 @@ using static DolphinScript.Lib.ScriptEventClasses.MouseMoveToColour;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class MouseMoveToMultiColourOnWindow : ScriptEvent
     {
         public MouseMoveToMultiColourOnWindow()
@@ -40,7 +42,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Move mouse to random pixel matching colour " + SearchColours.ToString() + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
             else
-                return "[Group " + GroupID + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }
     }
 }

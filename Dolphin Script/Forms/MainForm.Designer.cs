@@ -127,6 +127,7 @@
             this.Button_InsertLeftClickEvent = new System.Windows.Forms.Button();
             this.Button_InsertRightClickEvent = new System.Windows.Forms.Button();
             this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
+            this.button_RemoveRepeatGroup = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).BeginInit();
             this.MenuStrip_MainForm.SuspendLayout();
             this.tabControl_ScriptEvents.SuspendLayout();
@@ -169,9 +170,9 @@
             // 
             // button_StartScript
             // 
-            this.button_StartScript.Location = new System.Drawing.Point(12, 141);
+            this.button_StartScript.Location = new System.Drawing.Point(540, 184);
             this.button_StartScript.Name = "button_StartScript";
-            this.button_StartScript.Size = new System.Drawing.Size(522, 37);
+            this.button_StartScript.Size = new System.Drawing.Size(56, 55);
             this.button_StartScript.TabIndex = 0;
             this.button_StartScript.Text = "Start Script";
             this.button_StartScript.UseVisualStyleBackColor = true;
@@ -184,7 +185,7 @@
             this.ListBox_Events.Location = new System.Drawing.Point(12, 27);
             this.ListBox_Events.Name = "ListBox_Events";
             this.ListBox_Events.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.ListBox_Events.Size = new System.Drawing.Size(522, 108);
+            this.ListBox_Events.Size = new System.Drawing.Size(522, 212);
             this.ListBox_Events.TabIndex = 1;
             this.ListBox_Events.SelectedIndexChanged += new System.EventHandler(this.ListBox_Events_SelectedIndexChanged);
             // 
@@ -213,7 +214,7 @@
             // statusLabel
             // 
             this.statusLabel.AutoSize = true;
-            this.statusLabel.Location = new System.Drawing.Point(12, 619);
+            this.statusLabel.Location = new System.Drawing.Point(12, 685);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(60, 13);
             this.statusLabel.TabIndex = 14;
@@ -222,7 +223,7 @@
             // lastActionLabel
             // 
             this.lastActionLabel.AutoSize = true;
-            this.lastActionLabel.Location = new System.Drawing.Point(12, 606);
+            this.lastActionLabel.Location = new System.Drawing.Point(12, 672);
             this.lastActionLabel.Name = "lastActionLabel";
             this.lastActionLabel.Size = new System.Drawing.Size(103, 13);
             this.lastActionLabel.TabIndex = 15;
@@ -255,7 +256,7 @@
             this.button_AddRepeatGroup.Name = "button_AddRepeatGroup";
             this.button_AddRepeatGroup.Size = new System.Drawing.Size(42, 24);
             this.button_AddRepeatGroup.TabIndex = 8;
-            this.button_AddRepeatGroup.Text = "RG";
+            this.button_AddRepeatGroup.Text = "ARG";
             this.button_AddRepeatGroup.UseVisualStyleBackColor = true;
             this.button_AddRepeatGroup.Click += new System.EventHandler(this.repeatGroupButton_Click);
             // 
@@ -321,7 +322,7 @@
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseMoveEvent);
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseMoveToColour);
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseClick);
-            this.tabControl_ScriptEvents.Location = new System.Drawing.Point(12, 184);
+            this.tabControl_ScriptEvents.Location = new System.Drawing.Point(12, 250);
             this.tabControl_ScriptEvents.Name = "tabControl_ScriptEvents";
             this.tabControl_ScriptEvents.SelectedIndex = 0;
             this.tabControl_ScriptEvents.Size = new System.Drawing.Size(588, 419);
@@ -1254,11 +1255,22 @@
             this.Buton_InsertMiddleMouseClickEvent.UseVisualStyleBackColor = true;
             this.Buton_InsertMiddleMouseClickEvent.Click += new System.EventHandler(this.Buton_InsertMiddleMouseClickEvent_Click);
             // 
+            // button_RemoveRepeatGroup
+            // 
+            this.button_RemoveRepeatGroup.Location = new System.Drawing.Point(602, 99);
+            this.button_RemoveRepeatGroup.Name = "button_RemoveRepeatGroup";
+            this.button_RemoveRepeatGroup.Size = new System.Drawing.Size(42, 24);
+            this.button_RemoveRepeatGroup.TabIndex = 48;
+            this.button_RemoveRepeatGroup.Text = "RRG";
+            this.button_RemoveRepeatGroup.UseVisualStyleBackColor = true;
+            this.button_RemoveRepeatGroup.Click += new System.EventHandler(this.button_RemoveRepeatGroup_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 643);
+            this.ClientSize = new System.Drawing.Size(653, 707);
+            this.Controls.Add(this.button_RemoveRepeatGroup);
             this.Controls.Add(this.tabControl_ScriptEvents);
             this.Controls.Add(this.MenuStrip_MainForm);
             this.Controls.Add(this.NumericUpDown_RepeatAmount);
@@ -1429,6 +1441,7 @@
         private System.Windows.Forms.TextBox TextBox_MousePosX_2;
         private System.Windows.Forms.GroupBox groupBox23;
         private System.Windows.Forms.GroupBox groupBox22;
+        private System.Windows.Forms.Button button_RemoveRepeatGroup;
     }
 }
 

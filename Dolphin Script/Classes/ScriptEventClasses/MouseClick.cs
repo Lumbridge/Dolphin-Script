@@ -8,6 +8,7 @@ using static DolphinScript.Lib.Backend.WinAPI;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class MouseClick : ScriptEvent
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
@@ -90,9 +91,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)
-                return MouseButton + ".";
+                return "Mouse Click: " + MouseButton + ".";
             else
-                return "[Group " + GroupID + "] " + MouseButton + ".";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Mouse Click:  " + MouseButton + ".";
         }
 
         static public void RightClick()

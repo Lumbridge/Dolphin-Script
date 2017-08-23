@@ -1,10 +1,12 @@
-﻿using static DolphinScript.Lib.Backend.WinAPI;
+﻿using System;
+using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.PointReturns;
 
 using static DolphinScript.Lib.ScriptEventClasses.MouseMove;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class MouseMoveToArea : ScriptEvent
     {
         public MouseMoveToArea()
@@ -29,7 +31,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Move mouse to random point in area " + ClickArea.PrintArea() + ".";
             else
-                return "[Group " + GroupID + "] Move mouse to random point in area " + ClickArea.PrintArea() + ".";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + ".";
         }
     }
 }

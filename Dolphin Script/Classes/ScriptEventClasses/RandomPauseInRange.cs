@@ -6,6 +6,7 @@ using static DolphinScript.Lib.Backend.GlobalVariables;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class RandomPauseInRange : ScriptEvent
     {
         public RandomPauseInRange()
@@ -27,7 +28,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
             else
-                return "[Group " + GroupID + "] Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
         }
     }
 }

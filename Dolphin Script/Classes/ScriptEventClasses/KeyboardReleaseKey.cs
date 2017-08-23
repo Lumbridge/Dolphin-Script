@@ -2,6 +2,7 @@
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class KeyboardReleaseKey : ScriptEvent
     {
         public KeyboardReleaseKey()

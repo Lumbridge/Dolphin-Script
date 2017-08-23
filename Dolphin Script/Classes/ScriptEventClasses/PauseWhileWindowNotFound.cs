@@ -6,6 +6,7 @@ using static DolphinScript.Lib.Backend.WindowControl;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class PauseWhileWindowNotFound : ScriptEvent
     {
         public PauseWhileWindowNotFound()
@@ -27,7 +28,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Pause while window " + WindowTitle + " can't be found.";
             else
-                return "[Group " + GroupID + "] Pause while window " + WindowTitle + " can't be found.";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Pause while window " + WindowTitle + " can't be found.";
         }
     }
 }

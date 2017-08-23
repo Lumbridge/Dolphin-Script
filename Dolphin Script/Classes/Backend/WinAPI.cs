@@ -96,6 +96,7 @@ namespace DolphinScript.Lib.Backend
         /// <summary>
         /// struct used to store a rect area, offers extra functionality
         /// </summary>
+        [Serializable]
         public struct RECT
         {
             public int Left;
@@ -135,15 +136,6 @@ namespace DolphinScript.Lib.Backend
             }
 
             /// <summary>
-            /// returns a string suitable for storing to configuration file
-            /// </summary>
-            /// <returns></returns>
-            public string GetConfigString()
-            {
-                return "A" + Top + "B" + Left + "C" + Bottom + "D" + Right + "E";
-            }
-
-            /// <summary>
             /// prints the area of the rect
             /// </summary>
             /// <returns></returns>
@@ -152,19 +144,15 @@ namespace DolphinScript.Lib.Backend
                 return "Top-Left XY: " + Left + ", " + Top + " Bottom-Right XY: " + Right + ", " + Bottom;
             }
         }
-        
+
         /// <summary>
         /// this struct is used to store a point, also offers extra functionality
         /// </summary>
+        [Serializable]
         public struct POINT
         {
             public int X;
             public int Y;
-
-            public string GetConfigString()
-            {
-                return "A" + X + "B" + Y + "C";
-            }
             
             /// <summary>
             /// POINT constructor takes two ints which are the x and y position of the coordinate

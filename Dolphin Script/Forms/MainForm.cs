@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using DolphinScript.Lib.ScriptEventClasses;
+using System.Runtime.Serialization.Formatters.Binary;
 
-using static DolphinScript.Lib.ScriptEventClasses.ScriptEvent;
+using DolphinScript.Lib.ScriptEventClasses;
 
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.ColourEvent;
@@ -101,10 +101,34 @@ namespace DolphinScript
                 //
                 foreach (var ev in AllEvents)
                 {
-                    // each script event has overriden the DoEvent method so each
-                    // script event completes their own DoEvent method before the next one is carried out
+                    // check if the event if part of a repeat group
                     //
-                    ev.DoEvent();
+                    if (ev.IsPartOfGroup && ev.EventsInGroup.IndexOf(ev) == 0)
+                    {
+                        for (int i = 0; i < ev.NumberOfCycles; i++)
+                        {
+                            // do each subevent in the group list
+                            //
+                            foreach (var subEvent in ev.EventsInGroup)
+                            {
+                                // call overriden do method
+                                //
+                                subEvent.DoEvent();
+                            }
+                        }
+                    }
+                    else if (ev.IsPartOfGroup && ev.EventsInGroup.IndexOf(ev) != 0)
+                    {
+                        // skip the event because it was completed by the group loop
+                        //
+                    }
+                    else
+                    {
+                        // each script event has overriden the DoEvent method so each
+                        // script event completes their own DoEvent method before the next one is carried out
+                        //
+                        ev.DoEvent();
+                    }
                 }
             }
 
@@ -170,40 +194,44 @@ namespace DolphinScript
         /// <returns></returns>
         private void UpdateMouse()
         {
-            // stop updating if the form is being disposed
-            //
-            while (!IsDisposed && !Disposing)
+            try
             {
-                // update the colour buttons with the colour of the pixel underneath the cursor position
+                // stop updating if the form is being disposed
                 //
-                Button_ColourPreview1.BackColor = GetColorAt(GetCursorPosition());
-                Button_ColourPreview2.BackColor = GetColorAt(GetCursorPosition());
-                Button_ColourPreview3.BackColor = GetColorAt(GetCursorPosition());
+                while (!IsDisposed && !Disposing)
+                {
+                    // update the colour buttons with the colour of the pixel underneath the cursor position
+                    //
+                    Button_ColourPreview1.BackColor = GetColorAt(GetCursorPosition());
+                    Button_ColourPreview2.BackColor = GetColorAt(GetCursorPosition());
+                    Button_ColourPreview3.BackColor = GetColorAt(GetCursorPosition());
 
-                // update the position of the cursor in screen coordinates
-                //
-                TextBox_MousePosX_1.Text = Cursor.Position.X.ToString();
-                TextBox_MousePosY_1.Text = Cursor.Position.Y.ToString();
-                TextBox_MousePosX_2.Text = Cursor.Position.X.ToString();
-                TextBox_MousePosY_2.Text = Cursor.Position.Y.ToString();
+                    // update the position of the cursor in screen coordinates
+                    //
+                    TextBox_MousePosX_1.Text = Cursor.Position.X.ToString();
+                    TextBox_MousePosY_1.Text = Cursor.Position.Y.ToString();
+                    TextBox_MousePosX_2.Text = Cursor.Position.X.ToString();
+                    TextBox_MousePosY_2.Text = Cursor.Position.Y.ToString();
 
-                // update the active window title box
-                //
-                TextBox_ActiveWindowTitle_1.Text = GetActiveWindowTitle();
-                TextBox_ActiveWindowTitle_2.Text = GetActiveWindowTitle();
+                    // update the active window title box
+                    //
+                    TextBox_ActiveWindowTitle_1.Text = GetActiveWindowTitle();
+                    TextBox_ActiveWindowTitle_2.Text = GetActiveWindowTitle();
 
-                // update the position of the cursor inside the currently active window
-                //
-                TextBox_ActiveWindowMouseX_1.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
-                TextBox_ActiveWindowMouseY_1.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
-                TextBox_ActiveWindowMouseX_2.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
-                TextBox_ActiveWindowMouseY_2.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
+                    // update the position of the cursor inside the currently active window
+                    //
+                    TextBox_ActiveWindowMouseX_1.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
+                    TextBox_ActiveWindowMouseY_1.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
+                    TextBox_ActiveWindowMouseX_2.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
+                    TextBox_ActiveWindowMouseY_2.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
 
 
-                // add a delay to minimise CPU usage
-                //
-                Thread.Sleep(50);
+                    // add a delay to minimise CPU usage
+                    //
+                    Thread.Sleep(50);
+                }
             }
+            catch{ }
         }
 
         #region Form Control Events
@@ -420,29 +448,40 @@ namespace DolphinScript
             //
             if (ListBox_Events.SelectedIndices.Count > 1)
             {
-                // loop through all the selected items
+                // add a new list of script events to the all groups list
                 //
-                foreach (var index in ListBox_Events.SelectedIndices)
-                {
-                    int i = (int)index;
+                AllGroups.Add(new List<ScriptEvent>());
 
-                    // mark this event as part of a group
+                // loop through all the selected events in the listbox
+                //
+                for (int i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count + ListBox_Events.SelectedIndex; i++)
+                {
+                    // set the event as part of a group
                     //
                     AllEvents[i].IsPartOfGroup = true;
 
-                    // mark this event with a group id
+                    // set the group ID of the selected event
                     //
                     AllEvents[i].GroupID = AllGroups.Count;
 
-                    // mark the number of cycles the group will do before moving ahead
+                    // set the number of times the group is going to repeat
                     //
                     AllEvents[i].NumberOfCycles = (int)NumericUpDown_RepeatAmount.Value;
-
-                    // add the group to the group list
+                    
+                    // add the event to the all groups sub-list
                     //
-                    AllGroups[AllEvents[i].GroupID].Add(AllEvents[i]);
+                    AllGroups[AllGroups.Count - 1].Add(AllEvents[i]);
                 }
 
+                // loop through all the selected events again
+                //
+                for (int i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count + ListBox_Events.SelectedIndex; i++)
+                {
+                    // update their events in group list
+                    //
+                    AllEvents[i].EventsInGroup = AllGroups[AllGroups.Count - 1];
+                }
+                
                 // update the listbox to show any changes
                 //
                 UpdateListBox();
@@ -454,7 +493,12 @@ namespace DolphinScript
                 MessageBox.Show("Select more than 1 item to create a group.");
             }
         }
-        
+
+        private void button_RemoveRepeatGroup_Click(object sender, EventArgs e)
+        {
+
+        }
+
         /// <summary>
         /// this will be called when the save script button is pressed on the form
         /// </summary>
@@ -496,12 +540,16 @@ namespace DolphinScript
 
             if(result == DialogResult.OK)
             {
-                using (StreamWriter writer = new StreamWriter(sfd.FileName))
+                using (Stream s = File.Open(sfd.FileName, FileMode.Create))
                 {
-                    // use overriden save config string method on each script event in the list to save them to the file
-                    //
-                    foreach (var ev in AllEvents)
-                        writer.Write(ev.SaveConfigString());
+                    BinaryFormatter b = new BinaryFormatter();
+
+                    b.Serialize(s, AllEvents);
+
+                    //// use overriden save config string method on each script event in the list to save them to the file
+                    ////
+                    //foreach (var ev in AllEvents)
+                    //    writer.Write(ev.SaveConfigString());
                 }
             }
         }
@@ -543,96 +591,11 @@ namespace DolphinScript
 
             if(result == DialogResult.OK)
             {
-                // get all lines in the file
-                //
-                string[] lines = File.ReadAllLines(ofd.FileName);
-
-                // get everything after the equals symbol on the parse line
-                //
-                for (int l = 0; l < lines.Length; l++)
+                using (Stream s = File.Open(ofd.FileName, FileMode.Open))
                 {
-                    if (lines[l].Contains("="))
-                    {
-                        lines[l] = lines[l].Substring(lines[l].LastIndexOf('=') + 1);
-                    }
-                }
+                    BinaryFormatter b = new BinaryFormatter();
 
-                // we have to go through all the lines of the config file and save the events to the event list
-                //
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    // every 18 lines we'll find a script event title & the next 17 lines
-                    // will be the configuration for that particular script event e.g. click event mouse button, mouse move coordinates etc..
-                    //
-                    if (i % 19 == 0)
-                    {
-                        //
-                        // check the script event title on this line and create a new object depending on the name of the scrip event we found
-                        //
-
-                        if (lines[i] == Event.Mouse_Move.ToString())
-                            AllEvents.Add(new MouseMove());
-                        else if (lines[i] == Event.Mouse_Move_To_Area.ToString())
-                            AllEvents.Add(new MouseMoveToArea());
-                        else if (lines[i] == Event.Mouse_Move_To_Point_On_Window.ToString())
-                            AllEvents.Add(new MouseMoveToPointOnWindow());
-                        else if (lines[i] == Event.Mouse_Move_To_Area_On_Window.ToString())
-                            AllEvents.Add(new MouseMoveToAreaOnWindow());
-                        else if (lines[i] == Event.Mouse_Move_To_Colour.ToString())
-                            AllEvents.Add(new MouseMoveToColour());
-                        else if (lines[i] == Event.Mouse_Move_To_Colour_On_Window.ToString())
-                            AllEvents.Add(new MouseMoveToColourOnWindow());
-                        else if (lines[i] == Event.Mouse_Move_To_Multi_Colour_On_Window.ToString())
-                            AllEvents.Add(new MouseMoveToMultiColourOnWindow());
-                        else if (lines[i] == Event.Random_Pause_In_Range.ToString())
-                            AllEvents.Add(new RandomPauseInRange());
-                        else if (lines[i] == Event.Fixed_Pause.ToString())
-                            AllEvents.Add(new FixedPause());
-                        else if (lines[i] == Event.Pause_While_Colour_Exists_In_Area.ToString())
-                            AllEvents.Add(new PauseWhileColourExistsInArea());
-                        else if (lines[i] == Event.Pause_While_Colour_Doesnt_Exist_In_Area_On_Window.ToString())
-                            AllEvents.Add(new PauseWhileColourExistsInAreaOnWindow());
-                        else if (lines[i] == Event.Pause_While_Colour_Doesnt_Exist_In_Area.ToString())
-                            AllEvents.Add(new PauseWhileColourDoesntExistInArea());
-                        else if (lines[i] == Event.Pause_While_Colour_Doesnt_Exist_In_Area_On_Window.ToString())
-                            AllEvents.Add(new PauseWhileColourDoesntExistInAreaOnWindow());
-                        else if (lines[i] == Event.Pause_While_Window_Not_Found.ToString())
-                            AllEvents.Add(new PauseWhileWindowNotFound());
-                        else if (lines[i] == Event.Keyboard_Keypress.ToString())
-                            AllEvents.Add(new KeyboardKeyPress());
-                        else if (lines[i] == Event.Move_Window_To_Front.ToString())
-                            AllEvents.Add(new MoveWindowToFront());
-                        else if (lines[i].Contains("_Click") || lines[i].Contains("_Down") || lines[i].Contains("_Up"))
-                            AllEvents.Add(new MouseClick());
-
-                        //
-                        // add the 18 lines of configuration to the object we created 
-                        //
-
-                        // create this so we don't have to write "AllEvents.Count - 1" multiple times
-                        //
-                        int c = AllEvents.Count - 1;
-
-                        AllEvents[c].EventType              = (Event)Enum.Parse(typeof(Event), lines[i]);
-                        AllEvents[c].WindowToClickHandle    = (IntPtr)int.Parse(lines[i + 1]);
-                        AllEvents[c].WindowToClickLocation  = ConfigStringToRECT(lines[i + 2]);
-                        AllEvents[c].WindowToClickTitle     = lines[i + 3];
-                        AllEvents[c].CoordsToMoveTo         = ConfigStringToPOINT(lines[i + 4]);
-                        AllEvents[c].ClickArea              = ConfigStringToRECT(lines[i + 5]);
-                        AllEvents[c].MouseButton            = (VirtualMouseStates)Enum.Parse(typeof(VirtualMouseStates), lines[i + 6]);
-                        AllEvents[c].KeyboardKeys           = lines[i + 7];
-                        AllEvents[c].DelayDuration          = double.Parse(lines[i + 8]);
-                        AllEvents[c].DelayMinimum           = double.Parse(lines[i + 9]);
-                        AllEvents[c].DelayMaximum           = double.Parse(lines[i + 10]);
-                        AllEvents[c].SearchColour           = int.Parse(lines[i + 11]);
-                        AllEvents[c].SearchColours          = ConfigStringToList(lines[i + 12]);
-                        AllEvents[c].ColourSearchArea       = ConfigStringToRECT(lines[i + 13]);
-                        AllEvents[c].ColourWasFound         = bool.Parse(lines[i + 14]);
-                        AllEvents[c].EventsInGroup          = new System.Collections.Generic.List<ScriptEvent>();
-                        AllEvents[c].IsPartOfGroup          = bool.Parse(lines[i + 16]);
-                        AllEvents[c].GroupID                = int.Parse(lines[i + 17]);
-                        AllEvents[c].NumberOfCycles         = int.Parse(lines[i + 18]);
-                    }
+                    AllEvents = (List<ScriptEvent>)b.Deserialize(s);
                 }
             }
 

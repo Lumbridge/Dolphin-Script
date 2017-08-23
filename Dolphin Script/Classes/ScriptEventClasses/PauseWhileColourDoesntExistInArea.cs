@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 
 using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.GlobalVariables;
@@ -8,6 +7,7 @@ using static DolphinScript.Lib.Backend.WinAPI;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class PauseWhileColourDoesntExistInArea : ScriptEvent
     {
         public PauseWhileColourDoesntExistInArea()
@@ -34,7 +34,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
             else
-                return "[Group " + GroupID + "] Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
         }
     }
 }

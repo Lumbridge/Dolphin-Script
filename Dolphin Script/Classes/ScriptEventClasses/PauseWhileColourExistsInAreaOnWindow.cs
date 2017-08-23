@@ -9,6 +9,7 @@ using static DolphinScript.Lib.Backend.GlobalVariables;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class PauseWhileColourExistsInAreaOnWindow : ScriptEvent
     {
         public PauseWhileColourExistsInAreaOnWindow()
@@ -53,7 +54,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
             else
-                return "[Group " + GroupID + "] Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
 
         }
     }

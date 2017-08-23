@@ -1,8 +1,11 @@
-﻿using static DolphinScript.Lib.Backend.GlobalVariables;
+﻿using System;
+
+using static DolphinScript.Lib.Backend.GlobalVariables;
 using static DolphinScript.Lib.Backend.WindowControl;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class MoveWindowToFront : ScriptEvent
     {
         public MoveWindowToFront()
@@ -20,7 +23,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Move " + WindowTitle + " window to front.";
             else
-                return "[Group " + GroupID + "] Move " + WindowTitle + " window to front.";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move " + WindowTitle + " window to front.";
         }
     }
 }

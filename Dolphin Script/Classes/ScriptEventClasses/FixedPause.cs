@@ -3,6 +3,7 @@ using System.Threading;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class FixedPause : ScriptEvent
     {
         public FixedPause()
@@ -20,7 +21,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Fixed Pause for " + DelayDuration + " seconds.";
             else
-                return "[Group " + GroupID + "] Fixed Pause for " + DelayDuration + " seconds.";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Fixed Pause for " + DelayDuration + " seconds.";
         }
     }
 }

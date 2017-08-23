@@ -10,6 +10,7 @@ using static DolphinScript.Lib.Backend.GlobalVariables;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    [Serializable]
     class MouseMove : ScriptEvent
     {
         [DllImport("User32.Dll")]
@@ -167,7 +168,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             if (GroupID == -1)
                 return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
             else
-                return "[Group " + GroupID + "] Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
+                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
         }
     }
 }
