@@ -1,17 +1,16 @@
 ﻿using System;
 
+using static DolphinScript.Lib.Backend.Common;
+
 namespace DolphinScript.Lib.ScriptEventClasses
 {
     [Serializable]
     class KeyboardHoldKey : ScriptEvent
     {
-        public KeyboardHoldKey()
-        {
-            EventType = Event.Keyboard_HoldKey;
-        }
-
         public override void DoEvent()
         {
+            Status = $"";
+
             throw new NotImplementedException();
         }
 

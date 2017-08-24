@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.RandomNumber;
 using static DolphinScript.Lib.Backend.MouseMoveMath;
-using static DolphinScript.Lib.Backend.Common;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
@@ -25,11 +25,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
             _MaxWait = 15.0,
             _MaxStep = 10.0,
             _TargetArea = 15.0;
-
-        public MouseMove()
-        {
-            EventType = Event.Mouse_Move;
-        }
 
         /// <summary>
         /// moves the mouse from it's current location to the end point passed in
@@ -150,10 +145,12 @@ namespace DolphinScript.Lib.ScriptEventClasses
         }
 
         /// <summary>
-        /// overriden event method, moves the mouse to this event's position to move to
+        /// main overriden method used to perform this script event
         /// </summary>
         public override void DoEvent()
         {
+            Status = $"Mouse move: {CoordsToMoveTo.ToString()}.";
+
             MoveMouse(CoordsToMoveTo);
         }
 

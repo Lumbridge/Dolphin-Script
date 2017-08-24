@@ -1,17 +1,16 @@
 ﻿using System;
 
+using static DolphinScript.Lib.Backend.Common;
+
 namespace DolphinScript.Lib.ScriptEventClasses
 {
     [Serializable]
     class KeyboardReleaseKey : ScriptEvent
     {
-        public KeyboardReleaseKey()
-        {
-            EventType = Event.Keyboard_ReleaseKey;
-        }
-
         public override void DoEvent()
         {
+            Status = $"";
+
             throw new NotImplementedException();
         }
 

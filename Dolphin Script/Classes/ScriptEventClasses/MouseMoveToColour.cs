@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.RandomNumber;
@@ -12,11 +13,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
     [Serializable]
     class MouseMoveToColour : ScriptEvent
     {
-        public MouseMoveToColour()
-        {
-            EventType = Event.Mouse_Move_To_Colour;
-        }
-
         /// <summary>
         /// Moves mouse to a colour in a given search area
         /// </summary>
@@ -46,8 +42,13 @@ namespace DolphinScript.Lib.ScriptEventClasses
             }
         }
 
+        /// <summary>
+        /// main overriden method used to perform this script event
+        /// </summary>
         public override void DoEvent()
         {
+            Status = $"Mouse move to colour: {SearchColour} in area: {ColourSearchArea.PrintArea()}.";
+
             MoveMouseToColour(ColourSearchArea, SearchColour);
         }
 

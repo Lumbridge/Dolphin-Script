@@ -9,20 +9,18 @@ namespace DolphinScript.Lib.ScriptEventClasses
     [Serializable]
     class PauseWhileWindowNotFound : ScriptEvent
     {
-        public PauseWhileWindowNotFound()
-        {
-            EventType = Event.Pause_While_Window_Not_Found;
-        }
-
+        /// <summary>
+        /// main overriden method used to perform this script event
+        /// </summary>
         public override void DoEvent()
         {
             while (!WindowExists(WindowClass, WindowTitle))
             {
                 // update the global status string
                 //
-                Status = $"Search window not found, waiting {ReSearchPause} seconds before searching again.";
+                Status = $"Pause while window: {WindowToClickTitle} not found, waiting {ReSearchPause} seconds before searching again.";
 
-                // wait for 0.5 seconds before continuing
+                // wait before continuing
                 //
                 Thread.Sleep(TimeSpan.FromSeconds(ReSearchPause));
             }

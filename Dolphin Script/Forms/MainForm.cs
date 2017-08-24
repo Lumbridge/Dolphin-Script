@@ -5,15 +5,15 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
 using System.Runtime.Serialization.Formatters.Binary;
 
 using DolphinScript.Lib.ScriptEventClasses;
 
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.PointReturns;
-using static DolphinScript.Lib.Backend.Common;
+using static DolphinScript.Lib.Backend.WindowControl;
 
 namespace DolphinScript
 {

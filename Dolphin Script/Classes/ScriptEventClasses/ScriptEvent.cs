@@ -2,66 +2,48 @@
 using System.Collections.Generic;
 
 using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.Common;
+using static DolphinScript.Lib.Backend.WindowControl;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
     [Serializable]
     abstract class ScriptEvent
     {
-        public enum Event
-        {
-            // movement
-            Mouse_Move,
-            Mouse_Move_To_Area,
-            Mouse_Move_To_Point_On_Window,
-            Mouse_Move_To_Area_On_Window,
-            Mouse_Move_To_Colour,
-            Mouse_Move_To_Colour_On_Window,
-            Mouse_Move_To_Multi_Colour_On_Window,
-            // left mouse clicks
-            Mouse_Left_Click,
-            Mouse_Left_Down,
-            Mouse_Left_UP,
-            // right mouse clicks
-            Mouse_Right_Click,
-            Mouse_Right_Down,
-            Mouse_Right_Up,
-            // middle mouse clicks
-            Mouse_Middle_Click,
-            Mouse_Middle_Down,
-            Mouse_Middle_Up,
-            // pauses/delays/idles
-            Random_Pause_In_Range,
-            Fixed_Pause,
-            Pause_While_Colour_Exists_In_Area,
-            Pause_While_Colour_Exists_In_Area_On_Window,
-            Pause_While_Colour_Doesnt_Exist_In_Area,
-            Pause_While_Colour_Doesnt_Exist_In_Area_On_Window,
-            Pause_While_Window_Not_Found,
-            // keyboard event
-            Keyboard_Keypress,
-            Keyboard_HoldKey,
-            Keyboard_ReleaseKey,
-            // antiban event
-            Anti_ban,
-            // window event
-            Move_Window_To_Front,
-            // default assignment state
-            None
-        }
+        private IntPtr windowHandle;
+        private RECT windowRECT;
 
         // mandatory override methods
         //
         public abstract void DoEvent();
         public abstract string GetEventListBoxString();
 
-        // generic event variable
-        public Event EventType { get; set; }
+        // gets the window handle by title (because handle ID can change often)
+        //
+        public IntPtr WindowToClickHandle
+        {
+            get
+            {
+                windowHandle = FindWindow(null, WindowToClickTitle);
+                return windowHandle;
+            }
+            set { windowHandle = value; }
+        }
 
-        // For clicking a point/area on a specific window
-        public IntPtr WindowToClickHandle { get; set; }
-        public RECT WindowToClickLocation { get; set; }
+        // gets the window location (because the window can move/scale often)
+        //
+        public RECT WindowToClickLocation
+        {
+            get
+            {
+                GetWindowRect(WindowToClickHandle, ref windowRECT);
+                return windowRECT;
+            }
+            set { windowRECT = value; }
+        }
+
+        // gets/sets the title of the window, if the name of the window changes then the event will break
+        // window title can change but it's the most consistent window feature we can use to get the handle and location of the window
+        //
         public string WindowToClickTitle { get; set; }
 
         // fixed click position
@@ -95,7 +77,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
         public ScriptEvent()
         {
-            EventType = Event.None;
             WindowToClickHandle = IntPtr.Zero;
             WindowToClickLocation = new RECT();
             WindowToClickTitle = "NoWindow";

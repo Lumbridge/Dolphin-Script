@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.WindowControl;
@@ -12,11 +12,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
     [Serializable]
     class MouseMoveToAreaOnWindow : ScriptEvent
     {
-        public MouseMoveToAreaOnWindow()
-        {
-            EventType = Event.Mouse_Move_To_Area_On_Window;
-        }
-
         static public void MoveMouseToAreaOnWindow(RECT ClickArea)
         {
             POINT EndPoint = GetRandomPointInArea(ClickArea);
@@ -24,18 +19,14 @@ namespace DolphinScript.Lib.ScriptEventClasses
             MoveMouse(EndPoint); // move mouse to picked pixel
         }
 
+        /// <summary>
+        /// main overriden method used to perform this script event
+        /// </summary>
         public override void DoEvent()
         {
-            // make sure window is not minimised
-            while (GetForegroundWindow() != WindowToClickHandle)
-            {
-                // un-minimises window
-                ShowWindowAsync(WindowToClickHandle, SW_SHOWNORMAL);
-                // sets window to front
-                SetForegroundWindow(WindowToClickHandle);
-                // small delay to prevent click area errors
-                Task.WaitAll(Task.Delay(1));
-            }
+            Status = $"Mouse move to area: {ClickArea.PrintArea()} on window: {WindowToClickTitle}.";
+
+            BringEventWindowToFront(this);
 
             // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
             RECT NewClickArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);

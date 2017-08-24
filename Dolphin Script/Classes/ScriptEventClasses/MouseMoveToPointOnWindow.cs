@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.WindowControl;
@@ -12,23 +12,14 @@ namespace DolphinScript.Lib.ScriptEventClasses
     [Serializable]
     class MouseMoveToPointOnWindow : ScriptEvent
     {
-        public MouseMoveToPointOnWindow()
-        {
-            EventType = Event.Mouse_Move_To_Point_On_Window;
-        }
-
+        /// <summary>
+        /// main overriden method used to perform this script event
+        /// </summary>
         public override void DoEvent()
         {
-            // make sure window is not minimised
-            while (GetForegroundWindow() != WindowToClickHandle)
-            {
-                // un-minimises window
-                ShowWindowAsync(WindowToClickHandle, SW_SHOWNORMAL);
-                // sets window to front
-                SetForegroundWindow(WindowToClickHandle);
-                // small delay to prevent click area errors
-                Task.WaitAll(Task.Delay(1));
-            }
+            Status = $"Move mouse to {CoordsToMoveTo.ToString()} on window: {WindowTitle}.";
+
+            BringEventWindowToFront(this);
 
             POINT NewClickPoint = new POINT(
                 GetWindowPosition(WindowToClickHandle).Left + CoordsToMoveTo.X,

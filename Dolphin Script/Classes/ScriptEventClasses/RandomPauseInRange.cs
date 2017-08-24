@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Threading;
 
-using static DolphinScript.Lib.Backend.RandomNumber;
 using static DolphinScript.Lib.Backend.Common;
+using static DolphinScript.Lib.Backend.RandomNumber;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
     [Serializable]
     class RandomPauseInRange : ScriptEvent
     {
-        public RandomPauseInRange()
-        {
-            EventType = Event.Random_Pause_In_Range;
-        }
-
+        /// <summary>
+        /// main overriden method used to perform this script event
+        /// </summary>
         public override void DoEvent()
         {
             double delay = GetRandomDouble(DelayMinimum, DelayMaximum);

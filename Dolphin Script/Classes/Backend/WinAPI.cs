@@ -8,19 +8,10 @@ namespace DolphinScript.Lib.Backend
     class WinAPI
     {
         [DllImport("user32.dll")]
-        public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
-
-        [DllImport("user32.dll")]
         public static extern short GetAsyncKeyState(VirtualKeyStates vKey);
 
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(out POINT lpPoint);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
         // minimise/maximise window flags
         //
@@ -31,67 +22,6 @@ namespace DolphinScript.Lib.Backend
         // keypressed mem state
         //
         public const int KEY_PRESSED = 0x8000;
-
-        /// <summary>
-        /// gets the title of the currently active window
-        /// </summary>
-        /// <returns></returns>
-        public static string GetActiveWindowTitle()
-        {
-            // set the max number of characters
-            //
-            const int nChars = 256;
-
-            // create a stringbuilder with max capacity
-            //
-            StringBuilder Buff = new StringBuilder(nChars);
-
-            // get the handle of the currently active window
-            //
-            IntPtr handle = GetForegroundWindow();
-            
-            // check that the window has more than 0 characters
-            //
-            if (GetWindowText(handle, Buff, nChars) > 0)
-            {
-                // return the window title as a string
-                //
-                return Buff.ToString();
-            }
-
-            // if the window title has no characters null is returned
-            //
-            return null;
-        }
-
-        /// <summary>
-        /// returns the title of the window handle passed in
-        /// </summary>
-        /// <param name="handle"></param>
-        /// <returns></returns>
-        public static string GetWindowTitle(IntPtr handle)
-        {
-            // set the max number of characters
-            //
-            const int nChars = 256;
-
-            // create a stringbuilder with max capacity
-            //
-            StringBuilder Buff = new StringBuilder(nChars);
-
-            // check that the window has more than 0 characters
-            //
-            if (GetWindowText(handle, Buff, nChars) > 0)
-            {
-                // return the window title as a string
-                //
-                return Buff.ToString();
-            }
-
-            // if the window title has no characters null is returned
-            //
-            return null;
-        }
 
         /// <summary>
         /// struct used to store a rect area, offers extra functionality
@@ -163,6 +93,11 @@ namespace DolphinScript.Lib.Backend
             {
                 this.X = X;
                 this.Y = Y;
+            }
+
+            public override string ToString()
+            {
+                return $"X: {X} Y: {Y}";
             }
 
             /// <summary>

@@ -8,13 +8,13 @@ namespace DolphinScript.Lib.ScriptEventClasses
     [Serializable]
     class MoveWindowToFront : ScriptEvent
     {
-        public MoveWindowToFront()
-        {
-            EventType = Event.Move_Window_To_Front;
-        }
-
+        /// <summary>
+        /// main overriden method used to perform this script event
+        /// </summary>
         public override void DoEvent()
         {
+            Status = $"Bring window to front: {WindowToClickTitle}.";
+
             SetWindowTopMostIfExists(WindowClass, WindowTitle);
         }
 

@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using static DolphinScript.Lib.Backend.Common;
+
 namespace DolphinScript.Lib.ScriptEventClasses
 {
     [Serializable]
     class KeyboardKeyPress : ScriptEvent
     {
-        public KeyboardKeyPress()
-        {
-            EventType = Event.Keyboard_Keypress;
-        }
-
         public override void DoEvent()
         {
+            Status = $"";
+
             SendKeys.SendWait(KeyboardKeys);
         }
 

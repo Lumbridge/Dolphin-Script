@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Threading;
 
-using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WinAPI;
+using static DolphinScript.Lib.Backend.ColourEvent;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
     [Serializable]
     class PauseWhileColourExistsInArea : ScriptEvent
     {
-        public PauseWhileColourExistsInArea()
-        {
-            EventType = Event.Pause_While_Colour_Exists_In_Area;
-        }
-
+        /// <summary>
+        /// main overriden method used to perform this script event
+        /// </summary>
         public override void DoEvent()
         {
             while (ColourExistsInArea(ColourSearchArea, SearchColour))
             {
-                Status = $"Colour found in area, idling for {ReSearchPause} seconds.";
+                Status = $"Pause while colour: {SearchColour} is found in area: {ColourSearchArea.PrintArea()}, waiting {ReSearchPause} seconds before re-searching.";
 
                 Thread.Sleep(TimeSpan.FromSeconds(ReSearchPause));
             }

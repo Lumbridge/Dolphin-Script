@@ -9,11 +9,20 @@ namespace DolphinScript.Lib.Backend
     class Common
     {
         private static string status;
-
+        
+        // public window properties used for 
+        //
         public static string WindowClass { get; set; }
         public static string WindowTitle { get; set; }
 
+        // this is a public string string which is used to update the last action label on the main form
+        // it is here in the common class so all the sub events can update it
+        //
         public static string LastAction { get; set; }
+
+        // this is a public string which is used to update the status label on the main form
+        // it is here in the common class so all sub events can update it
+        //
         public static string Status
         {
             get { return status; }
@@ -31,22 +40,25 @@ namespace DolphinScript.Lib.Backend
 
         // the amount of time the script will pause before re-searching during some pause events
         //
-        public static double ReSearchPause = 0.5;
+        public static double                    ReSearchPause = 0.5;
 
+        // this is the speed the mouse will move at during mouse move events
+        //
         public static int                       MouseSpeed       = 15;
+
+        // this is a list of lists of scripts events which stores the grouped events
+        //
         public static List<List<ScriptEvent>>   AllGroups        = new List<List<ScriptEvent>>();
+
+        // this is a list of all events in the event listbox
+        //
         public static List<ScriptEvent>         AllEvents        = new List<ScriptEvent>();
+
+        // public bools which will be used to flag when the user is registering an event
+        // or running the script
+        //
         public static bool                      IsRegistering    = false, 
                                                 IsRunning        = false;
-
-        public static void CheckForTerminationKey()
-        {
-            if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
-            {
-                IsRunning = false;
-                return;
-            }
-        }
 
         // list of special sendkey codes
         //
@@ -95,6 +107,21 @@ namespace DolphinScript.Lib.Backend
             "{MULTIPLY}",
             "{DIVIDE}"
         };
+        
+        /// <summary>
+        /// this method is used to determine if the user is pressing the F5 key to stop the script
+        /// </summary>
+        public static void CheckForTerminationKey()
+        {
+            // listen for the F5 key
+            //
+            if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+            {
+                // set is running flag to false
+                IsRunning = false;
+                return;
+            }
+        }
 
         /// <summary>
         /// shortcut function to write to the console
