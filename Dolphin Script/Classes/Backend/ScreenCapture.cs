@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
+using static DolphinScript.Lib.Backend.WinAPI;
+
 namespace DolphinScript.Lib.Backend
 {
     class ScreenCapture
@@ -20,6 +22,21 @@ namespace DolphinScript.Lib.Backend
 
             // copy from screen into the bitmap we created
             g.CopyFromScreen(p1.X, p1.Y, 0, 0, new Size(w * 2, h * 2));
+
+            // return the screenshot
+            return bmpScreenshot;
+        }
+
+        public static Bitmap ScreenshotArea(RECT area)
+        {
+            // this is where we will store a snapshot of the screen
+            Bitmap bmpScreenshot = new Bitmap(area.Width, area.Height);
+
+            // creates a graphics object so we can draw the screen in the bitmap (bmpScreenshot)
+            Graphics g = Graphics.FromImage(bmpScreenshot);
+
+            // copy from screen into the bitmap we created
+            g.CopyFromScreen(area.Left, area.Top, 0, 0, new Size(area.Width * 2, area.Height * 2));
 
             // return the screenshot
             return bmpScreenshot;
@@ -68,34 +85,42 @@ namespace DolphinScript.Lib.Backend
             {
                 try
                 {
-                    // Get width and height of bitmap
+                    // get width and height of bitmap
+                    //
                     Width = source.Width;
                     Height = source.Height;
 
                     // get total locked pixels count
+                    //
                     int PixelCount = Width * Height;
 
-                    // Create rectangle to lock
+                    // create rectangle to lock
+                    //
                     Rectangle rect = new Rectangle(0, 0, Width, Height);
 
                     // get source bitmap pixel format size
+                    //
                     Depth = System.Drawing.Bitmap.GetPixelFormatSize(source.PixelFormat);
 
-                    // Check if bpp (Bits Per Pixel) is 8, 24, or 32
+                    // check if bpp (Bits Per Pixel) is 8, 24, or 32
+                    //
                     if (Depth != 8 && Depth != 24 && Depth != 32)
                     {
                         throw new ArgumentException("Only 8, 24 and 32 bpp images are supported.");
                     }
 
-                    // Lock bitmap and return bitmap data
+                    // lock bitmap and return bitmap data
+                    //
                     bitmapData = source.LockBits(rect, ImageLockMode.ReadWrite, source.PixelFormat);
 
                     // create byte array to copy pixel values
+                    //
                     int step = Depth / 8;
                     Pixels = new byte[PixelCount * step];
                     Iptr = bitmapData.Scan0;
 
-                    // Copy data from pointer to array
+                    // copy data from pointer to array
+                    //
                     Marshal.Copy(Iptr, Pixels, 0, Pixels.Length);
                 }
                 catch (Exception ex)
@@ -108,10 +133,12 @@ namespace DolphinScript.Lib.Backend
             {
                 try
                 {
-                    // Copy data from byte array to pointer
+                    // copy data from byte array to pointer
+                    //
                     Marshal.Copy(Pixels, 0, Iptr, Pixels.Length);
 
-                    // Unlock bitmap data
+                    // unlock bitmap data
+                    //
                     source.UnlockBits(bitmapData);
                 }
                 catch (Exception ex)
@@ -127,16 +154,20 @@ namespace DolphinScript.Lib.Backend
             {
                 Color clr = Color.Empty;
 
-                // Get color components count
+                // get color components count
+                //
                 int cCount = Depth / 8;
 
-                // Get start index of the specified pixel
+                // get start index of the specified pixel
+                //
                 int i = ((y * Width) + x) * cCount;
 
                 if (i > Pixels.Length - cCount)
                     throw new IndexOutOfRangeException();
 
-                if (Depth == 32) // For 32 bpp get Red, Green, Blue and Alpha
+                // for 32 bpp get Red, Green, Blue and Alpha
+                //
+                if (Depth == 32)
                 {
                     byte b = Pixels[i];
                     byte g = Pixels[i + 1];
@@ -144,15 +175,18 @@ namespace DolphinScript.Lib.Backend
                     byte a = Pixels[i + 3]; // a
                     clr = Color.FromArgb(a, r, g, b);
                 }
-                if (Depth == 24) // For 24 bpp get Red, Green and Blue
+                // for 24 bpp get Red, Green and Blue
+                //
+                if (Depth == 24)
                 {
                     byte b = Pixels[i];
                     byte g = Pixels[i + 1];
                     byte r = Pixels[i + 2];
                     clr = Color.FromArgb(r, g, b);
                 }
+                // for 8 bpp get color value (Red, Green and Blue values are the same)
+                //
                 if (Depth == 8)
-                // For 8 bpp get color value (Red, Green and Blue values are the same)
                 {
                     byte c = Pixels[i];
                     clr = Color.FromArgb(c, c, c);
@@ -165,27 +199,34 @@ namespace DolphinScript.Lib.Backend
             /// </summary>
             public void SetPixel(int x, int y, Color color)
             {
-                // Get color components count
+                // get color components count
+                //
                 int cCount = Depth / 8;
 
-                // Get start index of the specified pixel
+                // get start index of the specified pixel
+                //
                 int i = ((y * Width) + x) * cCount;
 
-                if (Depth == 32) // For 32 bpp set Red, Green, Blue and Alpha
+                // for 32 bpp set Red, Green, Blue and Alpha
+                //
+                if (Depth == 32)
                 {
                     Pixels[i] = color.B;
                     Pixels[i + 1] = color.G;
                     Pixels[i + 2] = color.R;
                     Pixels[i + 3] = color.A;
                 }
-                if (Depth == 24) // For 24 bpp set Red, Green and Blue
+                // for 24 bpp set Red, Green and Blue
+                //
+                if (Depth == 24)
                 {
                     Pixels[i] = color.B;
                     Pixels[i + 1] = color.G;
                     Pixels[i + 2] = color.R;
                 }
+                // for 8 bpp set color value (Red, Green and Blue values are the same)
+                //
                 if (Depth == 8)
-                // For 8 bpp set color value (Red, Green and Blue values are the same)
                 {
                     Pixels[i] = color.B;
                 }

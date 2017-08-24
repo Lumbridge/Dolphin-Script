@@ -14,6 +14,7 @@ using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.WindowControl;
+using static DolphinScript.Lib.Backend.ScreenCapture;
 
 namespace DolphinScript
 {
@@ -1348,191 +1349,191 @@ namespace DolphinScript
             Button_InsertColourSearchAreaWindowEvent.Text = temp;
         }
 
-        //void MouseMoveToMutliColourInAreaOnWindowLoop()
-        //{
-        //    // will store the colours we will be searching for
-        //    //
-        //    List<int> searchColours = new List<int>();
+        void MouseMoveToMutliColourInAreaOnWindowLoop()
+        {
+            // will store the colours we will be searching for
+            //
+            List<int> searchColours = new List<int>();
 
-        //    // will store the two points used for the search area
-        //    //
-        //    POINT p1 = new POINT(), p2 = new POINT();
+            // will store the two points used for the search area
+            //
+            POINT p1 = new POINT(), p2 = new POINT();
 
-        //    // will store the screenshot we take of the search area
-        //    //
-        //    Bitmap ColourSelectionScreenshot;
+            // will store the screenshot we take of the search area
+            //
+            Bitmap ColourSelectionScreenshot;
 
-        //    // set global registering to true
-        //    //
-        //    IsRegistering = true;
+            // set global registering to true
+            //
+            IsRegistering = true;
 
-        //    // these will be used to control register flow later
-        //    //
-        //    bool DonePickingColours = false, AreaPicked = false;
+            // these will be used to control register flow later
+            //
+            bool DonePickingColours = false, AreaPicked = false;
 
-        //    // store the original text of the button we just clicked
-        //    //
-        //    string temp = Button_InsertMultiColourSearchAreaWindowEvent.Text;
+            // store the original text of the button we just clicked
+            //
+            string temp = Button_InsertMultiColourSearchAreaWindowEvent.Text;
 
-        //    // change the button text to show we're currently registering
-        //    //
-        //    Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area to search... (F6 to cancel).";
+            // change the button text to show we're currently registering
+            //
+            Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area to search... (F6 to cancel).";
 
-        //    // register loop
-        //    //
-        //    while (IsRegistering)
-        //    {
-        //        // listen for the left shift key
-        //        //
-        //        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
-        //        {
-        //            // store the top left of the search area
-        //            //
-        //            p1 = GetCursorPosition();
+            // register loop
+            //
+            while (IsRegistering)
+            {
+                // listen for the left shift key
+                //
+                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                {
+                    // store the top left of the search area
+                    //
+                    p1 = GetCursorPosition();
 
-        //            // pause here while the user is still holding shift
-        //            //
-        //            while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    // pause here while the user is still holding shift
+                    //
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
-        //            // store bottom left of search area after user lets go of shift key
-        //            //
-        //            p2 = GetCursorPosition();
+                    // store bottom left of search area after user lets go of shift key
+                    //
+                    p2 = GetCursorPosition();
 
-        //            // calculate the width and height of the search area
-        //            //
-        //            int w = p2.X - p1.X,
-        //                h = p2.Y - p1.Y;
+                    // calculate the width and height of the search area
+                    //
+                    int w = p2.X - p1.X,
+                        h = p2.Y - p1.Y;
 
-        //            // change the size of the window to show the search area screenshot
-        //            //
-        //            Size = new Size(Size.Width + w + 10, Size.Height + h + 10);
+                    // change the size of the window to show the search area screenshot
+                    //
+                    Size = new Size(Size.Width + w + 10, Size.Height + h + 10);
 
-        //            // set the size of the picture box we're going to use to display the search area
-        //            //
-        //            Picturebox_ColourSelectionArea.Size = new Size(w, h);
+                    // set the size of the picture box we're going to use to display the search area
+                    //
+                    Picturebox_ColourSelectionArea.Size = new Size(w, h);
 
-        //            // take a screenshot of the search area and store it in our bitmap
-        //            //
-        //            ColourSelectionScreenshot = ScreenshotArea(p1, p2);
+                    // take a screenshot of the search area and store it in our bitmap
+                    //
+                    ColourSelectionScreenshot = ScreenshotArea(p1, p2);
 
-        //            // set the picturebox image to the screenshot we took
-        //            //
-        //            Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
+                    // set the picturebox image to the screenshot we took
+                    //
+                    Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
 
-        //            // change the button text to show we've moved on to selecting the search colours
-        //            //
-        //            Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting colours to search for in area... (F5 to continue).";
+                    // change the button text to show we've moved on to selecting the search colours
+                    //
+                    Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting colours to search for in area... (F5 to continue).";
 
-        //            // loop here while we're not done selecting colours to search for
-        //            //
-        //            while (!DonePickingColours)
-        //            {
-        //                // listen for the shift key
-        //                //
-        //                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
-        //                {
-        //                    // each time we hit shift key we add the colour under the mouse to the search colours list
-        //                    //
-        //                    searchColours.Add(GetColorAt(Cursor.Position).ToArgb());
+                    // loop here while we're not done selecting colours to search for
+                    //
+                    while (!DonePickingColours)
+                    {
+                        // listen for the shift key
+                        //
+                        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                        {
+                            // each time we hit shift key we add the colour under the mouse to the search colours list
+                            //
+                            searchColours.Add(GetColorAt(Cursor.Position).ToArgb());
 
-        //                    // change the colour we selected on the screenshot to red to show we've added it to the search list
-        //                    //
-        //                    ColourSelectionScreenshot = SetMatchingColourPixels(ColourSelectionScreenshot, searchColours[searchColours.Count - 1], Color.Red);
+                            // change the colour we selected on the screenshot to red to show we've added it to the search list
+                            //
+                            ColourSelectionScreenshot = SetMatchingColourPixels(ColourSelectionScreenshot, searchColours[searchColours.Count - 1], Color.Red);
 
-        //                    // override the original picturebox image with the new one to show the selected colours
-        //                    //
-        //                    Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
+                            // override the original picturebox image with the new one to show the selected colours
+                            //
+                            Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
 
-        //                    // sleep here so we don't add more than one colour when we press shift once
-        //                    //
-        //                    Thread.Sleep(200);
-        //                }
-        //                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
-        //                {
-        //                    // if we click F5 then the colour selection process is marked as complete
-        //                    //
-        //                    DonePickingColours = true;
+                            // sleep here so we don't add more than one colour when we press shift once
+                            //
+                            Thread.Sleep(200);
+                        }
+                        else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                        {
+                            // if we click F5 then the colour selection process is marked as complete
+                            //
+                            DonePickingColours = true;
 
-        //                    // we change the button text to ask the user to choose the area on the window they'd like to search for these colours on
-        //                    //
-        //                    Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area & window to search for colour in.... (Make sure window is top-most)";
+                            // we change the button text to ask the user to choose the area on the window they'd like to search for these colours on
+                            //
+                            Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area & window to search for colour in.... (Make sure window is top-most)";
 
-        //                    // loop here while the area hasn't been selected
-        //                    //
-        //                    while (!AreaPicked)
-        //                    {
-        //                        // listen for the shift key
-        //                        //
-        //                        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
-        //                        {
-        //                            // set the top left of the search area to the point under the mouse
-        //                            //
-        //                            p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+                            // loop here while the area hasn't been selected
+                            //
+                            while (!AreaPicked)
+                            {
+                                // listen for the shift key
+                                //
+                                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                                {
+                                    // set the top left of the search area to the point under the mouse
+                                    //
+                                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-        //                            // wait here while the user holds shift key
-        //                            //
-        //                            while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                                    // wait here while the user holds shift key
+                                    //
+                                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
-        //                            // set the bottom right of the search area to the point under the mouse
-        //                            //
-        //                            p2 = GetCursorPositionOnWindow(GetForegroundWindow());
+                                    // set the bottom right of the search area to the point under the mouse
+                                    //
+                                    p2 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-        //                            // set the area marked as complete
-        //                            //
-        //                            AreaPicked = true;
-        //                        }
-        //                    }
+                                    // set the area marked as complete
+                                    //
+                                    AreaPicked = true;
+                                }
+                            }
 
-        //                    // add the event to the event list
-        //                    //
-        //                    AllEvents.Add(new MouseMoveToMultiColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColours = new List<int>(searchColours) });
+                            // add the event to the event list
+                            //
+                            AllEvents.Add(new MouseMoveToMultiColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColours = new List<int>(searchColours) });
 
-        //                    // update the event listbox to show the new event
-        //                    //
-        //                    UpdateListBox();
+                            // update the event listbox to show the new event
+                            //
+                            UpdateListBox();
 
-        //                    // set the button text back to normal
-        //                    //
-        //                    Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
+                            // set the button text back to normal
+                            //
+                            Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
 
-        //                    // set global registering as false
-        //                    //
-        //                    IsRegistering = false;
+                            // set global registering as false
+                            //
+                            IsRegistering = false;
 
-        //                    // clear the search colours list
-        //                    //
-        //                    searchColours.Clear();
+                            // clear the search colours list
+                            //
+                            searchColours.Clear();
 
-        //                    // we're done here
-        //                    //
-        //                    return;
-        //                }
-        //            }
-        //        }
-        //        else if (GetAsyncKeyState(VirtualKeyStates.VK_F6) < 0)
-        //        {
-        //            //
-        //            // user can cancel the operation early by pressing F6
-        //            //
+                            // we're done here
+                            //
+                            return;
+                        }
+                    }
+                }
+                else if (GetAsyncKeyState(VirtualKeyStates.VK_F6) < 0)
+                {
+                    //
+                    // user can cancel the operation early by pressing F6
+                    //
 
-        //            // set the button text back to normal
-        //            //
-        //            Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
+                    // set the button text back to normal
+                    //
+                    Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
 
-        //            // set global registering as false
-        //            //
-        //            IsRegistering = false;
+                    // set global registering as false
+                    //
+                    IsRegistering = false;
 
-        //            // we're done here
-        //            //
-        //            return;
-        //        }
-        //    }
+                    // we're done here
+                    //
+                    return;
+                }
+            }
 
-        //    // set the button text back to normal if the normal operation fails somehow
-        //    //
-        //    Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
-        //}
+            // set the button text back to normal if the normal operation fails somehow
+            //
+            Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
+        }
 
         #endregion
     }

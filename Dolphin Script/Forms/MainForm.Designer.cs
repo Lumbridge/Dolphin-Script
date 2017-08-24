@@ -131,6 +131,7 @@
             this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
             this.button_RemoveRepeatGroup = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.Picturebox_ColourSelectionArea = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).BeginInit();
             this.MenuStrip_MainForm.SuspendLayout();
             this.tabControl_ScriptEvents.SuspendLayout();
@@ -169,6 +170,7 @@
             this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).BeginInit();
             this.SuspendLayout();
             // 
             // button_StartScript
@@ -298,14 +300,14 @@
             // saveScriptToolStripMenuItem
             // 
             this.saveScriptToolStripMenuItem.Name = "saveScriptToolStripMenuItem";
-            this.saveScriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveScriptToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.saveScriptToolStripMenuItem.Text = "Save Script";
             this.saveScriptToolStripMenuItem.Click += new System.EventHandler(this.saveScriptToolStripMenuItem_Click);
             // 
             // loadScriptToolStripMenuItem1
             // 
             this.loadScriptToolStripMenuItem1.Name = "loadScriptToolStripMenuItem1";
-            this.loadScriptToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.loadScriptToolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
             this.loadScriptToolStripMenuItem1.Text = "Load Script";
             this.loadScriptToolStripMenuItem1.Click += new System.EventHandler(this.loadScriptToolStripMenuItem1_Click);
             // 
@@ -321,14 +323,14 @@
             // wikiToolStripMenuItem
             // 
             this.wikiToolStripMenuItem.Name = "wikiToolStripMenuItem";
-            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.wikiToolStripMenuItem.Text = "Wiki";
             this.wikiToolStripMenuItem.Click += new System.EventHandler(this.wikiToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -1291,11 +1293,20 @@
             this.button1.Text = "View Event Details";
             this.button1.UseVisualStyleBackColor = true;
             // 
+            // Picturebox_ColourSelectionArea
+            // 
+            this.Picturebox_ColourSelectionArea.Location = new System.Drawing.Point(280, 85);
+            this.Picturebox_ColourSelectionArea.Name = "Picturebox_ColourSelectionArea";
+            this.Picturebox_ColourSelectionArea.Size = new System.Drawing.Size(100, 50);
+            this.Picturebox_ColourSelectionArea.TabIndex = 50;
+            this.Picturebox_ColourSelectionArea.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(669, 707);
+            this.Controls.Add(this.Picturebox_ColourSelectionArea);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button_RemoveRepeatGroup);
             this.Controls.Add(this.tabControl_ScriptEvents);
@@ -1360,6 +1371,7 @@
             this.groupBox10.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1471,6 +1483,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wikiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.PictureBox Picturebox_ColourSelectionArea;
     }
 }
 

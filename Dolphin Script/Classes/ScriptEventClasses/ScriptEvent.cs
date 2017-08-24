@@ -9,8 +9,10 @@ namespace DolphinScript.Lib.ScriptEventClasses
     [Serializable]
     abstract class ScriptEvent
     {
-        private IntPtr windowHandle;
+        // private window variables
+        //
         private RECT windowRECT;
+        private IntPtr windowHandle;
 
         // mandatory override methods
         //
@@ -75,6 +77,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public int GroupID { get; set; }
         public int NumberOfCycles { get; set; }
 
+        /// <summary>
+        /// Script Event Constructor - sets default values for properties
+        /// </summary>
         public ScriptEvent()
         {
             WindowToClickHandle = IntPtr.Zero;

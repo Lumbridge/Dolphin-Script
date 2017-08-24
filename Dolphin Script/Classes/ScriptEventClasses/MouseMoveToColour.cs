@@ -25,7 +25,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
             POINT EndPoint;
             POINT pos = GetCursorPosition();
 
-            while (GetColorAt(pos.X, pos.Y).ToArgb() != SearchColour)
+            while (GetColorAt(pos).ToArgb() != SearchColour)
             {
                 if (temp.Count > 0)
                 {
