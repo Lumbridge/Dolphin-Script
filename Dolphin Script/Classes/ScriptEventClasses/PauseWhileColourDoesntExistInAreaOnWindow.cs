@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Threading;
 
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.WindowControl;
-using static DolphinScript.Lib.Backend.GlobalVariables;
-using System.Threading;
+using static DolphinScript.Lib.Backend.Common;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
@@ -21,28 +20,32 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public override void DoEvent()
         {
             // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
+            //
             RECT NewSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
 
             while (!ColourExistsInArea(NewSearchArea, SearchColour))
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
-                {
-                    IsRunning = false;
-                    return;
-                }
+                Status = $"Colour / Window not found, attempting to bring window to front every {ReSearchPause} seconds to search window area for colour.";
 
                 if (GetForegroundWindow() != WindowToClickHandle || GetActiveWindowTitle() != WindowToClickTitle)
                 {
                     // un-minimises window
+                    //
                     ShowWindowAsync(WindowToClickHandle, SW_SHOWNORMAL);
+
                     // sets window to front
+                    //
                     SetForegroundWindow(WindowToClickHandle);
+
                     // small delay to prevent click area errors
-                    Task.WaitAll(Task.Delay(100));
+                    //
+                    Thread.Sleep(100);
                 }
 
-                Thread.Sleep(TimeSpan.FromSeconds(1.0));
+                Thread.Sleep(TimeSpan.FromSeconds(ReSearchPause));
 
+                // update the search area incase the window has moved
+                //
                 NewSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
             }
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.GlobalVariables;
+using static DolphinScript.Lib.Backend.Common;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {

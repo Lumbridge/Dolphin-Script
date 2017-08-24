@@ -35,7 +35,6 @@
             this.statusLabel = new System.Windows.Forms.Label();
             this.lastActionLabel = new System.Windows.Forms.Label();
             this.button_RemoveEvent = new System.Windows.Forms.Button();
-            this.Button_About = new System.Windows.Forms.Button();
             this.button_AddRepeatGroup = new System.Windows.Forms.Button();
             this.NumericUpDown_RepeatAmount = new System.Windows.Forms.NumericUpDown();
             this.MenuStrip_MainForm = new System.Windows.Forms.MenuStrip();
@@ -128,6 +127,10 @@
             this.Button_InsertRightClickEvent = new System.Windows.Forms.Button();
             this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
             this.button_RemoveRepeatGroup = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wikiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).BeginInit();
             this.MenuStrip_MainForm.SuspendLayout();
             this.tabControl_ScriptEvents.SuspendLayout();
@@ -170,9 +173,9 @@
             // 
             // button_StartScript
             // 
-            this.button_StartScript.Location = new System.Drawing.Point(540, 184);
+            this.button_StartScript.Location = new System.Drawing.Point(540, 203);
             this.button_StartScript.Name = "button_StartScript";
-            this.button_StartScript.Size = new System.Drawing.Size(56, 55);
+            this.button_StartScript.Size = new System.Drawing.Size(56, 41);
             this.button_StartScript.TabIndex = 0;
             this.button_StartScript.Text = "Start Script";
             this.button_StartScript.UseVisualStyleBackColor = true;
@@ -240,16 +243,6 @@
             this.button_RemoveEvent.UseVisualStyleBackColor = true;
             this.button_RemoveEvent.Click += new System.EventHandler(this.removeEventButton_Click);
             // 
-            // Button_About
-            // 
-            this.Button_About.Location = new System.Drawing.Point(540, 141);
-            this.Button_About.Name = "Button_About";
-            this.Button_About.Size = new System.Drawing.Size(56, 37);
-            this.Button_About.TabIndex = 27;
-            this.Button_About.Text = "About";
-            this.Button_About.UseVisualStyleBackColor = true;
-            this.Button_About.Click += new System.EventHandler(this.Button_About_Click);
-            // 
             // button_AddRepeatGroup
             // 
             this.button_AddRepeatGroup.Location = new System.Drawing.Point(602, 69);
@@ -285,7 +278,8 @@
             // MenuStrip_MainForm
             // 
             this.MenuStrip_MainForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolStripMenuItem_File});
+            this.ToolStripMenuItem_File,
+            this.helpToolStripMenuItem});
             this.MenuStrip_MainForm.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip_MainForm.Name = "MenuStrip_MainForm";
             this.MenuStrip_MainForm.Size = new System.Drawing.Size(653, 24);
@@ -1265,17 +1259,49 @@
             this.button_RemoveRepeatGroup.UseVisualStyleBackColor = true;
             this.button_RemoveRepeatGroup.Click += new System.EventHandler(this.button_RemoveRepeatGroup_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(541, 174);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(55, 24);
+            this.button1.TabIndex = 49;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.wikiToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // wikiToolStripMenuItem
+            // 
+            this.wikiToolStripMenuItem.Name = "wikiToolStripMenuItem";
+            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.wikiToolStripMenuItem.Text = "Wiki";
+            this.wikiToolStripMenuItem.Click += new System.EventHandler(this.wikiToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(653, 707);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.button_RemoveRepeatGroup);
             this.Controls.Add(this.tabControl_ScriptEvents);
             this.Controls.Add(this.MenuStrip_MainForm);
             this.Controls.Add(this.NumericUpDown_RepeatAmount);
             this.Controls.Add(this.button_AddRepeatGroup);
-            this.Controls.Add(this.Button_About);
             this.Controls.Add(this.button_RemoveEvent);
             this.Controls.Add(this.lastActionLabel);
             this.Controls.Add(this.statusLabel);
@@ -1346,7 +1372,6 @@
         private System.Windows.Forms.Button button_MoveEventDown;
         public System.Windows.Forms.ListBox ListBox_Events;
         private System.Windows.Forms.Button button_RemoveEvent;
-        private System.Windows.Forms.Button Button_About;
         public System.Windows.Forms.Label lastActionLabel;
         public System.Windows.Forms.Label statusLabel;
         public System.Windows.Forms.Button registerClickLocationsButton;
@@ -1442,6 +1467,10 @@
         private System.Windows.Forms.GroupBox groupBox23;
         private System.Windows.Forms.GroupBox groupBox22;
         private System.Windows.Forms.Button button_RemoveRepeatGroup;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wikiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
 

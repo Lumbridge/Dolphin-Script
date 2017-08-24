@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using static DolphinScript.Lib.Backend.GlobalVariables;
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WinAPI;
 
 namespace DolphinScript.Lib.Backend

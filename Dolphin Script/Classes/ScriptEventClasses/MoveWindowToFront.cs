@@ -1,6 +1,6 @@
 ﻿using System;
 
-using static DolphinScript.Lib.Backend.GlobalVariables;
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WindowControl;
 
 namespace DolphinScript.Lib.ScriptEventClasses

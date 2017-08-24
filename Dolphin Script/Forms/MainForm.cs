@@ -13,66 +13,21 @@ using DolphinScript.Lib.ScriptEventClasses;
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.ColourEvent;
 using static DolphinScript.Lib.Backend.PointReturns;
-using static DolphinScript.Lib.Backend.GlobalVariables;
+using static DolphinScript.Lib.Backend.Common;
 
 namespace DolphinScript
 {
     public partial class MainForm : Form
-    {
-        // list of special sendkey codes
-        //
-        public static List<string> SpecialKeys = new List<string>()
-        {
-            "+",
-            "%",
-            "{LEFT}",
-            "{RIGHT}",
-            "{UP}",
-            "{DOWN}",
-            "{BACKSPACE}",
-            "{BREAK}",
-            "{CAPSLOCK}",
-            "{DELETE}",
-            "{END}",
-            "{ENTER}",
-            "{ESC}",
-            "{HELP}",
-            "{HOME}",
-            "{INSERT}",
-            "{NUMLOCK}",
-            "{PGDN}",
-            "{PGUP}",
-            "{PRTSC}",
-            "{SCROLLLOCK}",
-            "{TAB}",
-            "{F1}",
-            "{F2}",
-            "{F3}",
-            "{F4}",
-            "{F5}",
-            "{F6}",
-            "{F7}",
-            "{F8}",
-            "{F9}",
-            "{F10}",
-            "{F11}",
-            "{F12}",
-            "{F13}",
-            "{F14}",
-            "{F15}",
-            "{F16}",
-            "{ADD}",
-            "{SUBTRACT}",
-            "{MULTIPLY}",
-            "{DIVIDE}"
-        };
-        
+    {        
         /// <summary>
-        /// entry point for the program
+        /// main form constructor
         /// </summary>
         public MainForm()
         {
             InitializeComponent();
+
+            Status = "Status: Idle";
+            LastAction = "Last Action: None";
 
             // add all keys to the key event combo box
             //
@@ -83,10 +38,12 @@ namespace DolphinScript
             //
             ComboBox_SpecialKeys.SelectedIndex = 17;
 
-            // run the cursor position callback
+            // run the cursor update method on a new thread
             //
             Task.Run(() => UpdateMouse());
         }
+
+        #region Main Form Methods
 
         /// <summary>
         /// main loop which runs all of the script events in the event list
@@ -111,6 +68,9 @@ namespace DolphinScript
                             //
                             foreach (var subEvent in ev.EventsInGroup)
                             {
+                                if (UpdateListboxCurrentEventIndex(subEvent))
+                                    break;
+
                                 // call overriden do method
                                 //
                                 subEvent.DoEvent();
@@ -124,6 +84,9 @@ namespace DolphinScript
                     }
                     else
                     {
+                        if (UpdateListboxCurrentEventIndex(ev))
+                            break;
+
                         // each script event has overriden the DoEvent method so each
                         // script event completes their own DoEvent method before the next one is carried out
                         //
@@ -162,14 +125,11 @@ namespace DolphinScript
             NumericUpDown_MouseSpeed.Enabled = State;
             TrackBar_MouseSpeed.Enabled = State;
 
-            // about button
-            //
-            Button_About.Enabled = State;
-
             // repeat group toggles
             //
             NumericUpDown_RepeatAmount.Enabled = State;
             button_AddRepeatGroup.Enabled = State;
+            button_RemoveRepeatGroup.Enabled = State;
         }
 
         /// <summary>
@@ -200,6 +160,15 @@ namespace DolphinScript
                 //
                 while (!IsDisposed && !Disposing)
                 {
+                    // check if the user wants to end the script
+                    //
+                    CheckForTerminationKey();
+
+                    // update the current script status
+                    //
+                    statusLabel.Text = Status;
+                    lastActionLabel.Text = LastAction;
+
                     // update the colour buttons with the colour of the pixel underneath the cursor position
                     //
                     Button_ColourPreview1.BackColor = GetColorAt(GetCursorPosition());
@@ -231,9 +200,32 @@ namespace DolphinScript
                     Thread.Sleep(50);
                 }
             }
-            catch{ }
+            catch { }
         }
 
+        /// <summary>
+        /// updates the selected index in the events listbox and provides a way of breaking the main
+        /// loop if the script should no longer be running
+        /// </summary>
+        /// <param name="ev"></param>
+        /// <returns></returns>
+        private bool UpdateListboxCurrentEventIndex(ScriptEvent ev)
+        {
+            if (!IsRunning)
+            {
+                ListBox_Events.ClearSelected();
+                return true;
+            }
+            else
+            {
+                ListBox_Events.ClearSelected();
+                ListBox_Events.SelectedIndex = AllEvents.IndexOf(ev);
+                return false;
+            }
+        }
+
+        #endregion
+        
         #region Form Control Events
 
         /// <summary>
@@ -496,7 +488,7 @@ namespace DolphinScript
 
         private void button_RemoveRepeatGroup_Click(object sender, EventArgs e)
         {
-
+            // to be implemented
         }
 
         /// <summary>
@@ -635,13 +627,23 @@ namespace DolphinScript
         }
 
         /// <summary>
-        /// simple information button
+        /// basic information about creator github
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_About_Click(object sender, EventArgs e)
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Created by Ryan Sainty @ https://github.com/Lumbridge");
+        }
+
+        /// <summary>
+        /// opens the program wiki in user's default browser
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Lumbridge/Dolphin-Script/wiki");
         }
 
         #endregion Form Control Events

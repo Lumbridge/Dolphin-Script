@@ -3,8 +3,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-using static DolphinScript.Lib.Backend.RandomNumber;
 using static DolphinScript.Lib.Backend.WinAPI;
+using static DolphinScript.Lib.Backend.RandomNumber;
+using static DolphinScript.Lib.Backend.Common;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
@@ -68,6 +69,8 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
         public override void DoEvent()
         {
+            Status = $"{MouseButton}";
+
             if (MouseButton == VirtualMouseStates.Left_Click)
                 LeftClick();
             else if (MouseButton == VirtualMouseStates.Right_Click)

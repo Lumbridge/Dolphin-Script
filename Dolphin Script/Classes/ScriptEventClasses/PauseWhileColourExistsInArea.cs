@@ -2,7 +2,7 @@
 using System.Threading;
 
 using static DolphinScript.Lib.Backend.ColourEvent;
-using static DolphinScript.Lib.Backend.GlobalVariables;
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WinAPI;
 
 namespace DolphinScript.Lib.ScriptEventClasses
@@ -19,16 +19,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         {
             while (ColourExistsInArea(ColourSearchArea, SearchColour))
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
-                {
-                    IsRunning = false;
-                    Write("Status: Idle");
-                    return;
-                }
+                Status = $"Colour found in area, idling for {ReSearchPause} seconds.";
 
-                Write("Colour found in search area, Idling for 1 second...");
-
-                Thread.Sleep(TimeSpan.FromSeconds(1.0));
+                Thread.Sleep(TimeSpan.FromSeconds(ReSearchPause));
             }
         }
 

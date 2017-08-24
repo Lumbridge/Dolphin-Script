@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-using static DolphinScript.Lib.Backend.GlobalVariables;
+using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WindowControl;
 
 namespace DolphinScript.Lib.ScriptEventClasses
@@ -18,8 +18,13 @@ namespace DolphinScript.Lib.ScriptEventClasses
         {
             while (!WindowExists(WindowClass, WindowTitle))
             {
-                Write("Search window not found, waiting 3 seconds before searching again.");
-                Thread.Sleep(TimeSpan.FromSeconds(3.0));
+                // update the global status string
+                //
+                Status = $"Search window not found, waiting {ReSearchPause} seconds before searching again.";
+
+                // wait for 0.5 seconds before continuing
+                //
+                Thread.Sleep(TimeSpan.FromSeconds(ReSearchPause));
             }
         }
 

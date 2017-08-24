@@ -6,7 +6,7 @@ using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.PointReturns;
 using static DolphinScript.Lib.Backend.RandomNumber;
 using static DolphinScript.Lib.Backend.MouseMoveMath;
-using static DolphinScript.Lib.Backend.GlobalVariables;
+using static DolphinScript.Lib.Backend.Common;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
@@ -92,12 +92,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
             while (dist > 1.0)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
-                {
-                    IsRunning = false;
-                    return;
-                }
-
                 pushForce = Math.Min(pushForce, dist);
 
                 if (dist >= targetArea)

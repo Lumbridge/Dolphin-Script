@@ -2,7 +2,7 @@
 using System.Threading;
 
 using static DolphinScript.Lib.Backend.RandomNumber;
-using static DolphinScript.Lib.Backend.GlobalVariables;
+using static DolphinScript.Lib.Backend.Common;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {

@@ -4,40 +4,11 @@ using System.Collections.Generic;
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.RandomNumber;
 using static DolphinScript.Lib.Backend.WindowControl;
-using static DolphinScript.Lib.Backend.GlobalVariables;
 
 namespace DolphinScript.Lib.Backend
 {
     class PointReturns
     {
-        /// <summary>
-        /// converts a config string to a point object
-        /// </summary>
-        /// <param name="ConfigString"></param>
-        /// <returns></returns>
-        static public POINT ConfigStringToPOINT(string ConfigString)
-        {
-            return new POINT(
-                int.Parse(GetSubstringByString(Alphabet[0], Alphabet[1], ConfigString)),
-                int.Parse(GetSubstringByString(Alphabet[1], Alphabet[2], ConfigString))
-                );
-        }
-
-        /// <summary>
-        /// converts a config string to a rect object
-        /// </summary>
-        /// <param name="ConfigString"></param>
-        /// <returns></returns>
-        static public RECT ConfigStringToRECT(string ConfigString)
-        {
-             return new RECT(
-                int.Parse(GetSubstringByString(Alphabet[0], Alphabet[1], ConfigString)),
-                int.Parse(GetSubstringByString(Alphabet[1], Alphabet[2], ConfigString)),
-                int.Parse(GetSubstringByString(Alphabet[2], Alphabet[3], ConfigString)),
-                int.Parse(GetSubstringByString(Alphabet[3], Alphabet[4], ConfigString))
-                );
-        }
-
         /// <summary>
         /// Returns the center point of a given rectangle area
         /// </summary>
@@ -152,25 +123,6 @@ namespace DolphinScript.Lib.Backend
         }
 
         /// <summary>
-        /// gets the position of a click area bounds inside of a window
-        /// </summary>
-        /// <param name="Window"></param>
-        /// <param name="ClickArea"></param>
-        /// <returns></returns>
-        public static RECT GetClickAreaPositionOnWindow(IntPtr Window, RECT ClickArea)
-        {
-            // get the window location
-            //
-            RECT WindowLocation = GetWindowPosition(Window);
-
-            // return the click area relative to the window position
-            //
-            return new RECT(
-                new POINT(WindowLocation.Left + ClickArea.Left, WindowLocation.Top + ClickArea.Top),
-                new POINT(WindowLocation.Left + ClickArea.Right, WindowLocation.Top + ClickArea.Bottom));
-        }
-
-        /// <summary>
         /// uses shift key to save an area on the screen
         /// </summary>
         /// <returns></returns>
@@ -225,6 +177,25 @@ namespace DolphinScript.Lib.Backend
             return area;
         }
 
+        /// <summary>
+        /// gets the position of a click area bounds inside of a window
+        /// </summary>
+        /// <param name="Window"></param>
+        /// <param name="ClickArea"></param>
+        /// <returns></returns>
+        public static RECT GetClickAreaPositionOnWindow(IntPtr Window, RECT ClickArea)
+        {
+            // get the window location
+            //
+            RECT WindowLocation = GetWindowPosition(Window);
+
+            // return the click area relative to the window position
+            //
+            return new RECT(
+                new POINT(WindowLocation.Left + ClickArea.Left, WindowLocation.Top + ClickArea.Top),
+                new POINT(WindowLocation.Left + ClickArea.Right, WindowLocation.Top + ClickArea.Bottom));
+        }
+        
         /// <summary>
         /// returns the position of a window using the handle
         /// </summary>
