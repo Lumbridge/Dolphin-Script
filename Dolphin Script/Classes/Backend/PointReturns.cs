@@ -7,12 +7,16 @@ using static DolphinScript.Lib.Backend.WindowControl;
 
 namespace DolphinScript.Lib.Backend
 {
+    /// <summary>
+    /// This class contains methods which generally return point values
+    /// there are exceptions for the RECT methods and list of point method.
+    /// </summary>
     class PointReturns
     {
         /// <summary>
         /// Returns the center point of a given rectangle area
         /// </summary>
-        static public POINT FindAreaCenter(POINT p1, POINT p2)
+        public static POINT FindAreaCenter(POINT p1, POINT p2)
         {
             // will store the center point we will be returning
             //
@@ -34,7 +38,7 @@ namespace DolphinScript.Lib.Backend
         /// <param name="TopleftPoint"></param>
         /// <param name="BottomRightPoint"></param>
         /// <returns></returns>
-        static public POINT GetRandomPointInArea(POINT TopleftPoint, POINT BottomRightPoint)
+        public static POINT GetRandomPointInArea(POINT TopleftPoint, POINT BottomRightPoint)
         {
             // will store a random point in the area
             //
@@ -55,7 +59,7 @@ namespace DolphinScript.Lib.Backend
         /// </summary>
         /// <param name="Area"></param>
         /// <returns></returns>
-        static public POINT GetRandomPointInArea(RECT Area)
+        public static POINT GetRandomPointInArea(RECT Area)
         {
             // will store a random point in the area
             //
@@ -126,7 +130,7 @@ namespace DolphinScript.Lib.Backend
         /// uses shift key to save an area on the screen
         /// </summary>
         /// <returns></returns>
-        static public List<POINT> RegisterClickArea()
+        public static List<POINT> RegisterClickArea()
         {
             // used to store the top left and bottom right of the registered area
             //

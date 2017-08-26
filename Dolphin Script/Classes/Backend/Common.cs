@@ -6,6 +6,9 @@ using static DolphinScript.Lib.Backend.WinAPI;
 
 namespace DolphinScript.Lib.Backend
 {
+    /// <summary>
+    /// This is a general class to keep methods and variables which are required in multiple different classes.
+    /// </summary>
     class Common
     {
         private static string status;

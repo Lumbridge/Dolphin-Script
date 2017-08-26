@@ -9,6 +9,9 @@ using static DolphinScript.Lib.Backend.PointReturns;
 
 namespace DolphinScript.Lib.Backend
 {
+    /// <summary>
+    /// This class contains methods which have some colour functionality such as getting the colour of a particular pixel.
+    /// </summary>
     class ColourEvent
     {
         /// <summary>

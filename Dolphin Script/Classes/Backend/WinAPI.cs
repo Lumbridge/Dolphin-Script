@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Drawing;
-using System.Text;
+using System.Runtime.InteropServices;
 
 namespace DolphinScript.Lib.Backend
 {
+    /// <summary>
+    /// This class contains methods and variables invoked from other languages and are used in multiple different classes.
+    /// </summary>
     class WinAPI
     {
         [DllImport("user32.dll")]

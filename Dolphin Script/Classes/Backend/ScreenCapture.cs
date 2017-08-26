@@ -7,64 +7,75 @@ using static DolphinScript.Lib.Backend.WinAPI;
 
 namespace DolphinScript.Lib.Backend
 {
+    /// <summary>
+    /// This class contains methods which allow for image capture of different areas of the screen.
+    /// </summary>
     class ScreenCapture
     {
-        public static Bitmap ScreenshotArea(Point p1, Point p2)
-        {
-            int w = p2.X - p1.X,
-                h = p2.Y - p1.Y;
-
-            // this is where we will store a snapshot of the screen
-            Bitmap bmpScreenshot = new Bitmap(w, h);
-
-            // creates a graphics object so we can draw the screen in the bitmap (bmpScreenshot)
-            Graphics g = Graphics.FromImage(bmpScreenshot);
-
-            // copy from screen into the bitmap we created
-            g.CopyFromScreen(p1.X, p1.Y, 0, 0, new Size(w * 2, h * 2));
-
-            // return the screenshot
-            return bmpScreenshot;
-        }
-
+        /// <summary>
+        /// This method returns a screenshot of the area passed in.
+        /// </summary>
+        /// <param name="area"></param>
+        /// <returns></returns>
         public static Bitmap ScreenshotArea(RECT area)
         {
             // this is where we will store a snapshot of the screen
+            //
             Bitmap bmpScreenshot = new Bitmap(area.Width, area.Height);
 
             // creates a graphics object so we can draw the screen in the bitmap (bmpScreenshot)
+            //
             Graphics g = Graphics.FromImage(bmpScreenshot);
 
             // copy from screen into the bitmap we created
+            //
             g.CopyFromScreen(area.Left, area.Top, 0, 0, new Size(area.Width * 2, area.Height * 2));
 
             // return the screenshot
+            //
             return bmpScreenshot;
         }
 
-        public static Bitmap ScreenshotDestinationPoint(Point p1, Point p2)
+        /// <summary>
+        /// This method returns a screenshot of the click area and a small area around it, the click area is marked by a transparent overlay.
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        public static Bitmap ScreenshotAreaWithTransparentOverlay(RECT area)
         {
-            int w = p2.X - p1.X,
-                h = p2.Y - p2.X;
-
             // this is where we will store a snapshot of the screen
-            Bitmap bmpScreenshot = new Bitmap(w * 3, h * 3);
+            //
+            Bitmap bmpScreenshot = new Bitmap(area.Width * 3, area.Height * 3);
 
             // creates a graphics object so we can draw the screen in the bitmap (bmpScreenshot)
+            //
             Graphics g = Graphics.FromImage(bmpScreenshot);
 
+            // create a semi-transparent colour to draw over the click area
+            //
             Color transparentRed = Color.FromArgb(95, Color.Red);
+            
+            // create a brush using the semi-transparent colour we created
+            //
             SolidBrush customBrush = new SolidBrush(transparentRed);
 
             // copy from screen into the bitmap we created
-            g.CopyFromScreen(p1.X - w, p1.Y - h, 0, 0, new Size(w * 3, h * 3));
+            //
+            g.CopyFromScreen(area.Left - area.Width, area.Top - area.Height, 0, 0, new Size(area.Width * 3, area.Height * 3));
 
-            g.FillRectangle(customBrush, new RectangleF(new PointF(w, h), new SizeF(w, h)));
+            // draw a transparent rectangle over the actual click area
+            //
+            g.FillRectangle(customBrush, new RectangleF(new PointF(area.Width, area.Height), new SizeF(area.Width, area.Height)));
 
             // return the screenshot
+            //
             return bmpScreenshot;
         }
 
+        /// <summary>
+        /// This class is used to mainly control bitmap data so we can use it in arrays and loops quickly.
+        /// </summary>
         public class LockBitmap
         {
             Bitmap source = null;
