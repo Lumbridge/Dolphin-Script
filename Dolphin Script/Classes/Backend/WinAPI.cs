@@ -9,12 +9,6 @@ namespace DolphinScript.Lib.Backend
     /// </summary>
     class WinAPI
     {
-        [DllImport("user32.dll")]
-        public static extern short GetAsyncKeyState(VirtualKeyStates vKey);
-
-        [DllImport("user32.dll")]
-        public static extern bool GetCursorPos(out POINT lpPoint);
-
         // minimise/maximise window flags
         //
         public static int SW_SHOWNORMAL = 1;
@@ -330,5 +324,21 @@ namespace DolphinScript.Lib.Backend
             VK_OEM_CLEAR = 0xFE,
             None
         }
+
+        /// <summary>
+        /// imported method which allows you to listen for a keypress
+        /// </summary>
+        /// <param name="vKey"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        public static extern short GetAsyncKeyState(VirtualKeyStates vKey);
+
+        /// <summary>
+        /// imported method which returns the current position of the mouse cursor
+        /// </summary>
+        /// <param name="lpPoint"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        public static extern bool GetCursorPos(out POINT lpPoint);
     }
 }

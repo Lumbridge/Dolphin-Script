@@ -10,6 +10,8 @@ namespace DolphinScript.Lib.ScriptEventClasses
     {
         public override void DoEvent()
         {
+            // update the status label on the main form
+            //
             Status = $"";
 
             SendKeys.SendWait(KeyboardKeys);

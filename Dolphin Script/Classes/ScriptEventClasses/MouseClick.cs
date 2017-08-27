@@ -12,28 +12,20 @@ namespace DolphinScript.Lib.ScriptEventClasses
     /// <summary>
     /// This event can be used to simulate a variety of different mouse clicks
     /// </summary>
-
     [Serializable]
     class MouseClick : ScriptEvent
     {
-        /// <summary>
-        /// we import this mouse_event method so we can use it to perform different operations using the mouse buttons
-        /// </summary>
-        /// <param name="dwFlags"></param>
-        /// <param name="dx"></param>
-        /// <param name="dy"></param>
-        /// <param name="cButtons"></param>
-        /// <param name="dwExtraInfo"></param>
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
-
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
         public override void DoEvent()
         {
+            // update the status label on the main form
+            //
             Status = $"Mouse Click: {MouseButton}";
 
+            // check which virtual mouse state is associated with the event and perform that type of mouse event
+            //
             if (MouseButton == VirtualMouseStates.Left_Click)
                 LeftClick();
             else if (MouseButton == VirtualMouseStates.Right_Click)
@@ -54,6 +46,10 @@ namespace DolphinScript.Lib.ScriptEventClasses
                 RightUP();
         }
 
+        /// <summary>
+        /// returns a string which is added to the listbox to give information about the event which was added to the event list
+        /// </summary>
+        /// <returns></returns>
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)
@@ -157,5 +153,16 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
             Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(GetRandomDouble(0.1, 0.3))));
         }
+
+        /// <summary>
+        /// we import this mouse_event method so we can use it to perform different operations using the mouse buttons
+        /// </summary>
+        /// <param name="dwFlags"></param>
+        /// <param name="dx"></param>
+        /// <param name="dy"></param>
+        /// <param name="cButtons"></param>
+        /// <param name="dwExtraInfo"></param>
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
     }
 }

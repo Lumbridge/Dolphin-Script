@@ -21,10 +21,14 @@ namespace DolphinScript.Lib.ScriptEventClasses
             //
             RECT NewSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
 
+            // update the status label on the main form
+            //
             Status = $"Pause while colour: {SearchColour} not found in area: {NewSearchArea.PrintArea()} on window: {WindowToClickTitle}, waiting {ReSearchPause} seconds before re-searching.";
 
             while (!ColourExistsInArea(NewSearchArea, SearchColour))
             {
+                // bring the window associated with this event to the front
+                //
                 BringEventWindowToFront(this);
 
                 Thread.Sleep(TimeSpan.FromSeconds(ReSearchPause));
@@ -35,6 +39,10 @@ namespace DolphinScript.Lib.ScriptEventClasses
             }
         }
 
+        /// <summary>
+        /// returns a string which is added to the listbox to give information about the event which was added to the event list
+        /// </summary>
+        /// <returns></returns>
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)

@@ -17,8 +17,12 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// </summary>
         public override void DoEvent()
         {
+            // update the status label on the main form
+            //
             Status = $"Mouse move to any colour in list of selected colours on window: {WindowToClickTitle}.";
 
+            // bring the window associated with this event to the front
+            //
             BringEventWindowToFront(this);
 
             // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
@@ -29,6 +33,10 @@ namespace DolphinScript.Lib.ScriptEventClasses
             MoveMouseToColour(newClickArea, newSearchColour);
         }
 
+        /// <summary>
+        /// returns a string which is added to the listbox to give information about the event which was added to the event list
+        /// </summary>
+        /// <returns></returns>
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)

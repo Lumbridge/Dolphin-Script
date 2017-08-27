@@ -6,9 +6,8 @@ using static DolphinScript.Lib.Backend.Common;
 namespace DolphinScript.Lib.ScriptEventClasses
 {
     /// <summary>
-    /// This event will pause the script for a fixed period of time 
+    /// This event will pause the script for a fixed period of time .
     /// </summary>
-
     [Serializable]
     class FixedPause : ScriptEvent
     {
@@ -17,7 +16,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// </summary>
         public override void DoEvent()
         {
-            // sets the status label
+            // update the status label on the main form
             //
             Status = $"Fixed pause for {DelayDuration} seconds.";
 

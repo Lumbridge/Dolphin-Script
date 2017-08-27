@@ -10,12 +10,12 @@ using static DolphinScript.Lib.Backend.MouseMoveMath;
 
 namespace DolphinScript.Lib.ScriptEventClasses
 {
+    /// <summary>
+    /// This class provides the core mouse moving functionality.
+    /// </summary>
     [Serializable]
     class MouseMove : ScriptEvent
     {
-        [DllImport("User32.Dll")]
-        public static extern long SetCursorPos(int x, int y);
-
         // mouse movement variables
         //
         private static double
@@ -149,11 +149,17 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// </summary>
         public override void DoEvent()
         {
+            // update the status label on the main form
+            //
             Status = $"Mouse move: {CoordsToMoveTo.ToString()}.";
 
             MoveMouse(CoordsToMoveTo);
         }
 
+        /// <summary>
+        /// returns a string which is added to the listbox to give information about the event which was added to the event list
+        /// </summary>
+        /// <returns></returns>
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)
@@ -161,5 +167,14 @@ namespace DolphinScript.Lib.ScriptEventClasses
             else
                 return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
         }
+
+        /// <summary>
+        /// Imported method which allows us to set the position of the mouse cursor.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        [DllImport("User32.Dll")]
+        public static extern long SetCursorPos(int x, int y);
     }
 }

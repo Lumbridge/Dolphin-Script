@@ -17,8 +17,12 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// </summary>
         public override void DoEvent()
         {
+            // update the status label on the main form
+            //
             Status = $"Move mouse to {CoordsToMoveTo.ToString()} on window: {WindowTitle}.";
 
+            // bring the window associated with this event to the front
+            //
             BringEventWindowToFront(this);
 
             POINT NewClickPoint = new POINT(
@@ -28,6 +32,10 @@ namespace DolphinScript.Lib.ScriptEventClasses
             MoveMouse(NewClickPoint);
         }
 
+        /// <summary>
+        /// returns a string which is added to the listbox to give information about the event which was added to the event list
+        /// </summary>
+        /// <returns></returns>
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)

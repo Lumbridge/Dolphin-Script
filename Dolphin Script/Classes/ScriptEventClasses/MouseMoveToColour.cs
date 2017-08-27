@@ -47,11 +47,19 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// </summary>
         public override void DoEvent()
         {
+            // update the status label on the main form
+            //
             Status = $"Mouse move to colour: {SearchColour} in area: {ColourSearchArea.PrintArea()}.";
 
+            // perform the mouse move method
+            //
             MoveMouseToColour(ColourSearchArea, SearchColour);
         }
 
+        /// <summary>
+        /// returns a string which is added to the listbox to give information about the event which was added to the event list
+        /// </summary>
+        /// <returns></returns>
         public override string GetEventListBoxString()
         {
             if (GroupID == -1)
