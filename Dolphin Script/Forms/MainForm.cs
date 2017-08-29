@@ -272,29 +272,98 @@ namespace DolphinScript
         /// <param name="e"></param>
         private void moveElementUpButton_Click(object sender, EventArgs e)
         {
-            // check that the selectedindex is greater than 0 to avoid an out of bounds exception
-            //
+            /* 
+             * possibilities include:
+             * non-group selected, group above
+             * group selected, non-group above
+             * group selected, same group above
+             * group selected, different group above
+             * non-group selected, non-group above
+            */
+
             if (ListBox_Events.SelectedIndex > 0)
             {
-                // store the selected index as temp so it's easier to type
+                // first get the selected and above events
                 //
-                var temp = ListBox_Events.SelectedIndex;
+                ScriptEvent selected = AllEvents[ListBox_Events.SelectedIndex];
+                ScriptEvent above = AllEvents[ListBox_Events.SelectedIndex - 1];
 
-                // swap the two items in the allevents list
+                // get the indices of the events we're using
                 //
-                Swap(AllEvents, temp - 1, temp);
+                int selectedIndex = ListBox_Events.SelectedIndex;
+                int aboveIndex = ListBox_Events.SelectedIndex - 1;
 
-                // update the listbox to show the change
                 //
-                UpdateListBox();
+                // non-group selected, non-group above (normal swap - selected moves above, above event moves below)
+                //
+                if (!selected.IsPartOfGroup && !above.IsPartOfGroup)
+                {
+                    Swap(AllEvents, aboveIndex, selectedIndex);
+                }
+                //
+                // group selected, non-group above (group moves above non-group event & non-group event above moves below group)
+                //
+                else if(selected.IsPartOfGroup && !above.IsPartOfGroup)
+                {
+                    // get the size of the group we need to shift
+                    //
+                    int groupSize = selected.EventsInGroup.Count;
 
-                // select the item again after it's moved so the user can move it again if needed
+                    // shift the events one by one until the non-group event is below the group
+                    //
+                    ShiftItem(AllEvents, aboveIndex, groupSize);
+                }
                 //
-                if (temp - 1 >= 0)
-                    ListBox_Events.SelectedIndex = temp - 1;
-                else
-                    ListBox_Events.SelectedIndex = temp;
+                // group selected, same group above (move the group event up within the group)
+                //
+                else if(selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID == above.GroupID)
+                {
+                    // swap the events in the main event list
+                    //
+                    Swap(AllEvents, aboveIndex, selectedIndex);
+
+                    // swap the events within the group list
+                    //
+                    Swap(AllGroups[AllEvents[selectedIndex].GroupID - 1], aboveIndex, selectedIndex);
+                }
+                //
+                // group selected, different group above (swap the position of both groups)
+                //
+                else if(selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID != above.GroupID)
+                {
+
+                }
             }
+
+            UpdateListBox();
+
+            //// check that the selectedindex is greater than 0 to avoid an out of bounds exception
+            ////
+            //if (ListBox_Events.SelectedIndex > 0)
+            //{
+            //    // get the event above the selected event
+            //    //
+            //    ScriptEvent aboveEvent = AllEvents[ListBox_Events.SelectedIndex - 1];
+
+            //    // store the selected index as temp so it's easier to type
+            //    //
+            //    int selectedIndex = ListBox_Events.SelectedIndex;
+
+            //    // swap the two items in the allevents list
+            //    //
+            //    Swap(AllEvents, selectedIndex - 1, selectedIndex);
+
+            //    // update the listbox to show the change
+            //    //
+            //    UpdateListBox();
+
+            //    // select the item again after it's moved so the user can move it again if needed
+            //    //
+            //    if (selectedIndex - 1 >= 0)
+            //        ListBox_Events.SelectedIndex = selectedIndex - 1;
+            //    else
+            //        ListBox_Events.SelectedIndex = selectedIndex;
+            //}
         }
 
         /// <summary>
@@ -441,6 +510,17 @@ namespace DolphinScript
             //
             if (ListBox_Events.SelectedIndices.Count > 1)
             {
+                // check that none of the selected events are part of a group already
+                //
+                for(int i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count; i++)
+                {
+                    if (AllEvents[i].IsPartOfGroup)
+                    {
+                        MessageBox.Show("One or more selected events are already part of a group, events can only be part of one group.");
+                        return;
+                    }
+                }
+
                 // add a new list of script events to the all groups list
                 //
                 AllGroups.Add(new List<ScriptEvent>());
@@ -487,9 +567,59 @@ namespace DolphinScript
             }
         }
 
+        /// <summary>
+        /// this button disbands the group associated with the selected event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button_RemoveRepeatGroup_Click(object sender, EventArgs e)
         {
-            // to be implemented
+            // check that we only have one event selected
+            //
+            if(ListBox_Events.SelectedIndices.Count > 1)
+            {
+                // we have more than one event selected
+                //
+                MessageBox.Show("Select only one event from the group and try again.");
+            }
+            else
+            {
+                // check that the item we have selected is part of a group
+                //
+                if (!AllEvents[ListBox_Events.SelectedIndex].IsPartOfGroup)
+                {
+                    // event isn't part of a group
+                    //
+                    MessageBox.Show("Error: Event not part of group.");
+                }
+                else
+                {
+                    // create a local variable of the group we're removing
+                    //
+                    int removeGroupID = AllEvents[ListBox_Events.SelectedIndex].GroupID;
+
+                    // remove the group flags from the allevents events
+                    //
+                    foreach (ScriptEvent ev in AllEvents)
+                    {
+                        if (ev.GroupID == removeGroupID)
+                        {
+                            ev.GroupID = -1;
+                            ev.IsPartOfGroup = false;
+                            ev.NumberOfCycles = -1;
+                            ev.EventsInGroup.Clear();
+                        }
+                    }
+
+                    // remove the group from the all groups collection
+                    //
+                    AllGroups[removeGroupID - 1].Clear();
+
+                    // update the main event list box
+                    //
+                    UpdateListBox();
+                }
+            }
         }
 
         /// <summary>
@@ -846,8 +976,9 @@ namespace DolphinScript
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/
                 }
+            }
                 else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInArea.Text = temp;
@@ -1414,7 +1545,7 @@ namespace DolphinScript
 
                     // take a screenshot of the search area and store it in our bitmap
                     //
-                    ColourSelectionScreenshot = ScreenshotArea(p1, p2);
+                    ColourSelectionScreenshot = ScreenshotArea(new RECT(p1, p2));
 
                     // set the picturebox image to the screenshot we took
                     //

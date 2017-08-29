@@ -155,5 +155,24 @@ namespace DolphinScript.Lib.Backend
             //
             list[indexB] = tmp;
         }
+
+        /// <summary>
+        /// moves a list item to another position in the collection
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="shiftCount"></param>
+        public static void ShiftItem(IList<ScriptEvent> list, int startIndex, int shiftCount)
+        {
+            for(int i = startIndex; i < startIndex + shiftCount; i++)
+            {
+                Swap(list, i, i + 1);
+            }
+        }
+
+        public static void ShiftRange(IList<ScriptEvent> list, int startIndexA, int groupSizeA, int startIndexB, int groupSizeB)
+        {
+
+        }
     }
 }

@@ -1295,7 +1295,7 @@
             // 
             // Picturebox_ColourSelectionArea
             // 
-            this.Picturebox_ColourSelectionArea.Location = new System.Drawing.Point(280, 85);
+            this.Picturebox_ColourSelectionArea.Location = new System.Drawing.Point(420, 43);
             this.Picturebox_ColourSelectionArea.Name = "Picturebox_ColourSelectionArea";
             this.Picturebox_ColourSelectionArea.Size = new System.Drawing.Size(100, 50);
             this.Picturebox_ColourSelectionArea.TabIndex = 50;

@@ -48,33 +48,54 @@ namespace DolphinScript.Lib.ScriptEventClasses
         //
         public string WindowToClickTitle { get; set; }
 
-        // fixed click position
+        // POINT we are going to move the mouse to in mouse move events
+        //
         public POINT CoordsToMoveTo { get; set; }
 
-        // area cick
+        // screen region we are going to move the mouse to in mouse move events
+        //
         public RECT ClickArea { get; set; }
         
-        // click event
+        // click event mouse button
+        //
         public VirtualMouseStates MouseButton { get; set; }
 
-        // keyboard event
+        // string of keys we are sending during a keyboard type event
+        //
         public string KeyboardKeys { get; set; }
 
-        // delay event
+        // double variables to use in pause events
+        //
         public double DelayDuration { get; set; }
         public double DelayMinimum { get; set; }
         public double DelayMaximum { get; set; }
 
-        // area colour search
+        // colour integer we are going to use when searching for colour in colour search events
+        //
         public int SearchColour { get; set; }
-        public List<int> SearchColours { get; set; }
-        public RECT ColourSearchArea { get; set; }
-        public bool ColourWasFound { get; set; }
 
-        // event group
+        // list of search colours for multi-colour search events
+        //
+        public List<int> SearchColours { get; set; }
+
+        // area we will search for colour in colour search events
+        //
+        public RECT ColourSearchArea { get; set; }
+
+        // repeat group event list
+        //
         public List<ScriptEvent> EventsInGroup { get; set; }
+
+        // tells us if this event is part of a group event list
+        //
         public bool IsPartOfGroup { get; set; }
+
+        // gives us the Id of the group that this event is part of
+        //
         public int GroupID { get; set; }
+
+        // tells us how many times the repeat group is going to repeat for before continuing
+        //
         public int NumberOfCycles { get; set; }
 
         /// <summary>
@@ -95,7 +116,6 @@ namespace DolphinScript.Lib.ScriptEventClasses
             SearchColour = -1;
             SearchColours = new List<int>();
             ColourSearchArea = new RECT();
-            ColourWasFound = false;
             EventsInGroup = new List<ScriptEvent>();
             IsPartOfGroup = false;
             GroupID = -1;
