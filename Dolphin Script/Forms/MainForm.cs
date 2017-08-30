@@ -1,4 +1,7 @@
-﻿using System;
+﻿//
+// native namespace references
+//
+using System;
 using System.IO;
 using System.Drawing;
 using System.Threading;
@@ -7,8 +10,14 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 
+//
+// script event object reference
+//
 using DolphinScript.Lib.ScriptEventClasses;
 
+//
+// static class references
+//
 using static DolphinScript.Lib.Backend.Common;
 using static DolphinScript.Lib.Backend.WinAPI;
 using static DolphinScript.Lib.Backend.ColourEvent;
@@ -226,8 +235,10 @@ namespace DolphinScript
         }
 
         #endregion
-        
+
         #region Form Control Events
+
+        #region Buttons
 
         /// <summary>
         /// button which starts the script
@@ -303,7 +314,7 @@ namespace DolphinScript
                 //
                 // group selected, non-group above (group moves above non-group event & non-group event above moves below group)
                 //
-                else if(selected.IsPartOfGroup && !above.IsPartOfGroup)
+                else if (selected.IsPartOfGroup && !above.IsPartOfGroup)
                 {
                     // get the size of the group we need to shift
                     //
@@ -316,7 +327,7 @@ namespace DolphinScript
                 //
                 // group selected, same group above (move the group event up within the group)
                 //
-                else if(selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID == above.GroupID)
+                else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID == above.GroupID)
                 {
                     // get the indices of the events in their group-event lists so we can swap them
                     //
@@ -334,7 +345,7 @@ namespace DolphinScript
                 //
                 // group selected, different group above (swap the position of both groups)
                 //
-                else if(selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID != above.GroupID)
+                else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID != above.GroupID)
                 {
                     int aboveGroupSize = above.EventsInGroup.Count;
                     int selectedGroupSize = selected.EventsInGroup.Count;
@@ -353,10 +364,21 @@ namespace DolphinScript
 
                 // select the item again after it's moved so the user can move it again if needed
                 //
-                if (selectedIndex - 1 >= 0)
-                    ListBox_Events.SelectedIndex = selectedIndex - 1;
+                if (selected.IsPartOfGroup)
+                {
+                    // if we move a group past another group then set the selected index to the top of the group
+                    //
+                    ListBox_Events.SelectedIndex = selected.EventsInGroup.Count - selectedIndex;
+                }
                 else
-                    ListBox_Events.SelectedIndex = selectedIndex;
+                {
+                    // select the event we just moved so we can move it again quickly if we want to
+                    //
+                    if (selectedIndex - 1 >= 0)
+                        ListBox_Events.SelectedIndex = selectedIndex - 1;
+                    else
+                        ListBox_Events.SelectedIndex = selectedIndex;
+                }
             }
         }
 
@@ -434,7 +456,7 @@ namespace DolphinScript
                     // get the size of the group below us
                     //
                     int belowGroupSize = below.EventsInGroup.Count;
-                    
+
                     // get the size of the group we're shifting
                     //
                     int selectedGroupSize = selected.EventsInGroup.Count;
@@ -460,35 +482,6 @@ namespace DolphinScript
                 else
                     ListBox_Events.SelectedIndex = selectedIndex;
             }
-        }
-
-        /// <summary>
-        /// called when an item in the events listbox is selected
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ListBox_Events_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // disable the move item up button if it's already at the top
-            //
-            if (ListBox_Events.SelectedIndex <= 0)
-                button_MoveEventUp.Enabled = false;
-            else
-                button_MoveEventUp.Enabled = true;
-
-            // disable the move item down button if it's already at the bottom
-            //
-            if (ListBox_Events.SelectedIndex >= ListBox_Events.Items.Count - 1)
-                button_MoveEventDown.Enabled = false;
-            else
-                button_MoveEventDown.Enabled = true;
-
-            // if the listbox has no item selected then diable the remove item button
-            //
-            if (ListBox_Events.SelectedIndex <= ListBox_Events.Items.Count - 1 && ListBox_Events.SelectedIndex >= 0)
-                button_RemoveEvent.Enabled = true;
-            else
-                button_RemoveEvent.Enabled = false;
         }
 
         /// <summary>
@@ -532,38 +525,6 @@ namespace DolphinScript
         }
 
         /// <summary>
-        /// when this value is changed we update the global mouse speed variable and the value on the mouse speed track bar
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void NumericUpDown_MouseSpeed_ValueChanged(object sender, EventArgs e)
-        {
-            // update the global mouse speed variable
-            //
-            MouseSpeed = (int)NumericUpDown_MouseSpeed.Value;
-
-            // update the mouse speed trackbar with the new speed
-            //
-            TrackBar_MouseSpeed.Value = (int)NumericUpDown_MouseSpeed.Value;
-        }
-
-        /// <summary>
-        /// when this value is changed we update the global mouse speed variable and the value in the mouse speed number box
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TrackBar_MouseSpeed_Scroll(object sender, EventArgs e)
-        {
-            // update the global mouse speed variable
-            //
-            NumericUpDown_MouseSpeed.Value = TrackBar_MouseSpeed.Value;
-
-            // update the mouse speed number box with the new speed
-            //
-            MouseSpeed = TrackBar_MouseSpeed.Value;
-        }
-
-        /// <summary>
         /// this button adds the selected items to a group, sub groups can be looped a number of times before the script continues
         /// </summary>
         /// <param name="sender"></param>
@@ -576,7 +537,7 @@ namespace DolphinScript
             {
                 // check that none of the selected events are part of a group already
                 //
-                for(int i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count; i++)
+                for (int i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count; i++)
                 {
                     if (AllEvents[i].IsPartOfGroup)
                     {
@@ -604,7 +565,7 @@ namespace DolphinScript
                     // set the number of times the group is going to repeat
                     //
                     AllEvents[i].NumberOfCycles = (int)NumericUpDown_RepeatAmount.Value;
-                    
+
                     // add the event to the all groups sub-list
                     //
                     AllGroups[AllGroups.Count - 1].Add(AllEvents[i]);
@@ -618,7 +579,7 @@ namespace DolphinScript
                     //
                     AllEvents[i].EventsInGroup = AllGroups[AllGroups.Count - 1];
                 }
-                
+
                 // update the listbox to show any changes
                 //
                 UpdateListBox();
@@ -640,7 +601,7 @@ namespace DolphinScript
         {
             // check that we only have one event selected
             //
-            if(ListBox_Events.SelectedIndices.Count > 1)
+            if (ListBox_Events.SelectedIndices.Count > 1)
             {
                 // we have more than one event selected
                 //
@@ -686,6 +647,22 @@ namespace DolphinScript
             }
         }
 
+        #endregion
+
+        #region Menu Items
+
+        /// <summary>
+        /// this menu item is used in the event that the script ends but the button is not re-enabled
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void refreshFormToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToggleControls(true);
+            IsRunning = false;
+            IsRegistering = false;
+        }
+
         /// <summary>
         /// this will be called when the save script button is pressed on the form
         /// </summary>
@@ -725,7 +702,7 @@ namespace DolphinScript
             //
             var result = sfd.ShowDialog();
 
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 using (Stream s = File.Open(sfd.FileName, FileMode.Create))
                 {
@@ -776,7 +753,7 @@ namespace DolphinScript
             //
             var result = ofd.ShowDialog();
 
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 using (Stream s = File.Open(ofd.FileName, FileMode.Open))
                 {
@@ -790,6 +767,30 @@ namespace DolphinScript
             //
             UpdateListBox();
         }
+
+        /// <summary>
+        /// basic information about creator github
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Created by Ryan Sainty @ https://github.com/Lumbridge");
+        }
+
+        /// <summary>
+        /// opens the program wiki in user's default browser
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Lumbridge/Dolphin-Script/wiki");
+        }
+
+        #endregion
+
+        #region Numeric Up/Down controls
 
         /// <summary>
         /// the primary function here is to make sure that the lower bound value doesn't go above the upper bound value
@@ -822,25 +823,76 @@ namespace DolphinScript
         }
 
         /// <summary>
-        /// basic information about creator github
+        /// when this value is changed we update the global mouse speed variable and the value on the mouse speed track bar
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NumericUpDown_MouseSpeed_ValueChanged(object sender, EventArgs e)
         {
-            MessageBox.Show("Created by Ryan Sainty @ https://github.com/Lumbridge");
+            // update the global mouse speed variable
+            //
+            MouseSpeed = (int)NumericUpDown_MouseSpeed.Value;
+
+            // update the mouse speed trackbar with the new speed
+            //
+            TrackBar_MouseSpeed.Value = (int)NumericUpDown_MouseSpeed.Value;
         }
+
+        #endregion
+
+        #region Listbox Control Events
 
         /// <summary>
-        /// opens the program wiki in user's default browser
+        /// called when an item in the events listbox is selected
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ListBox_Events_SelectedIndexChanged(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Lumbridge/Dolphin-Script/wiki");
+            // disable the move item up button if it's already at the top
+            //
+            if (ListBox_Events.SelectedIndex <= 0)
+                button_MoveEventUp.Enabled = false;
+            else
+                button_MoveEventUp.Enabled = true;
+
+            // disable the move item down button if it's already at the bottom
+            //
+            if (ListBox_Events.SelectedIndex >= ListBox_Events.Items.Count - 1)
+                button_MoveEventDown.Enabled = false;
+            else
+                button_MoveEventDown.Enabled = true;
+
+            // if the listbox has no item selected then diable the remove item button
+            //
+            if (ListBox_Events.SelectedIndex <= ListBox_Events.Items.Count - 1 && ListBox_Events.SelectedIndex >= 0)
+                button_RemoveEvent.Enabled = true;
+            else
+                button_RemoveEvent.Enabled = false;
         }
 
+        #endregion
+
+        #region Trackbar Events
+
+        /// <summary>
+        /// when this value is changed we update the global mouse speed variable and the value in the mouse speed number box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TrackBar_MouseSpeed_Scroll(object sender, EventArgs e)
+        {
+            // update the global mouse speed variable
+            //
+            NumericUpDown_MouseSpeed.Value = TrackBar_MouseSpeed.Value;
+
+            // update the mouse speed number box with the new speed
+            //
+            MouseSpeed = TrackBar_MouseSpeed.Value;
+        }
+
+        #endregion
+        
         #endregion Form Control Events
 
         #region Pause Event Buttons
@@ -941,7 +993,7 @@ namespace DolphinScript
 
         private void Button_InsertMultiColourSearchAreaWindowEvent_Click(object sender, EventArgs e)
         {
-            //Task.Run(() => MouseMoveToMutliColourInAreaOnWindowLoop());
+            Task.Run(() => MouseMoveToMutliColourInAreaOnWindowLoop());
         }
 
         #endregion
@@ -1273,6 +1325,9 @@ namespace DolphinScript
 
         #region Mouse Move Event Register Loops
 
+        /// <summary>
+        /// this is the register loop used to register a mouse move to a fixed point event
+        /// </summary>
         void MouseMoveToFixedPointLoop()
         {
             POINT p1 = new POINT();
@@ -1306,6 +1361,9 @@ namespace DolphinScript
             Button_InsertMouseMoveEvent.Text = temp;
         }
 
+        /// <summary>
+        /// this is the register loop used to register a mouse move to area on screen event
+        /// </summary>
         void MouseMoveToAreaLoop()
         {
             POINT p1 = new POINT(), p2 = new POINT();
@@ -1345,6 +1403,9 @@ namespace DolphinScript
             Button_InsertMouseMoveToAreaEvent.Text = temp;
         }
 
+        /// <summary>
+        /// this is the register loop used to register a mouse move to point on window event
+        /// </summary>
         void MouseMoveToPointOnWindowLoop()
         {
             POINT p1 = new POINT();
@@ -1378,6 +1439,9 @@ namespace DolphinScript
             Button_InsertMouseMoveToPointOnWindowEvent.Text = temp;
         }
 
+        /// <summary>
+        /// this is the register loop used to register a mouse move to area on window event
+        /// </summary>
         void MouseMoveToAreaOnWindowLoop()
         {
             POINT p1 = new POINT(), p2 = new POINT();
@@ -1417,6 +1481,9 @@ namespace DolphinScript
             Button_InsertMouseMoveToAreaOnWindowEvent.Text = temp;
         }
 
+        /// <summary>
+        /// this is the register loop used to register a mouse move to colour in area event
+        /// </summary>
         void MouseMoveToColourInAreaLoop()
         {
             POINT p1 = new POINT(), p2 = new POINT();
@@ -1481,6 +1548,9 @@ namespace DolphinScript
             Button_InsertColourSearchAreaEvent.Text = temp;
         }
 
+        /// <summary>
+        /// this is the register loop used to register a mouse move to colour in area on window event
+        /// </summary>
         void MouseMoveToColourInAreaOnWindowLoop()
         {
             POINT p1 = new POINT(), p2 = new POINT();
@@ -1544,6 +1614,9 @@ namespace DolphinScript
             Button_InsertColourSearchAreaWindowEvent.Text = temp;
         }
 
+        /// <summary>
+        /// this is the register loop used to register a mouse move to multi colour in area on window event
+        /// </summary>
         void MouseMoveToMutliColourInAreaOnWindowLoop()
         {
             // will store the colours we will be searching for
@@ -1598,14 +1671,6 @@ namespace DolphinScript
                     //
                     int w = p2.X - p1.X,
                         h = p2.Y - p1.Y;
-
-                    // change the size of the window to show the search area screenshot
-                    //
-                    Size = new Size(Size.Width + w + 10, Size.Height + h + 10);
-
-                    // set the size of the picture box we're going to use to display the search area
-                    //
-                    Picturebox_ColourSelectionArea.Size = new Size(w, h);
 
                     // take a screenshot of the search area and store it in our bitmap
                     //
