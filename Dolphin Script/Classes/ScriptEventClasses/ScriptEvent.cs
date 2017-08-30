@@ -94,6 +94,20 @@ namespace DolphinScript.Lib.ScriptEventClasses
         //
         public int GroupID { get; set; }
 
+        // gives us the index of the event inside it's event group
+        //
+        public int GroupEventIndex
+        {
+            get
+            {
+                for (int i = 0; i < EventsInGroup.Count; i++)
+                    if (EventsInGroup[i] == this)
+                        return i;
+
+                return -1;
+            }
+        }
+
         // tells us how many times the repeat group is going to repeat for before continuing
         //
         public int NumberOfCycles { get; set; }

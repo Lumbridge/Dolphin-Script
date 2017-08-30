@@ -318,52 +318,46 @@ namespace DolphinScript
                 //
                 else if(selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID == above.GroupID)
                 {
+                    // get the indices of the events in their group-event lists so we can swap them
+                    //
+                    int selectedGroupIndex = selected.GroupEventIndex;
+                    int aboveGroupIndex = above.GroupEventIndex;
+
                     // swap the events in the main event list
                     //
-                    Swap(AllEvents, aboveIndex, selectedIndex);
+                    Swap(AllEvents, selectedIndex, aboveIndex);
 
                     // swap the events within the group list
                     //
-                    Swap(AllGroups[AllEvents[selectedIndex].GroupID - 1], aboveIndex, selectedIndex);
+                    Swap(AllGroups[AllEvents[selectedIndex].GroupID - 1], selectedGroupIndex, aboveGroupIndex);
                 }
                 //
                 // group selected, different group above (swap the position of both groups)
                 //
                 else if(selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID != above.GroupID)
                 {
+                    int aboveGroupSize = above.EventsInGroup.Count;
+                    int selectedGroupSize = selected.EventsInGroup.Count;
 
+                    ShiftRange(AllEvents, aboveIndex - aboveGroupSize + 1, aboveGroupSize, selectedGroupSize);
                 }
+                //
+                // some error occurred
+                //
+                else
+                {
+                    MessageBox.Show("Error moving event.");
+                }
+
+                UpdateListBox();
+
+                // select the item again after it's moved so the user can move it again if needed
+                //
+                if (selectedIndex - 1 >= 0)
+                    ListBox_Events.SelectedIndex = selectedIndex - 1;
+                else
+                    ListBox_Events.SelectedIndex = selectedIndex;
             }
-
-            UpdateListBox();
-
-            //// check that the selectedindex is greater than 0 to avoid an out of bounds exception
-            ////
-            //if (ListBox_Events.SelectedIndex > 0)
-            //{
-            //    // get the event above the selected event
-            //    //
-            //    ScriptEvent aboveEvent = AllEvents[ListBox_Events.SelectedIndex - 1];
-
-            //    // store the selected index as temp so it's easier to type
-            //    //
-            //    int selectedIndex = ListBox_Events.SelectedIndex;
-
-            //    // swap the two items in the allevents list
-            //    //
-            //    Swap(AllEvents, selectedIndex - 1, selectedIndex);
-
-            //    // update the listbox to show the change
-            //    //
-            //    UpdateListBox();
-
-            //    // select the item again after it's moved so the user can move it again if needed
-            //    //
-            //    if (selectedIndex - 1 >= 0)
-            //        ListBox_Events.SelectedIndex = selectedIndex - 1;
-            //    else
-            //        ListBox_Events.SelectedIndex = selectedIndex;
-            //}
         }
 
         /// <summary>
@@ -373,28 +367,98 @@ namespace DolphinScript
         /// <param name="e"></param>
         private void moveElementDownButton_Click(object sender, EventArgs e)
         {
-            // check that the selectedindex is less than the number of events in the list to avoid an out of bounds exception
-            //
+            /* 
+             * possibilities include:
+             * non-group selected, group below
+             * group selected, non-group below
+             * group selected, same group below
+             * group selected, different group below
+             * non-group selected, non-group below
+            */
+
             if (ListBox_Events.SelectedIndex < ListBox_Events.Items.Count)
             {
-                // store the selected index as temp so it's easier to type
+                // first get the selected and above events
                 //
-                var temp = ListBox_Events.SelectedIndex;
+                ScriptEvent selected = AllEvents[ListBox_Events.SelectedIndex];
+                ScriptEvent below = AllEvents[ListBox_Events.SelectedIndex + 1];
 
-                // swap the two items in the allevents list
+                // get the indices of the events we're using
                 //
-                Swap(AllEvents, temp + 1, temp);
+                int selectedIndex = ListBox_Events.SelectedIndex;
+                int belowIndex = ListBox_Events.SelectedIndex + 1;
 
-                // update the listbox to show the change
                 //
+                // non-group selected, non-group below (normal swap - selected moves below, below event moves above)
+                //
+                if (!selected.IsPartOfGroup && !below.IsPartOfGroup)
+                {
+                    Swap(AllEvents, belowIndex, selectedIndex);
+                }
+                //
+                // group selected, non-group below (group moves below non-group event & non-group event below moves above group)
+                //
+                else if (selected.IsPartOfGroup && !below.IsPartOfGroup)
+                {
+                    // get the size of the group we're shifting
+                    //
+                    int selectedGroupSize = selected.EventsInGroup.Count;
+
+                    // move the whole group under the event below us
+                    //
+                    ShiftRange(AllEvents, selectedIndex - selectedGroupSize + 1, selectedGroupSize, 1);
+                }
+                //
+                // group selected, same group below (move the group event down within the group)
+                //
+                else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupID == below.GroupID)
+                {
+                    // get the indices of the events in their group-event lists so we can swap them
+                    //
+                    int selectedGroupIndex = selected.GroupEventIndex;
+                    int belowGroupIndex = below.GroupEventIndex;
+
+                    // swap the events in the main event list
+                    //
+                    Swap(AllEvents, selectedIndex, belowIndex);
+
+                    // swap the events within the group list
+                    //
+                    Swap(AllGroups[AllEvents[selectedIndex].GroupID - 1], selectedGroupIndex, belowGroupIndex);
+                }
+                //
+                // group selected, different group below (swap the position of both groups)
+                //
+                else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupID != below.GroupID)
+                {
+                    // get the size of the group below us
+                    //
+                    int belowGroupSize = below.EventsInGroup.Count;
+                    
+                    // get the size of the group we're shifting
+                    //
+                    int selectedGroupSize = selected.EventsInGroup.Count;
+
+                    // move the whole selected group under the group below us
+                    //
+                    ShiftRange(AllEvents, selectedIndex - selectedGroupSize + 1, selectedGroupSize, belowGroupSize);
+                }
+                //
+                // some error occurred
+                //
+                else
+                {
+                    MessageBox.Show("Error moving event.");
+                }
+
                 UpdateListBox();
 
                 // select the item again after it's moved so the user can move it again if needed
                 //
-                if (temp + 1 <= ListBox_Events.Items.Count)
-                    ListBox_Events.SelectedIndex = temp + 1;
+                if (selectedIndex + 1 <= ListBox_Events.Items.Count)
+                    ListBox_Events.SelectedIndex = selectedIndex + 1;
                 else
-                    ListBox_Events.SelectedIndex = temp;
+                    ListBox_Events.SelectedIndex = selectedIndex;
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using DolphinScript.Lib.ScriptEventClasses;
 using static DolphinScript.Lib.Backend.WinAPI;
+using System.Windows.Forms;
 
 namespace DolphinScript.Lib.Backend
 {
@@ -161,18 +162,28 @@ namespace DolphinScript.Lib.Backend
         /// </summary>
         /// <param name="list"></param>
         /// <param name="startIndex"></param>
-        /// <param name="shiftCount"></param>
-        public static void ShiftItem(IList<ScriptEvent> list, int startIndex, int shiftCount)
+        /// <param name="shiftAmount"></param>
+        public static void ShiftItem(IList<ScriptEvent> list, int startIndex, int shiftAmount)
         {
-            for(int i = startIndex; i < startIndex + shiftCount; i++)
+            for(int i = startIndex; i < startIndex + shiftAmount; i++)
             {
                 Swap(list, i, i + 1);
             }
         }
 
-        public static void ShiftRange(IList<ScriptEvent> list, int startIndexA, int groupSizeA, int startIndexB, int groupSizeB)
+        /// <summary>
+        /// moves a range of elements down a list
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="groupSize"></param>
+        /// <param name="shiftAmount"></param>
+        public static void ShiftRange(IList<ScriptEvent> list, int startIndex, int groupSize, int shiftAmount)
         {
-
+            for(int i = startIndex; i < shiftAmount; i++)
+            {
+                Swap(list, i, i + groupSize);
+            }
         }
     }
 }
