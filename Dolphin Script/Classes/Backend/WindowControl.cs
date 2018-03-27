@@ -102,9 +102,15 @@ namespace DolphinScript.Lib.Backend
             // we check if the window exists first then if it does
             //
             if (WindowExists(WindowClass, WindowName))
+            {
+                // un-minimises window
+                //
+                ShowWindowAsync(handle, SW_SHOWNORMAL);
+
                 // then we set it as the foreground window
                 //
                 SetForegroundWindow(handle);
+            }
         }
 
         /// <summary>
