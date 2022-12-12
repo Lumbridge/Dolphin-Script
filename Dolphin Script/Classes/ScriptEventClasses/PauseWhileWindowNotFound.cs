@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WindowControl;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WindowControl;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class PauseWhileWindowNotFound : ScriptEvent
@@ -32,10 +31,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Pause while window " + WindowTitle + " can't be found.";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Pause while window " + WindowTitle + " can't be found.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while window " + WindowTitle + " can't be found.";
         }
     }
 }

@@ -1,19 +1,17 @@
 ﻿using System;
 
-namespace DolphinScript.Lib.Backend
+namespace DolphinScript.Classes.Backend
 {
     /// <summary>
     /// This class can be used to generate random numbers quickly and easily.
     /// </summary>
     class RandomNumber
     {
-        // the random object remains private because we don't need external access to it
-        //
-        private static readonly Random getrandom = new Random();
+        private static readonly Random Random = new Random(Guid.NewGuid().GetHashCode());
         
         // we create this lock object to use in the class methods
         //
-        private static readonly object syncLock = new object();
+        private static readonly object SyncLock = new object();
 
         /// <summary>
         /// This method returns a random integer inside the range passed in.
@@ -26,11 +24,11 @@ namespace DolphinScript.Lib.Backend
             // we lock this method so that we ensure that the method only returns the same number once
             // and that a unique number is returned every time the method is called
             //
-            lock (syncLock)
+            lock (SyncLock)
             {
                 // return the random number using the private random object
                 //
-                return getrandom.Next(min, max + 1);
+                return Random.Next(min, max + 1);
             }
         }
 
@@ -45,11 +43,11 @@ namespace DolphinScript.Lib.Backend
             // we lock this method so that we ensure that the method only returns the same number once
             // and that a unique number is returned every time the method is called
             //
-            lock (syncLock)
+            lock (SyncLock)
             {
                 // return the random number using the private random object
                 //
-                return getrandom.NextDouble() * (maximum - minimum) + minimum;
+                return Random.NextDouble() * (maximum - minimum) + minimum;
             }
         }
     }

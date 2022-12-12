@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
+using static DolphinScript.Classes.Backend.Common;
 
-using static DolphinScript.Lib.Backend.Common;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     /// <summary>
     /// This event will pause the script for a fixed period of time .
@@ -35,10 +34,10 @@ namespace DolphinScript.Lib.ScriptEventClasses
             // check if the event is part of a group to add a group tag to the list box string
             //
 
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Fixed Pause for " + DelayDuration + " seconds.";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Fixed Pause for " + DelayDuration + " seconds.";
+            
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Fixed Pause for " + DelayDuration + " seconds.";
         }
     }
 }

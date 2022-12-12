@@ -1,13 +1,12 @@
 ﻿using System;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.PointReturns;
+using static DolphinScript.Classes.Backend.WindowControl;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.PointReturns;
-using static DolphinScript.Lib.Backend.WindowControl;
+using static DolphinScript.Classes.ScriptEventClasses.MouseMove;
 
-using static DolphinScript.Lib.ScriptEventClasses.MouseMove;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class MouseMoveToPointOnWindow : ScriptEvent
@@ -25,11 +24,11 @@ namespace DolphinScript.Lib.ScriptEventClasses
             //
             BringEventWindowToFront(this);
 
-            POINT NewClickPoint = new POINT(
+            var newClickPoint = new Point(
                 GetWindowPosition(WindowToClickHandle).Left + CoordsToMoveTo.X,
                 GetWindowPosition(WindowToClickHandle).Top + CoordsToMoveTo.Y);
 
-            MoveMouse(NewClickPoint);
+            MoveMouse(newClickPoint);
         }
 
         /// <summary>
@@ -38,10 +37,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + " on " + WindowToClickTitle + " window.";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.ColourEvent;
+using static DolphinScript.Classes.Backend.PointReturns;
+using static DolphinScript.Classes.Backend.WindowControl;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.ColourEvent;
-using static DolphinScript.Lib.Backend.PointReturns;
-using static DolphinScript.Lib.Backend.WindowControl;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class PauseWhileColourExistsInAreaOnWindow : ScriptEvent
@@ -19,13 +18,13 @@ namespace DolphinScript.Lib.ScriptEventClasses
         {
             // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
             //
-            RECT NewSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+            var newSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
 
             // update the status label on the main form
             //
-            Status = $"Pause while colour: {SearchColour} is found in area: {NewSearchArea.PrintArea()} on window: {WindowToClickTitle}, waiting {ReSearchPause} seconds before re-searching.";
+            Status = $"Pause while colour: {SearchColour} is found in area: {newSearchArea.PrintArea()} on window: {WindowToClickTitle}, waiting {ReSearchPause} seconds before re-searching.";
 
-            while (ColourExistsInArea(NewSearchArea, SearchColour))
+            while (ColourExistsInArea(newSearchArea, SearchColour))
             {
                 // bring the window associated with this event to the front
                 //
@@ -35,7 +34,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
                 // update the search area incase the window has moved
                 //
-                NewSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+                newSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
             }
         }
 
@@ -45,10 +44,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
 
         }
     }

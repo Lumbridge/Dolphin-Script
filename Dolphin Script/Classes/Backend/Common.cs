@@ -1,18 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using DolphinScript.Classes.ScriptEventClasses;
+using static DolphinScript.Classes.Backend.WinApi;
 
-using DolphinScript.Lib.ScriptEventClasses;
-using static DolphinScript.Lib.Backend.WinAPI;
-using System.Windows.Forms;
-
-namespace DolphinScript.Lib.Backend
+namespace DolphinScript.Classes.Backend
 {
     /// <summary>
     /// This is a general class to keep methods and variables which are required in multiple different classes.
     /// </summary>
     class Common
     {
-        private static string status;
+        private static string _status;
         
         // public window properties used for 
         //
@@ -29,7 +28,7 @@ namespace DolphinScript.Lib.Backend
         //
         public static string Status
         {
-            get { return status; }
+            get { return _status; }
             set
             {
                 // when the status property is changed then we change the last action property also
@@ -38,33 +37,32 @@ namespace DolphinScript.Lib.Backend
 
                 // then override the current status
                 //
-                status = value;
+                _status = value;
             }
         }
 
         // the amount of time the script will pause before re-searching during some pause events
         //
-        public static double                    ReSearchPause = 0.5;
+        public static double ReSearchPause = 0.5;
 
         // this is the speed the mouse will move at during mouse move events
         //
-        public static int                       MouseSpeed       = 15;
+        public static int MouseSpeed = 15;
 
         // this is a list of lists of scripts events which stores the grouped events
         //
-        public static List<List<ScriptEvent>>   AllGroups        = new List<List<ScriptEvent>>();
+        public static List<List<ScriptEvent>> AllGroups = new List<List<ScriptEvent>>();
 
         // this is a list of all events in the event listbox
         //
-        public static List<ScriptEvent>         AllEvents        = new List<ScriptEvent>();
+        public static List<ScriptEvent> AllEvents = new List<ScriptEvent>();
 
-        // public bools which will be used to flag when the user is registering an event
+        // public booleans which will be used to flag when the user is registering an event
         // or running the script
         //
-        public static bool                      IsRegistering    = false, 
-                                                IsRunning        = false;
+        public static bool IsRegistering, IsRunning;
 
-        // list of special sendkey codes
+        // list of special send key codes
         //
         public static List<string> SpecialKeys = new List<string>()
         {
@@ -113,17 +111,16 @@ namespace DolphinScript.Lib.Backend
         };
         
         /// <summary>
-        /// this method is used to determine if the user is pressing the F5 key to stop the script
+        /// this method is used to determine if the user is pressing the F6 key to stop the script
         /// </summary>
         public static void CheckForTerminationKey()
         {
-            // listen for the F5 key
+            // listen for the equals key
             //
-            if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+            if (GetAsyncKeyState(VirtualKeyStates.VkOemPlus) < 0)
             {
                 // set is running flag to false
                 IsRunning = false;
-                return;
             }
         }
 
@@ -142,19 +139,9 @@ namespace DolphinScript.Lib.Backend
         /// <param name="list"></param>
         /// <param name="indexA"></param>
         /// <param name="indexB"></param>
-        public static void Swap(IList<ScriptEvent> list, int indexA, int indexB)
+        public static void Swap(IList list, int indexA, int indexB)
         {
-            // store temp version of element object
-            //
-            ScriptEvent tmp = list[indexA];
-            
-            // move element at index b to the location of the element we stored
-            //
-            list[indexA] = list[indexB];
-
-            // move the stored element to the location of index b
-            //
-            list[indexB] = tmp;
+            (list[indexA], list[indexB]) = (list[indexB], list[indexA]);
         }
 
         /// <summary>
@@ -163,9 +150,9 @@ namespace DolphinScript.Lib.Backend
         /// <param name="list"></param>
         /// <param name="startIndex"></param>
         /// <param name="shiftAmount"></param>
-        public static void ShiftItem(IList<ScriptEvent> list, int startIndex, int shiftAmount)
+        public static void ShiftItem(IList list, int startIndex, int shiftAmount)
         {
-            for(int i = startIndex; i < startIndex + shiftAmount; i++)
+            for(var i = startIndex; i < startIndex + shiftAmount; i++)
             {
                 Swap(list, i, i + 1);
             }
@@ -178,9 +165,9 @@ namespace DolphinScript.Lib.Backend
         /// <param name="startIndex"></param>
         /// <param name="groupSize"></param>
         /// <param name="shiftAmount"></param>
-        public static void ShiftRange(IList<ScriptEvent> list, int startIndex, int groupSize, int shiftAmount)
+        public static void ShiftRange(IList list, int startIndex, int groupSize, int shiftAmount)
         {
-            for(int i = startIndex; i < shiftAmount; i++)
+            for(var i = startIndex; i < shiftAmount; i++)
             {
                 Swap(list, i, i + groupSize);
             }

@@ -1,11 +1,11 @@
 ﻿using System;
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.PointReturns;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.PointReturns;
 
-using static DolphinScript.Lib.ScriptEventClasses.MouseMove;
+using static DolphinScript.Classes.ScriptEventClasses.MouseMove;
 
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     /// <summary>
     /// This event moves the mouse cursor to a random point in a given area.
@@ -16,12 +16,12 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <summary>
         /// wrote this function in here for clarity in the doevent method
         /// </summary>
-        /// <param name="ClickArea"></param>
-        static public void MoveMouseToArea(RECT ClickArea)
+        /// <param name="clickArea"></param>
+        public static void MoveMouseToArea(Rect clickArea)
         {
-            POINT EndPoint = GetRandomPointInArea(ClickArea);
+            var endPoint = GetRandomPointInArea(clickArea);
 
-            MoveMouse(EndPoint); // move mouse to picked pixel
+            MoveMouse(endPoint); // move mouse to picked pixel
         }
 
         /// <summary>
@@ -42,10 +42,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Move mouse to random point in area " + ClickArea.PrintArea() + ".";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + ".";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + ".";
         }
     }
 }

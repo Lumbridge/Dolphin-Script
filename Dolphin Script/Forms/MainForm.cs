@@ -1,31 +1,21 @@
-﻿//
-// native namespace references
-//
-using System;
-using System.IO;
-using System.Drawing;
-using System.Threading;
-using System.Windows.Forms;
-using System.Threading.Tasks;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using DolphinScript.Classes.Backend;
+using DolphinScript.Classes.ScriptEventClasses;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.ColourEvent;
+using static DolphinScript.Classes.Backend.PointReturns;
+using static DolphinScript.Classes.Backend.WindowControl;
+using static DolphinScript.Classes.Backend.ScreenCapture;
 
-//
-// script event object reference
-//
-using DolphinScript.Lib.ScriptEventClasses;
-
-//
-// static class references
-//
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.ColourEvent;
-using static DolphinScript.Lib.Backend.PointReturns;
-using static DolphinScript.Lib.Backend.WindowControl;
-using static DolphinScript.Lib.Backend.ScreenCapture;
-
-namespace DolphinScript
+namespace DolphinScript.Forms
 {
     public partial class MainForm : Form
     {        
@@ -41,7 +31,7 @@ namespace DolphinScript
 
             // add all keys to the key event combo box
             //
-            foreach (string key in SpecialKeys)
+            foreach (var key in SpecialKeys)
                 ComboBox_SpecialKeys.Items.Add(key);
 
             // set the default index for the keys combo box
@@ -50,7 +40,11 @@ namespace DolphinScript
 
             // run the cursor update method on a new thread
             //
-            Task.Run(() => UpdateMouse());
+            Task.Run(UpdateMouse);
+
+            // run the start script hotkey listener
+            //
+            Task.Run(StartScriptHotkeyListener);
         }
 
         #region Main Form Methods
@@ -72,7 +66,7 @@ namespace DolphinScript
                     //
                     if (ev.IsPartOfGroup && ev.EventsInGroup.IndexOf(ev) == 0)
                     {
-                        for (int i = 0; i < ev.NumberOfCycles; i++)
+                        for (var i = 0; i < ev.NumberOfCycles; i++)
                         {
                             // do each subevent in the group list
                             //
@@ -107,7 +101,7 @@ namespace DolphinScript
 
             // change the text back to normal while the script isn't running
             //
-            button_StartScript.Text = "Start Script";
+            button_StartScript.Text = "Start script";
 
             // if the loop has ended then we reenable the form buttons
             //
@@ -117,35 +111,34 @@ namespace DolphinScript
         /// <summary>
         /// toggles certain controls on the form between enabled and disabled
         /// </summary>
-        /// <param name="State"></param>
-        private void ToggleControls(bool State)
+        /// <param name="state"></param>
+        private void ToggleControls(bool state)
         {
             // start button
             //
-            button_StartScript.Enabled = State;
+            button_StartScript.Enabled = state;
 
             // move element buttons
             //
-            button_MoveEventUp.Enabled = State;
-            button_RemoveEvent.Enabled = State;
-            button_MoveEventDown.Enabled = State;
+            button_MoveEventUp.Enabled = state;
+            button_RemoveEvent.Enabled = state;
+            button_MoveEventDown.Enabled = state;
 
             // mouse speed toggles
             //
-            NumericUpDown_MouseSpeed.Enabled = State;
-            TrackBar_MouseSpeed.Enabled = State;
+            NumericUpDown_MouseSpeed.Enabled = state;
+            TrackBar_MouseSpeed.Enabled = state;
 
             // repeat group toggles
             //
-            NumericUpDown_RepeatAmount.Enabled = State;
-            button_AddRepeatGroup.Enabled = State;
-            button_RemoveRepeatGroup.Enabled = State;
+            NumericUpDown_RepeatAmount.Enabled = state;
+            button_AddRepeatGroup.Enabled = state;
+            button_RemoveRepeatGroup.Enabled = state;
         }
 
         /// <summary>
         /// clears the contents of the main form listbox and updates it with the items in the event list
         /// </summary>
-        /// <param name="mf"></param>
         public void UpdateListBox()
         {
             // clear the listbox
@@ -207,10 +200,26 @@ namespace DolphinScript
 
                     // add a delay to minimise CPU usage
                     //
-                    Thread.Sleep(50);
+                    Thread.Sleep(1);
                 }
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        private void StartScriptHotkeyListener()
+        {
+            while (true)
+            {
+                if (!IsRunning && GetAsyncKeyState(VirtualKeyStates.VkOemMinus) < 0)
+                {
+                    StartButton_Click(null, null);
+                    Task.Delay(TimeSpan.FromSeconds(1));
+                }
+                Task.Delay(1);
+            }
         }
 
         /// <summary>
@@ -226,12 +235,10 @@ namespace DolphinScript
                 ListBox_Events.ClearSelected();
                 return true;
             }
-            else
-            {
-                ListBox_Events.ClearSelected();
-                ListBox_Events.SelectedIndex = AllEvents.IndexOf(ev);
-                return false;
-            }
+
+            ListBox_Events.ClearSelected();
+            ListBox_Events.SelectedIndex = AllEvents.IndexOf(ev);
+            return false;
         }
 
         #endregion
@@ -245,7 +252,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void startButton_Click(object sender, EventArgs e)
+        private void StartButton_Click(object sender, EventArgs e)
         {
             // check that there are events in the list before starting
             //
@@ -265,7 +272,7 @@ namespace DolphinScript
 
                 // run the main loop
                 //
-                Task.Run(() => MainLoop());
+                Task.Run(MainLoop);
             }
             else
             {
@@ -281,7 +288,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void moveElementUpButton_Click(object sender, EventArgs e)
+        private void MoveElementUpButton_Click(object sender, EventArgs e)
         {
             /* 
              * possibilities include:
@@ -296,13 +303,13 @@ namespace DolphinScript
             {
                 // first get the selected and above events
                 //
-                ScriptEvent selected = AllEvents[ListBox_Events.SelectedIndex];
-                ScriptEvent above = AllEvents[ListBox_Events.SelectedIndex - 1];
+                var selected = AllEvents[ListBox_Events.SelectedIndex];
+                var above = AllEvents[ListBox_Events.SelectedIndex - 1];
 
                 // get the indices of the events we're using
                 //
-                int selectedIndex = ListBox_Events.SelectedIndex;
-                int aboveIndex = ListBox_Events.SelectedIndex - 1;
+                var selectedIndex = ListBox_Events.SelectedIndex;
+                var aboveIndex = ListBox_Events.SelectedIndex - 1;
 
                 //
                 // non-group selected, non-group above (normal swap - selected moves above, above event moves below)
@@ -318,7 +325,7 @@ namespace DolphinScript
                 {
                     // get the size of the group we need to shift
                     //
-                    int groupSize = selected.EventsInGroup.Count;
+                    var groupSize = selected.EventsInGroup.Count;
 
                     // shift the events one by one until the non-group event is below the group
                     //
@@ -327,12 +334,12 @@ namespace DolphinScript
                 //
                 // group selected, same group above (move the group event up within the group)
                 //
-                else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID == above.GroupID)
+                else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupId == above.GroupId)
                 {
                     // get the indices of the events in their group-event lists so we can swap them
                     //
-                    int selectedGroupIndex = selected.GroupEventIndex;
-                    int aboveGroupIndex = above.GroupEventIndex;
+                    var selectedGroupIndex = selected.GroupEventIndex;
+                    var aboveGroupIndex = above.GroupEventIndex;
 
                     // swap the events in the main event list
                     //
@@ -340,15 +347,15 @@ namespace DolphinScript
 
                     // swap the events within the group list
                     //
-                    Swap(AllGroups[AllEvents[selectedIndex].GroupID - 1], selectedGroupIndex, aboveGroupIndex);
+                    Swap(AllGroups[AllEvents[selectedIndex].GroupId - 1], selectedGroupIndex, aboveGroupIndex);
                 }
                 //
                 // group selected, different group above (swap the position of both groups)
                 //
-                else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupID != above.GroupID)
+                else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupId != above.GroupId)
                 {
-                    int aboveGroupSize = above.EventsInGroup.Count;
-                    int selectedGroupSize = selected.EventsInGroup.Count;
+                    var aboveGroupSize = above.EventsInGroup.Count;
+                    var selectedGroupSize = selected.EventsInGroup.Count;
 
                     ShiftRange(AllEvents, aboveIndex - aboveGroupSize + 1, aboveGroupSize, selectedGroupSize);
                 }
@@ -387,7 +394,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void moveElementDownButton_Click(object sender, EventArgs e)
+        private void MoveElementDownButton_Click(object sender, EventArgs e)
         {
             /* 
              * possibilities include:
@@ -402,13 +409,13 @@ namespace DolphinScript
             {
                 // first get the selected and above events
                 //
-                ScriptEvent selected = AllEvents[ListBox_Events.SelectedIndex];
-                ScriptEvent below = AllEvents[ListBox_Events.SelectedIndex + 1];
+                var selected = AllEvents[ListBox_Events.SelectedIndex];
+                var below = AllEvents[ListBox_Events.SelectedIndex + 1];
 
                 // get the indices of the events we're using
                 //
-                int selectedIndex = ListBox_Events.SelectedIndex;
-                int belowIndex = ListBox_Events.SelectedIndex + 1;
+                var selectedIndex = ListBox_Events.SelectedIndex;
+                var belowIndex = ListBox_Events.SelectedIndex + 1;
 
                 //
                 // non-group selected, non-group below (normal swap - selected moves below, below event moves above)
@@ -424,7 +431,7 @@ namespace DolphinScript
                 {
                     // get the size of the group we're shifting
                     //
-                    int selectedGroupSize = selected.EventsInGroup.Count;
+                    var selectedGroupSize = selected.EventsInGroup.Count;
 
                     // move the whole group under the event below us
                     //
@@ -433,12 +440,12 @@ namespace DolphinScript
                 //
                 // group selected, same group below (move the group event down within the group)
                 //
-                else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupID == below.GroupID)
+                else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupId == below.GroupId)
                 {
                     // get the indices of the events in their group-event lists so we can swap them
                     //
-                    int selectedGroupIndex = selected.GroupEventIndex;
-                    int belowGroupIndex = below.GroupEventIndex;
+                    var selectedGroupIndex = selected.GroupEventIndex;
+                    var belowGroupIndex = below.GroupEventIndex;
 
                     // swap the events in the main event list
                     //
@@ -446,20 +453,20 @@ namespace DolphinScript
 
                     // swap the events within the group list
                     //
-                    Swap(AllGroups[AllEvents[selectedIndex].GroupID - 1], selectedGroupIndex, belowGroupIndex);
+                    Swap(AllGroups[AllEvents[selectedIndex].GroupId - 1], selectedGroupIndex, belowGroupIndex);
                 }
                 //
                 // group selected, different group below (swap the position of both groups)
                 //
-                else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupID != below.GroupID)
+                else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupId != below.GroupId)
                 {
                     // get the size of the group below us
                     //
-                    int belowGroupSize = below.EventsInGroup.Count;
+                    var belowGroupSize = below.EventsInGroup.Count;
 
                     // get the size of the group we're shifting
                     //
-                    int selectedGroupSize = selected.EventsInGroup.Count;
+                    var selectedGroupSize = selected.EventsInGroup.Count;
 
                     // move the whole selected group under the group below us
                     //
@@ -489,7 +496,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void removeEventButton_Click(object sender, EventArgs e)
+        private void RemoveEventButton_Click(object sender, EventArgs e)
         {
             // check that the selected item is between the bounds of the listbox
             //
@@ -497,7 +504,7 @@ namespace DolphinScript
             {
                 // create a temp variable of the selected index so it's easier to type
                 //
-                int temp = ListBox_Events.SelectedIndex;
+                var temp = ListBox_Events.SelectedIndex;
 
                 // remove the script event from the allevents list
                 //
@@ -529,7 +536,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void repeatGroupButton_Click(object sender, EventArgs e)
+        private void RepeatGroupButton_Click(object sender, EventArgs e)
         {
             // check that we have more than one event selected in the listbox
             //
@@ -537,7 +544,7 @@ namespace DolphinScript
             {
                 // check that none of the selected events are part of a group already
                 //
-                for (int i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count; i++)
+                for (var i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count; i++)
                 {
                     if (AllEvents[i].IsPartOfGroup)
                     {
@@ -552,7 +559,7 @@ namespace DolphinScript
 
                 // loop through all the selected events in the listbox
                 //
-                for (int i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count + ListBox_Events.SelectedIndex; i++)
+                for (var i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count + ListBox_Events.SelectedIndex; i++)
                 {
                     // set the event as part of a group
                     //
@@ -560,7 +567,7 @@ namespace DolphinScript
 
                     // set the group ID of the selected event
                     //
-                    AllEvents[i].GroupID = AllGroups.Count;
+                    AllEvents[i].GroupId = AllGroups.Count;
 
                     // set the number of times the group is going to repeat
                     //
@@ -573,7 +580,7 @@ namespace DolphinScript
 
                 // loop through all the selected events again
                 //
-                for (int i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count + ListBox_Events.SelectedIndex; i++)
+                for (var i = ListBox_Events.SelectedIndex; i < ListBox_Events.SelectedIndices.Count + ListBox_Events.SelectedIndex; i++)
                 {
                     // update their events in group list
                     //
@@ -597,7 +604,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button_RemoveRepeatGroup_Click(object sender, EventArgs e)
+        private void Button_RemoveRepeatGroup_Click(object sender, EventArgs e)
         {
             // check that we only have one event selected
             //
@@ -621,15 +628,15 @@ namespace DolphinScript
                 {
                     // create a local variable of the group we're removing
                     //
-                    int removeGroupID = AllEvents[ListBox_Events.SelectedIndex].GroupID;
+                    var removeGroupId = AllEvents[ListBox_Events.SelectedIndex].GroupId;
 
                     // remove the group flags from the allevents events
                     //
-                    foreach (ScriptEvent ev in AllEvents)
+                    foreach (var ev in AllEvents)
                     {
-                        if (ev.GroupID == removeGroupID)
+                        if (ev.GroupId == removeGroupId)
                         {
-                            ev.GroupID = -1;
+                            ev.GroupId = -1;
                             ev.IsPartOfGroup = false;
                             ev.NumberOfCycles = -1;
                             ev.EventsInGroup.Clear();
@@ -638,7 +645,7 @@ namespace DolphinScript
 
                     // remove the group from the all groups collection
                     //
-                    AllGroups[removeGroupID - 1].Clear();
+                    AllGroups[removeGroupId - 1].Clear();
 
                     // update the main event list box
                     //
@@ -656,7 +663,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void refreshFormToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RefreshFormToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToggleControls(true);
             IsRunning = false;
@@ -668,7 +675,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveScriptToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //
             // Save Config File Function
@@ -676,7 +683,7 @@ namespace DolphinScript
 
             // create a new instance of the save file dialog object
             //
-            SaveFileDialog sfd = new SaveFileDialog();
+            var sfd = new SaveFileDialog();
 
             // set the default file extension
             //
@@ -706,7 +713,7 @@ namespace DolphinScript
             {
                 using (Stream s = File.Open(sfd.FileName, FileMode.Create))
                 {
-                    BinaryFormatter b = new BinaryFormatter();
+                    var b = new BinaryFormatter();
 
                     b.Serialize(s, AllEvents);
 
@@ -723,7 +730,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void loadScriptToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void LoadScriptToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //
             // Load Config File Function
@@ -731,7 +738,7 @@ namespace DolphinScript
 
             // create a new instance of the open file dialog object
             //
-            OpenFileDialog ofd = new OpenFileDialog();
+            var ofd = new OpenFileDialog();
 
             // set the default file extension
             //
@@ -757,7 +764,7 @@ namespace DolphinScript
             {
                 using (Stream s = File.Open(ofd.FileName, FileMode.Open))
                 {
-                    BinaryFormatter b = new BinaryFormatter();
+                    var b = new BinaryFormatter();
 
                     AllEvents = (List<ScriptEvent>)b.Deserialize(s);
                 }
@@ -773,7 +780,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Created by Ryan Sainty @ https://github.com/Lumbridge");
         }
@@ -783,7 +790,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
+        private void WikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/Lumbridge/Dolphin-Script/wiki");
         }
@@ -797,7 +804,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lowerRandomDelayNumberBox_ValueChanged(object sender, EventArgs e)
+        private void LowerRandomDelayNumberBox_ValueChanged(object sender, EventArgs e)
         {
             if (lowerRandomDelayNumberBox.Value > upperRandomDelayNumberBox.Value)
                 // if the lower bound value is above the upper bound value then
@@ -812,7 +819,7 @@ namespace DolphinScript
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void upperRandomDelayNumberBox_ValueChanged(object sender, EventArgs e)
+        private void UpperRandomDelayNumberBox_ValueChanged(object sender, EventArgs e)
         {
             if (upperRandomDelayNumberBox.Value < lowerRandomDelayNumberBox.Value)
                 // if the upper bound value is below the lower bound value then
@@ -851,17 +858,11 @@ namespace DolphinScript
         {
             // disable the move item up button if it's already at the top
             //
-            if (ListBox_Events.SelectedIndex <= 0)
-                button_MoveEventUp.Enabled = false;
-            else
-                button_MoveEventUp.Enabled = true;
+            button_MoveEventUp.Enabled = ListBox_Events.SelectedIndex > 0;
 
             // disable the move item down button if it's already at the bottom
             //
-            if (ListBox_Events.SelectedIndex >= ListBox_Events.Items.Count - 1)
-                button_MoveEventDown.Enabled = false;
-            else
-                button_MoveEventDown.Enabled = true;
+            button_MoveEventDown.Enabled = ListBox_Events.SelectedIndex < ListBox_Events.Items.Count - 1;
 
             // if the listbox has no item selected then diable the remove item button
             //
@@ -913,22 +914,22 @@ namespace DolphinScript
 
         private void Button_InsertPauseWhileColourExistsInArea_Click(object sender, EventArgs e)
         {
-            Task.Run(() => PauseWhileColourExistsInAreaLoop());
+            Task.Run(PauseWhileColourExistsInAreaLoop);
         }
 
         private void Button_InsertPauseWhileColourDoesntExistInArea_Click(object sender, EventArgs e)
         {
-            Task.Run(() => PauseWhileColourDoesntExistInAreaLoop());
+            Task.Run(PauseWhileColourDoesntExistInAreaLoop);
         }
 
         private void Button_InsertPauseWhileColourExistsInAreaOnWindow_Click(object sender, EventArgs e)
         {
-            Task.Run(() => PauseWhileColourExistsInAreaOnWindowLoop());
+            Task.Run(PauseWhileColourExistsInAreaOnWindowLoop);
         }
 
         private void Button_InsertPauseWhileColourDoesntExistInAreaOnWindow_Click(object sender, EventArgs e)
         {
-            Task.Run(() => PauseWhileColourDoesntExistInAreaOnWindowLoop());
+            Task.Run(PauseWhileColourDoesntExistInAreaOnWindowLoop);
         }
 
         #endregion
@@ -957,24 +958,24 @@ namespace DolphinScript
 
         #region Mouse Move Button Events
 
-        private void button_InsertMouseMoveEvent_Click(object sender, EventArgs e)
+        private void Button_InsertMouseMoveEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(() => MouseMoveToFixedPointLoop());
+            Task.Run(MouseMoveToFixedPointLoop);
         }
 
-        private void button_InsertMouseMoveToAreaEvent_Click(object sender, EventArgs e)
+        private void Button_InsertMouseMoveToAreaEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(() => MouseMoveToAreaLoop());
+            Task.Run(MouseMoveToAreaLoop);
         }
 
-        private void button_InsertMouseMoveToPointOnWindowEvent_Click(object sender, EventArgs e)
+        private void Button_InsertMouseMoveToPointOnWindowEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(() => MouseMoveToPointOnWindowLoop());
+            Task.Run(MouseMoveToPointOnWindowLoop);
         }
 
-        private void button_InsertMouseMoveToAreaOnWindowEvent_Click(object sender, EventArgs e)
+        private void Button_InsertMouseMoveToAreaOnWindowEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(() => MouseMoveToAreaOnWindowLoop());
+            Task.Run(MouseMoveToAreaOnWindowLoop);
         }
 
         #endregion
@@ -983,17 +984,17 @@ namespace DolphinScript
 
         private void Button_InsertColourSearchAreaEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(() => MouseMoveToColourInAreaLoop());
+            Task.Run(MouseMoveToColourInAreaLoop);
         }
 
         private void Button_InsertColourSearchAreaWindowEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(() => MouseMoveToColourInAreaOnWindowLoop());
+            Task.Run(MouseMoveToColourInAreaOnWindowLoop);
         }
 
         private void Button_InsertMultiColourSearchAreaWindowEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(() => MouseMoveToMutliColourInAreaOnWindowLoop());
+            Task.Run(MouseMoveToMutliColourInAreaOnWindowLoop);
         }
 
         #endregion
@@ -1002,63 +1003,63 @@ namespace DolphinScript
 
         private void Button_InsertLeftClickEvent_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.Left_Click });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.LeftClick });
 
             UpdateListBox();
         }
 
-        private void Buton_InsertMiddleMouseClickEvent_Click(object sender, EventArgs e)
+        private void Button_InsertMiddleMouseClickEvent_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.Middle_Click });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.MiddleClick });
 
             UpdateListBox();
         }
 
         private void Button_InsertRightClickEvent_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.Right_Click });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.RightClick });
 
             UpdateListBox();
         }
 
         private void Button_InsertLMBDown_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.LMB_Down });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.LmbDown });
 
             UpdateListBox();
         }
 
         private void Button_InsertMMBDown_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.MMB_Down });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.MmbDown });
 
             UpdateListBox();
         }
 
         private void Button_InsertRMBDown_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.RMB_Down });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.RmbDown });
 
             UpdateListBox();
         }
 
         private void Button_InsertLMBUp_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.LMB_Up });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.LmbUp });
 
             UpdateListBox();
         }
 
         private void Button_InsertMMBUp_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.MMB_Up });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.MmbUp });
 
             UpdateListBox();
         }
 
         private void Button_InsertRMBUp_Click(object sender, EventArgs e)
         {
-            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.RMB_Up });
+            AllEvents.Add(new MouseClick() { MouseButton = VirtualMouseStates.RmbUp });
 
             UpdateListBox();
         }
@@ -1075,33 +1076,33 @@ namespace DolphinScript
         /// </summary>
         void PauseWhileColourExistsInAreaLoop()
         {
-            POINT p1 = new POINT(), p2 = new POINT();
-            Color SearchColour = Color.Empty;
+            WinApi.Point p1 = new WinApi.Point(), p2 = new WinApi.Point();
+            var searchColour = Color.Empty;
 
-            bool xChosen = false, yChosen = false, colourChosen = false;
+            bool xChosen = false, colourChosen = false;
 
-            string temp = Button_InsertPauseWhileColourExistsInArea.Text;
+            var temp = Button_InsertPauseWhileColourExistsInArea.Text;
 
             Button_InsertPauseWhileColourExistsInArea.Text = "Selecting area to search... (F5 to cancel).";
 
             while (xChosen == false)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
                     p1 = GetCursorPosition();
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/
+                    }
                 }
-            }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInArea.Text = temp;
                     return;
                 }
 
-                while (yChosen == false && xChosen == true)
+                while (xChosen)
                 {
                     p2 = GetCursorPosition();
 
@@ -1113,19 +1114,19 @@ namespace DolphinScript
 
             while (!colourChosen)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    SearchColour = GetColorAt(Cursor.Position);
+                    searchColour = GetColorAt(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInArea.Text = temp;
                     return;
                 }
             }
 
-            AllEvents.Add(new PauseWhileColourExistsInArea() { ColourSearchArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+            AllEvents.Add(new PauseWhileColourExistsInArea() { ColourSearchArea = new Rect(p1, p2), SearchColour = searchColour.ToArgb() });
 
             UpdateListBox();
 
@@ -1139,32 +1140,32 @@ namespace DolphinScript
         /// </summary>
         void PauseWhileColourDoesntExistInAreaLoop()
         {
-            POINT p1 = new POINT(), p2 = new POINT();
-            Color SearchColour = Color.Empty;
+            WinApi.Point p1 = new WinApi.Point(), p2 = new WinApi.Point();
+            var searchColour = Color.Empty;
 
-            bool xChosen = false, yChosen = false, colourChosen = false;
+            bool xChosen = false, colourChosen = false;
 
-            string temp = Button_InsertPauseWhileColourDoesntExistInArea.Text;
+            var temp = Button_InsertPauseWhileColourDoesntExistInArea.Text;
 
             Button_InsertPauseWhileColourDoesntExistInArea.Text = "Selecting area to search... (F5 to cancel).";
 
             while (xChosen == false)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
                     p1 = GetCursorPosition();
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
                     return;
                 }
 
-                while (yChosen == false && xChosen == true)
+                while (xChosen)
                 {
                     p2 = GetCursorPosition();
 
@@ -1176,19 +1177,19 @@ namespace DolphinScript
 
             while (!colourChosen)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    SearchColour = GetColorAt(Cursor.Position);
+                    searchColour = GetColorAt(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
                     return;
                 }
             }
 
-            AllEvents.Add(new PauseWhileColourDoesntExistInArea() { ColourSearchArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+            AllEvents.Add(new PauseWhileColourDoesntExistInArea() { ColourSearchArea = new Rect(p1, p2), SearchColour = searchColour.ToArgb() });
 
             UpdateListBox();
 
@@ -1202,32 +1203,32 @@ namespace DolphinScript
         /// </summary>
         void PauseWhileColourExistsInAreaOnWindowLoop()
         {
-            POINT p1 = new POINT(), p2 = new POINT();
-            Color SearchColour = Color.Empty;
+            WinApi.Point p1 = new WinApi.Point(), p2 = new WinApi.Point();
+            var searchColour = Color.Empty;
 
-            bool xChosen = false, yChosen = false, colourChosen = false;
+            bool xChosen = false, colourChosen = false;
 
-            string temp = Button_InsertPauseWhileColourExistsInAreaOnWindow.Text;
+            var temp = Button_InsertPauseWhileColourExistsInAreaOnWindow.Text;
 
             Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = "Selecting area to search... (F5 to cancel).";
 
             while (xChosen == false)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
                     p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
                     return;
                 }
 
-                while (yChosen == false && xChosen == true)
+                while (xChosen)
                 {
                     p2 = GetCursorPositionOnWindow(GetForegroundWindow());
 
@@ -1239,19 +1240,19 @@ namespace DolphinScript
 
             while (!colourChosen)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    SearchColour = GetColorAt(Cursor.Position);
+                    searchColour = GetColorAt(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
                     return;
                 }
             }
 
-            AllEvents.Add(new PauseWhileColourExistsInAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+            AllEvents.Add(new PauseWhileColourExistsInAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new Rect(p1, p2), ClickArea = new Rect(p1, p2), SearchColour = searchColour.ToArgb() });
 
             UpdateListBox();
 
@@ -1265,32 +1266,32 @@ namespace DolphinScript
         /// </summary>
         void PauseWhileColourDoesntExistInAreaOnWindowLoop()
         {
-            POINT p1 = new POINT(), p2 = new POINT();
-            Color SearchColour = Color.Empty;
+            WinApi.Point p1 = new WinApi.Point(), p2 = new WinApi.Point();
+            var searchColour = Color.Empty;
 
-            bool xChosen = false, yChosen = false, colourChosen = false;
+            bool xChosen = false, colourChosen = false;
 
-            string temp = Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text;
+            var temp = Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text;
 
             Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = "Selecting area to search... (F5 to cancel).";
 
             while (xChosen == false)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
                     p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
                     return;
                 }
 
-                while (yChosen == false && xChosen == true)
+                while (xChosen)
                 {
                     p2 = GetCursorPositionOnWindow(GetForegroundWindow());
 
@@ -1302,19 +1303,19 @@ namespace DolphinScript
 
             while (!colourChosen)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    SearchColour = GetColorAt(Cursor.Position);
+                    searchColour = GetColorAt(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
                     return;
                 }
             }
 
-            AllEvents.Add(new PauseWhileColourDoesntExistInAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+            AllEvents.Add(new PauseWhileColourDoesntExistInAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new Rect(p1, p2), ClickArea = new Rect(p1, p2), SearchColour = searchColour.ToArgb() });
 
             UpdateListBox();
 
@@ -1330,27 +1331,25 @@ namespace DolphinScript
         /// </summary>
         void MouseMoveToFixedPointLoop()
         {
-            POINT p1 = new POINT();
-
             IsRegistering = true;
 
-            string temp = Button_InsertMouseMoveEvent.Text;
+            var temp = Button_InsertMouseMoveEvent.Text;
 
             Button_InsertMouseMoveEvent.Text = "Selecting points to click... (F5 to finish).";
 
             while (IsRegistering)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    p1 = GetCursorPosition();
+                    var p1 = GetCursorPosition();
 
                     AllEvents.Add(new MouseMove() { CoordsToMoveTo = p1 });
 
                     UpdateListBox();
 
-                    Thread.Sleep(200);
+                    Thread.Sleep(1);
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertMouseMoveEvent.Text = temp;
                     IsRegistering = false;
@@ -1366,31 +1365,29 @@ namespace DolphinScript
         /// </summary>
         void MouseMoveToAreaLoop()
         {
-            POINT p1 = new POINT(), p2 = new POINT();
-
             IsRegistering = true;
 
-            string temp = Button_InsertMouseMoveToAreaEvent.Text;
+            var temp = Button_InsertMouseMoveToAreaEvent.Text;
 
             Button_InsertMouseMoveToAreaEvent.Text = "Selecting area to click... (F5 to cancel).";
 
             while (IsRegistering)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    p1 = GetCursorPosition();
+                    var p1 = GetCursorPosition();
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
-                    p2 = GetCursorPosition();
+                    var p2 = GetCursorPosition();
 
-                    AllEvents.Add(new MouseMoveToArea() { ClickArea = new RECT(p1, p2) });
+                    AllEvents.Add(new MouseMoveToArea() { ClickArea = new Rect(p1, p2) });
 
                     UpdateListBox();
 
-                    Thread.Sleep(200);
+                    Thread.Sleep(1);
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertMouseMoveToAreaEvent.Text = temp;
 
@@ -1408,27 +1405,25 @@ namespace DolphinScript
         /// </summary>
         void MouseMoveToPointOnWindowLoop()
         {
-            POINT p1 = new POINT();
-
             IsRegistering = true;
 
-            string temp = Button_InsertMouseMoveToPointOnWindowEvent.Text;
+            var temp = Button_InsertMouseMoveToPointOnWindowEvent.Text;
 
             Button_InsertMouseMoveToPointOnWindowEvent.Text = "Selecting point to click... (F5 to cancel).";
 
             while (IsRegistering)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+                    var p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
                     AllEvents.Add(new MouseMoveToPointOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), CoordsToMoveTo = p1 });
 
                     UpdateListBox();
 
-                    Thread.Sleep(200);
+                    Thread.Sleep(1);
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertMouseMoveToPointOnWindowEvent.Text = temp;
                     IsRegistering = false;
@@ -1444,31 +1439,29 @@ namespace DolphinScript
         /// </summary>
         void MouseMoveToAreaOnWindowLoop()
         {
-            POINT p1 = new POINT(), p2 = new POINT();
-
             IsRegistering = true;
 
-            string temp = Button_InsertMouseMoveToAreaOnWindowEvent.Text;
+            var temp = Button_InsertMouseMoveToAreaOnWindowEvent.Text;
 
             Button_InsertMouseMoveToAreaOnWindowEvent.Text = "Selecting area to click... (F5 to cancel).";
 
             while (IsRegistering)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+                    var p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
-                    p2 = GetCursorPositionOnWindow(GetForegroundWindow());
+                    var p2 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-                    AllEvents.Add(new MouseMoveToAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ClickArea = new RECT(p1, p2) });
+                    AllEvents.Add(new MouseMoveToAreaOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ClickArea = new Rect(p1, p2) });
 
                     UpdateListBox();
 
-                    Thread.Sleep(200);
+                    Thread.Sleep(1);
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertMouseMoveToAreaOnWindowEvent.Text = temp;
 
@@ -1486,46 +1479,43 @@ namespace DolphinScript
         /// </summary>
         void MouseMoveToColourInAreaLoop()
         {
-            POINT p1 = new POINT(), p2 = new POINT();
-            Color SearchColour = Color.White;
-
             IsRegistering = true;
 
-            string temp = Button_InsertColourSearchAreaEvent.Text;
+            var temp = Button_InsertColourSearchAreaEvent.Text;
 
             Button_InsertColourSearchAreaEvent.Text = "Selecting area to search... (F5 to cancel).";
 
             while (IsRegistering)
             {
-                bool ColourPicked = false;
+                var colourPicked = false;
 
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    p1 = GetCursorPosition();
+                    var p1 = GetCursorPosition();
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
-                    p2 = GetCursorPosition();
+                    var p2 = GetCursorPosition();
 
                     Button_InsertColourSearchAreaEvent.Text = "Selecting colour to search for in area... (F5 to cancel).";
 
-                    while (!ColourPicked)
+                    while (!colourPicked)
                     {
-                        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                        if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                         {
-                            ColourPicked = true;
+                            colourPicked = true;
 
                             Button_InsertColourSearchAreaEvent.Text = "Selecting area to search... (F5 to cancel).";
 
-                            SearchColour = GetColorAt(Cursor.Position);
+                            var searchColour = GetColorAt(Cursor.Position);
 
-                            AllEvents.Add(new MouseMoveToColour() { ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+                            AllEvents.Add(new MouseMoveToColour() { ColourSearchArea = new Rect(p1, p2), ClickArea = new Rect(p1, p2), SearchColour = searchColour.ToArgb() });
 
                             UpdateListBox();
 
-                            Thread.Sleep(200);
+                            Thread.Sleep(1);
                         }
-                        else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                        else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                         {
                             Button_InsertColourSearchAreaEvent.Text = temp;
 
@@ -1535,7 +1525,7 @@ namespace DolphinScript
                         }
                     }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertColourSearchAreaEvent.Text = temp;
 
@@ -1553,45 +1543,42 @@ namespace DolphinScript
         /// </summary>
         void MouseMoveToColourInAreaOnWindowLoop()
         {
-            POINT p1 = new POINT(), p2 = new POINT();
-            Color SearchColour = Color.White;
-
             IsRegistering = true;
 
-            string temp = Button_InsertColourSearchAreaWindowEvent.Text;
+            var temp = Button_InsertColourSearchAreaWindowEvent.Text;
 
             Button_InsertColourSearchAreaWindowEvent.Text = "Selecting area to search... (F5 to cancel).";
 
             while (IsRegistering)
             {
-                bool ColourPicked = false;
+                var colourPicked = false;
 
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
-                    p1 = GetCursorPositionOnWindow(GetForegroundWindow());
+                    var p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
-                    p2 = GetCursorPositionOnWindow(GetForegroundWindow());
+                    var p2 = GetCursorPositionOnWindow(GetForegroundWindow());
 
                     Button_InsertColourSearchAreaWindowEvent.Text = "Selecting colour to search for in area... (F5 to cancel).";
 
-                    while (!ColourPicked)
+                    while (!colourPicked)
                     {
-                        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                        if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                         {
-                            ColourPicked = true;
+                            colourPicked = true;
                             Button_InsertColourSearchAreaWindowEvent.Text = "Selecting area to search... (F5 to cancel).";
 
-                            SearchColour = GetColorAt(Cursor.Position);
+                            var searchColour = GetColorAt(Cursor.Position);
 
-                            AllEvents.Add(new MouseMoveToColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColour = SearchColour.ToArgb() });
+                            AllEvents.Add(new MouseMoveToColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new Rect(p1, p2), ClickArea = new Rect(p1, p2), SearchColour = searchColour.ToArgb() });
 
                             UpdateListBox();
 
-                            Thread.Sleep(200);
+                            Thread.Sleep(1);
                         }
-                        else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                        else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                         {
                             Button_InsertColourSearchAreaWindowEvent.Text = temp;
 
@@ -1601,7 +1588,7 @@ namespace DolphinScript
                         }
                     }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                 {
                     Button_InsertColourSearchAreaWindowEvent.Text = temp;
 
@@ -1621,15 +1608,14 @@ namespace DolphinScript
         {
             // will store the colours we will be searching for
             //
-            List<int> searchColours = new List<int>();
+            var searchColours = new List<int>();
 
             // will store the two points used for the search area
             //
-            POINT p1 = new POINT(), p2 = new POINT();
 
             // will store the screenshot we take of the search area
             //
-            Bitmap ColourSelectionScreenshot;
+            Bitmap colourSelectionScreenshot;
 
             // set global registering to true
             //
@@ -1637,11 +1623,11 @@ namespace DolphinScript
 
             // these will be used to control register flow later
             //
-            bool DonePickingColours = false, AreaPicked = false;
+            bool areaPicked = false;
 
             // store the original text of the button we just clicked
             //
-            string temp = Button_InsertMultiColourSearchAreaWindowEvent.Text;
+            var temp = Button_InsertMultiColourSearchAreaWindowEvent.Text;
 
             // change the button text to show we're currently registering
             //
@@ -1653,32 +1639,27 @@ namespace DolphinScript
             {
                 // listen for the left shift key
                 //
-                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                 {
                     // store the top left of the search area
                     //
-                    p1 = GetCursorPosition();
+                    var p1 = GetCursorPosition();
 
                     // pause here while the user is still holding shift
                     //
-                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                     // store bottom left of search area after user lets go of shift key
                     //
-                    p2 = GetCursorPosition();
-
-                    // calculate the width and height of the search area
-                    //
-                    int w = p2.X - p1.X,
-                        h = p2.Y - p1.Y;
+                    var p2 = GetCursorPosition();
 
                     // take a screenshot of the search area and store it in our bitmap
                     //
-                    ColourSelectionScreenshot = ScreenshotArea(new RECT(p1, p2));
+                    colourSelectionScreenshot = ScreenshotArea(new Rect(p1, p2));
 
                     // set the picturebox image to the screenshot we took
                     //
-                    Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
+                    Picturebox_ColourSelectionArea.Image = colourSelectionScreenshot;
 
                     // change the button text to show we've moved on to selecting the search colours
                     //
@@ -1686,11 +1667,11 @@ namespace DolphinScript
 
                     // loop here while we're not done selecting colours to search for
                     //
-                    while (!DonePickingColours)
+                    while (true)
                     {
                         // listen for the shift key
                         //
-                        if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                        if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                         {
                             // each time we hit shift key we add the colour under the mouse to the search colours list
                             //
@@ -1698,33 +1679,29 @@ namespace DolphinScript
 
                             // change the colour we selected on the screenshot to red to show we've added it to the search list
                             //
-                            ColourSelectionScreenshot = SetMatchingColourPixels(ColourSelectionScreenshot, searchColours[searchColours.Count - 1], Color.Red);
+                            colourSelectionScreenshot = SetMatchingColourPixels(colourSelectionScreenshot, searchColours[searchColours.Count - 1], Color.Red);
 
                             // override the original picturebox image with the new one to show the selected colours
                             //
-                            Picturebox_ColourSelectionArea.Image = ColourSelectionScreenshot;
+                            Picturebox_ColourSelectionArea.Image = colourSelectionScreenshot;
 
                             // sleep here so we don't add more than one colour when we press shift once
                             //
-                            Thread.Sleep(200);
+                            Thread.Sleep(1);
                         }
-                        else if (GetAsyncKeyState(VirtualKeyStates.VK_F5) < 0)
+                        else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
                         {
-                            // if we click F5 then the colour selection process is marked as complete
-                            //
-                            DonePickingColours = true;
-
                             // we change the button text to ask the user to choose the area on the window they'd like to search for these colours on
                             //
                             Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area & window to search for colour in.... (Make sure window is top-most)";
 
                             // loop here while the area hasn't been selected
                             //
-                            while (!AreaPicked)
+                            while (!areaPicked)
                             {
                                 // listen for the shift key
                                 //
-                                if (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0)
+                                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                                 {
                                     // set the top left of the search area to the point under the mouse
                                     //
@@ -1732,7 +1709,7 @@ namespace DolphinScript
 
                                     // wait here while the user holds shift key
                                     //
-                                    while (GetAsyncKeyState(VirtualKeyStates.VK_LSHIFT) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                                     // set the bottom right of the search area to the point under the mouse
                                     //
@@ -1740,13 +1717,13 @@ namespace DolphinScript
 
                                     // set the area marked as complete
                                     //
-                                    AreaPicked = true;
+                                    areaPicked = true;
                                 }
                             }
 
                             // add the event to the event list
                             //
-                            AllEvents.Add(new MouseMoveToMultiColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new RECT(p1, p2), ClickArea = new RECT(p1, p2), SearchColours = new List<int>(searchColours) });
+                            AllEvents.Add(new MouseMoveToMultiColourOnWindow() { WindowToClickHandle = GetForegroundWindow(), WindowToClickTitle = GetActiveWindowTitle(), ColourSearchArea = new Rect(p1, p2), ClickArea = new Rect(p1, p2), SearchColours = new List<int>(searchColours) });
 
                             // update the event listbox to show the new event
                             //
@@ -1770,7 +1747,8 @@ namespace DolphinScript
                         }
                     }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VK_F6) < 0)
+
+                if (GetAsyncKeyState(VirtualKeyStates.VkF6) < 0)
                 {
                     //
                     // user can cancel the operation early by pressing F6

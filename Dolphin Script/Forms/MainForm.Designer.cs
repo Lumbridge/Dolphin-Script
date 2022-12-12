@@ -1,4 +1,4 @@
-﻿namespace DolphinScript
+﻿namespace DolphinScript.Forms
 {
     partial class MainForm
     {
@@ -44,6 +44,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wikiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl_ScriptEvents = new System.Windows.Forms.TabControl();
             this.tabPage_PauseEvent = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
@@ -94,6 +95,8 @@
             this.TrackBar_MouseSpeed = new System.Windows.Forms.TrackBar();
             this.NumericUpDown_MouseSpeed = new System.Windows.Forms.NumericUpDown();
             this.tabPage_MouseMoveToColour = new System.Windows.Forms.TabPage();
+            this.groupBox24 = new System.Windows.Forms.GroupBox();
+            this.Picturebox_ColourSelectionArea = new System.Windows.Forms.PictureBox();
             this.groupBox23 = new System.Windows.Forms.GroupBox();
             this.Button_InsertMultiColourSearchAreaWindowEvent = new System.Windows.Forms.Button();
             this.groupBox22 = new System.Windows.Forms.GroupBox();
@@ -131,9 +134,6 @@
             this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
             this.button_RemoveRepeatGroup = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.Picturebox_ColourSelectionArea = new System.Windows.Forms.PictureBox();
-            this.groupBox24 = new System.Windows.Forms.GroupBox();
-            this.refreshFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).BeginInit();
             this.MenuStrip_MainForm.SuspendLayout();
             this.tabControl_ScriptEvents.SuspendLayout();
@@ -160,6 +160,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.TrackBar_MouseSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MouseSpeed)).BeginInit();
             this.tabPage_MouseMoveToColour.SuspendLayout();
+            this.groupBox24.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).BeginInit();
             this.groupBox23.SuspendLayout();
             this.groupBox22.SuspendLayout();
             this.groupBox16.SuspendLayout();
@@ -172,19 +174,17 @@
             this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).BeginInit();
-            this.groupBox24.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_StartScript
             // 
-            this.button_StartScript.Location = new System.Drawing.Point(540, 203);
+            this.button_StartScript.Location = new System.Drawing.Point(540, 189);
             this.button_StartScript.Name = "button_StartScript";
-            this.button_StartScript.Size = new System.Drawing.Size(56, 36);
+            this.button_StartScript.Size = new System.Drawing.Size(56, 50);
             this.button_StartScript.TabIndex = 0;
-            this.button_StartScript.Text = "Start Script";
+            this.button_StartScript.Text = "Start Script (F5)";
             this.button_StartScript.UseVisualStyleBackColor = true;
-            this.button_StartScript.Click += new System.EventHandler(this.startButton_Click);
+            this.button_StartScript.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // ListBox_Events
             // 
@@ -206,7 +206,7 @@
             this.button_MoveEventUp.TabIndex = 3;
             this.button_MoveEventUp.Text = "↑";
             this.button_MoveEventUp.UseVisualStyleBackColor = true;
-            this.button_MoveEventUp.Click += new System.EventHandler(this.moveElementUpButton_Click);
+            this.button_MoveEventUp.Click += new System.EventHandler(this.MoveElementUpButton_Click);
             // 
             // button_MoveEventDown
             // 
@@ -217,12 +217,12 @@
             this.button_MoveEventDown.TabIndex = 4;
             this.button_MoveEventDown.Text = "↓";
             this.button_MoveEventDown.UseVisualStyleBackColor = true;
-            this.button_MoveEventDown.Click += new System.EventHandler(this.moveElementDownButton_Click);
+            this.button_MoveEventDown.Click += new System.EventHandler(this.MoveElementDownButton_Click);
             // 
             // statusLabel
             // 
             this.statusLabel.AutoSize = true;
-            this.statusLabel.Location = new System.Drawing.Point(12, 685);
+            this.statusLabel.Location = new System.Drawing.Point(35, 685);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(60, 13);
             this.statusLabel.TabIndex = 14;
@@ -246,7 +246,7 @@
             this.button_RemoveEvent.TabIndex = 16;
             this.button_RemoveEvent.Text = "X";
             this.button_RemoveEvent.UseVisualStyleBackColor = true;
-            this.button_RemoveEvent.Click += new System.EventHandler(this.removeEventButton_Click);
+            this.button_RemoveEvent.Click += new System.EventHandler(this.RemoveEventButton_Click);
             // 
             // button_AddRepeatGroup
             // 
@@ -256,7 +256,7 @@
             this.button_AddRepeatGroup.TabIndex = 8;
             this.button_AddRepeatGroup.Text = "Add Repeat Group";
             this.button_AddRepeatGroup.UseVisualStyleBackColor = true;
-            this.button_AddRepeatGroup.Click += new System.EventHandler(this.repeatGroupButton_Click);
+            this.button_AddRepeatGroup.Click += new System.EventHandler(this.RepeatGroupButton_Click);
             // 
             // NumericUpDown_RepeatAmount
             // 
@@ -303,16 +303,16 @@
             // saveScriptToolStripMenuItem
             // 
             this.saveScriptToolStripMenuItem.Name = "saveScriptToolStripMenuItem";
-            this.saveScriptToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.saveScriptToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveScriptToolStripMenuItem.Text = "Save Script";
-            this.saveScriptToolStripMenuItem.Click += new System.EventHandler(this.saveScriptToolStripMenuItem_Click);
+            this.saveScriptToolStripMenuItem.Click += new System.EventHandler(this.SaveScriptToolStripMenuItem_Click);
             // 
             // loadScriptToolStripMenuItem1
             // 
             this.loadScriptToolStripMenuItem1.Name = "loadScriptToolStripMenuItem1";
-            this.loadScriptToolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
+            this.loadScriptToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.loadScriptToolStripMenuItem1.Text = "Load Script";
-            this.loadScriptToolStripMenuItem1.Click += new System.EventHandler(this.loadScriptToolStripMenuItem1_Click);
+            this.loadScriptToolStripMenuItem1.Click += new System.EventHandler(this.LoadScriptToolStripMenuItem1_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -327,16 +327,23 @@
             // wikiToolStripMenuItem
             // 
             this.wikiToolStripMenuItem.Name = "wikiToolStripMenuItem";
-            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.wikiToolStripMenuItem.Text = "Wiki";
-            this.wikiToolStripMenuItem.Click += new System.EventHandler(this.wikiToolStripMenuItem_Click);
+            this.wikiToolStripMenuItem.Click += new System.EventHandler(this.WikiToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
+            // 
+            // refreshFormToolStripMenuItem
+            // 
+            this.refreshFormToolStripMenuItem.Name = "refreshFormToolStripMenuItem";
+            this.refreshFormToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshFormToolStripMenuItem.Text = "Refresh Form";
+            this.refreshFormToolStripMenuItem.Click += new System.EventHandler(this.RefreshFormToolStripMenuItem_Click);
             // 
             // tabControl_ScriptEvents
             // 
@@ -544,7 +551,7 @@
             0,
             0,
             65536});
-            this.upperRandomDelayNumberBox.ValueChanged += new System.EventHandler(this.upperRandomDelayNumberBox_ValueChanged);
+            this.upperRandomDelayNumberBox.ValueChanged += new System.EventHandler(this.UpperRandomDelayNumberBox_ValueChanged);
             // 
             // lowerRandomDelayNumberBox
             // 
@@ -568,7 +575,7 @@
             0,
             0,
             65536});
-            this.lowerRandomDelayNumberBox.ValueChanged += new System.EventHandler(this.lowerRandomDelayNumberBox_ValueChanged);
+            this.lowerRandomDelayNumberBox.ValueChanged += new System.EventHandler(this.LowerRandomDelayNumberBox_ValueChanged);
             // 
             // tabPage2_KeyboardEvent
             // 
@@ -733,7 +740,7 @@
             this.Button_InsertMouseMoveToAreaEvent.TabIndex = 1;
             this.Button_InsertMouseMoveToAreaEvent.Text = "Move To a Random Point in an Area";
             this.Button_InsertMouseMoveToAreaEvent.UseVisualStyleBackColor = true;
-            this.Button_InsertMouseMoveToAreaEvent.Click += new System.EventHandler(this.button_InsertMouseMoveToAreaEvent_Click);
+            this.Button_InsertMouseMoveToAreaEvent.Click += new System.EventHandler(this.Button_InsertMouseMoveToAreaEvent_Click);
             // 
             // Button_InsertMouseMoveEvent
             // 
@@ -743,7 +750,7 @@
             this.Button_InsertMouseMoveEvent.TabIndex = 0;
             this.Button_InsertMouseMoveEvent.Text = "Move To Fixed Point";
             this.Button_InsertMouseMoveEvent.UseVisualStyleBackColor = true;
-            this.Button_InsertMouseMoveEvent.Click += new System.EventHandler(this.button_InsertMouseMoveEvent_Click);
+            this.Button_InsertMouseMoveEvent.Click += new System.EventHandler(this.Button_InsertMouseMoveEvent_Click);
             // 
             // groupBox1
             // 
@@ -796,7 +803,7 @@
             this.Button_InsertMouseMoveToAreaOnWindowEvent.TabIndex = 5;
             this.Button_InsertMouseMoveToAreaOnWindowEvent.Text = "Move To Random Point in Area on Window";
             this.Button_InsertMouseMoveToAreaOnWindowEvent.UseVisualStyleBackColor = true;
-            this.Button_InsertMouseMoveToAreaOnWindowEvent.Click += new System.EventHandler(this.button_InsertMouseMoveToAreaOnWindowEvent_Click);
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.Click += new System.EventHandler(this.Button_InsertMouseMoveToAreaOnWindowEvent_Click);
             // 
             // Button_InsertMouseMoveToPointOnWindowEvent
             // 
@@ -806,7 +813,7 @@
             this.Button_InsertMouseMoveToPointOnWindowEvent.TabIndex = 4;
             this.Button_InsertMouseMoveToPointOnWindowEvent.Text = "Move To Fixed Point on Window";
             this.Button_InsertMouseMoveToPointOnWindowEvent.UseVisualStyleBackColor = true;
-            this.Button_InsertMouseMoveToPointOnWindowEvent.Click += new System.EventHandler(this.button_InsertMouseMoveToPointOnWindowEvent_Click);
+            this.Button_InsertMouseMoveToPointOnWindowEvent.Click += new System.EventHandler(this.Button_InsertMouseMoveToPointOnWindowEvent_Click);
             // 
             // groupBox3
             // 
@@ -917,6 +924,25 @@
             this.tabPage_MouseMoveToColour.TabIndex = 4;
             this.tabPage_MouseMoveToColour.Text = "Mouse Move to Colour Event";
             this.tabPage_MouseMoveToColour.UseVisualStyleBackColor = true;
+            // 
+            // groupBox24
+            // 
+            this.groupBox24.Controls.Add(this.Picturebox_ColourSelectionArea);
+            this.groupBox24.Location = new System.Drawing.Point(3, 204);
+            this.groupBox24.Name = "groupBox24";
+            this.groupBox24.Size = new System.Drawing.Size(307, 172);
+            this.groupBox24.TabIndex = 72;
+            this.groupBox24.TabStop = false;
+            this.groupBox24.Text = "Multi-Colour Search Area";
+            // 
+            // Picturebox_ColourSelectionArea
+            // 
+            this.Picturebox_ColourSelectionArea.Location = new System.Drawing.Point(6, 19);
+            this.Picturebox_ColourSelectionArea.Name = "Picturebox_ColourSelectionArea";
+            this.Picturebox_ColourSelectionArea.Size = new System.Drawing.Size(295, 147);
+            this.Picturebox_ColourSelectionArea.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.Picturebox_ColourSelectionArea.TabIndex = 50;
+            this.Picturebox_ColourSelectionArea.TabStop = false;
             // 
             // groupBox23
             // 
@@ -1277,7 +1303,7 @@
             this.Buton_InsertMiddleMouseClickEvent.TabIndex = 58;
             this.Buton_InsertMiddleMouseClickEvent.Text = "Middle Mouse Click";
             this.Buton_InsertMiddleMouseClickEvent.UseVisualStyleBackColor = true;
-            this.Buton_InsertMiddleMouseClickEvent.Click += new System.EventHandler(this.Buton_InsertMiddleMouseClickEvent_Click);
+            this.Buton_InsertMiddleMouseClickEvent.Click += new System.EventHandler(this.Button_InsertMiddleMouseClickEvent_Click);
             // 
             // button_RemoveRepeatGroup
             // 
@@ -1287,42 +1313,16 @@
             this.button_RemoveRepeatGroup.TabIndex = 48;
             this.button_RemoveRepeatGroup.Text = "Remove Repeat Group";
             this.button_RemoveRepeatGroup.UseVisualStyleBackColor = true;
-            this.button_RemoveRepeatGroup.Click += new System.EventHandler(this.button_RemoveRepeatGroup_Click);
+            this.button_RemoveRepeatGroup.Click += new System.EventHandler(this.Button_RemoveRepeatGroup_Click);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(541, 141);
+            this.button1.Location = new System.Drawing.Point(599, 170);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(55, 57);
             this.button1.TabIndex = 49;
             this.button1.Text = "View Event Details";
             this.button1.UseVisualStyleBackColor = true;
-            // 
-            // Picturebox_ColourSelectionArea
-            // 
-            this.Picturebox_ColourSelectionArea.Location = new System.Drawing.Point(6, 19);
-            this.Picturebox_ColourSelectionArea.Name = "Picturebox_ColourSelectionArea";
-            this.Picturebox_ColourSelectionArea.Size = new System.Drawing.Size(295, 147);
-            this.Picturebox_ColourSelectionArea.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.Picturebox_ColourSelectionArea.TabIndex = 50;
-            this.Picturebox_ColourSelectionArea.TabStop = false;
-            // 
-            // groupBox24
-            // 
-            this.groupBox24.Controls.Add(this.Picturebox_ColourSelectionArea);
-            this.groupBox24.Location = new System.Drawing.Point(3, 204);
-            this.groupBox24.Name = "groupBox24";
-            this.groupBox24.Size = new System.Drawing.Size(307, 172);
-            this.groupBox24.TabIndex = 72;
-            this.groupBox24.TabStop = false;
-            this.groupBox24.Text = "Multi-Colour Search Area";
-            // 
-            // refreshFormToolStripMenuItem
-            // 
-            this.refreshFormToolStripMenuItem.Name = "refreshFormToolStripMenuItem";
-            this.refreshFormToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.refreshFormToolStripMenuItem.Text = "Refresh Form";
-            this.refreshFormToolStripMenuItem.Click += new System.EventHandler(this.refreshFormToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -1378,6 +1378,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.TrackBar_MouseSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MouseSpeed)).EndInit();
             this.tabPage_MouseMoveToColour.ResumeLayout(false);
+            this.groupBox24.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).EndInit();
             this.groupBox23.ResumeLayout(false);
             this.groupBox22.ResumeLayout(false);
             this.groupBox16.ResumeLayout(false);
@@ -1393,8 +1395,6 @@
             this.groupBox10.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).EndInit();
-            this.groupBox24.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

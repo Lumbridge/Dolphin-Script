@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.ColourEvent;
+using static DolphinScript.Classes.Backend.RandomNumber;
+using static DolphinScript.Classes.Backend.PointReturns;
+using static DolphinScript.Classes.ScriptEventClasses.MouseMove;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.ColourEvent;
-using static DolphinScript.Lib.Backend.RandomNumber;
-using static DolphinScript.Lib.Backend.PointReturns;
-using static DolphinScript.Lib.ScriptEventClasses.MouseMove;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class MouseMoveToColour : ScriptEvent
@@ -16,24 +15,23 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <summary>
         /// Moves mouse to a colour in a given search area
         /// </summary>
-        /// <param name="SearchArea"></param>
-        /// <param name="SearchColour"></param>
+        /// <param name="searchArea"></param>
+        /// <param name="searchColour"></param>
         /// <returns></returns>
-        static public void MoveMouseToColour(RECT SearchArea, int SearchColour)
+        public static void MoveMouseToColour(Rect searchArea, int searchColour)
         {
-            List<POINT> temp = GetMatchingPixelList(SearchArea, SearchColour); // add matching colour pixels to list
-            POINT EndPoint;
-            POINT pos = GetCursorPosition();
+            var temp = GetMatchingPixelList(searchArea, searchColour); // add matching colour pixels to list
+            var pos = GetCursorPosition();
 
-            while (GetColorAt(pos).ToArgb() != SearchColour)
+            while (GetColorAt(pos).ToArgb() != searchColour)
             {
                 if (temp.Count > 0)
                 {
-                    temp = GetMatchingPixelList(SearchArea, SearchColour); // add matching colour pixels to list
+                    temp = GetMatchingPixelList(searchArea, searchColour); // add matching colour pixels to list
 
-                    EndPoint = temp[GetRandomNumber(0, temp.Count - 1)]; // pick random matching pixel to click
+                    var endPoint = temp[GetRandomNumber(0, temp.Count - 1)];
 
-                    MoveMouse(EndPoint); // move mouse to picked pixel
+                    MoveMouse(endPoint); // move mouse to picked pixel
 
                     GetCursorPos(out pos);
                 }
@@ -62,10 +60,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
         }
     }
 }

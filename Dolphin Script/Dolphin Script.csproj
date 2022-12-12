@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DolphinScript</RootNamespace>
     <AssemblyName>DolphinScript</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -27,6 +27,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -68,9 +69,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Backend\Benchmark.cs" />
     <Compile Include="Classes\Backend\ColourEvent.cs" />
     <Compile Include="Classes\Backend\Common.cs" />
+    <Compile Include="Classes\Backend\LockBitmap.cs" />
     <Compile Include="Classes\Backend\MouseMoveMath.cs" />
     <Compile Include="Classes\ScriptEventClasses\MouseMoveToMultiColourOnWindow.cs" />
     <Compile Include="Classes\Backend\PointReturns.cs" />

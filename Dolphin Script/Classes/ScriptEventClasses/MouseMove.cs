@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using DolphinScript.Classes.Backend;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.PointReturns;
+using static DolphinScript.Classes.Backend.RandomNumber;
+using static DolphinScript.Classes.Backend.MouseMoveMath;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.PointReturns;
-using static DolphinScript.Lib.Backend.RandomNumber;
-using static DolphinScript.Lib.Backend.MouseMoveMath;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     /// <summary>
     /// This class provides the core mouse moving functionality.
@@ -19,38 +19,38 @@ namespace DolphinScript.Lib.ScriptEventClasses
         // mouse movement variables
         //
         private static double
-            _Gravity = 9.0,
-            _PushForce = 3.0,
-            _MinWait = 10.0,
-            _MaxWait = 15.0,
-            _MaxStep = 10.0,
-            _TargetArea = 15.0;
+            _gravity = GetRandomDouble(8.0, 10.0),
+            _pushForce = GetRandomDouble(1.0, 2.0),
+            _minWait = GetRandomDouble(8.0, 10.0),
+            _maxWait = GetRandomDouble(13.0, 15.0),
+            _maxStep = GetRandomDouble(3.0, 6.0),
+            _targetArea = GetRandomDouble(12.0, 15.0);
 
         /// <summary>
         /// moves the mouse from it's current location to the end point passed in
         /// </summary>
         /// <param name="end"></param>
-        public static void MoveMouse(POINT end)
+        public static void MoveMouse(Point end)
         {
             // store the current mouse position to pass into the core mouse move loop
             //
-            POINT start = GetCursorPosition();
+            var start = GetCursorPosition();
 
             // generate a random mouse speed close to the one set on the form
             //
-            double randomSpeed = Math.Max((GetRandomNumber(0, MouseSpeed) / 2.0 + MouseSpeed) / 10.0, 0.1);
+            var randomSpeed = Math.Max((GetRandomNumber(0, MouseSpeed) / 2.0 + MouseSpeed) / 10.0, 0.1);
 
             // call the main mouse move loop and pass in the global params
             //
             MouseMoveCoreLoop(
                 start,
                 end,
-                _Gravity,
-                _PushForce,
-                _MinWait / randomSpeed,
-                _MaxWait / randomSpeed,
-                _MaxStep * randomSpeed,
-                _TargetArea * randomSpeed);
+                _gravity,
+                _pushForce,
+                _minWait / randomSpeed,
+                _maxWait / randomSpeed,
+                _maxStep * randomSpeed,
+                _targetArea * randomSpeed);
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <param name="maxStep"></param>
         /// <param name="targetArea"></param>
         public static void MouseMoveCoreLoop(
-            POINT start,
-            POINT end,
+            Point start,
+            Point end,
             double gravity,
             double pushForce,
             double minWait, double maxWait,
@@ -75,15 +75,16 @@ namespace DolphinScript.Lib.ScriptEventClasses
             double xs = start.X, ys = start.Y;
             double xe = end.X, ye = end.Y;
 
-            double dist, windX = 0, windY = 0, veloX = 0, veloY = 0, randomDist, veloMag, step;
-            int oldX, oldY, newX = (int)Math.Round(xs), newY = (int)Math.Round(ys);
+            double windX = 0, windY = 0, veloX = 0, veloY = 0;
+            double veloMag, step;
+            int oldY, newX = (int)Math.Round(xs), newY = (int)Math.Round(ys);
 
-            double waitDiff = maxWait - minWait;
-            double sqrt2 = Math.Sqrt(2.0);
-            double sqrt3 = Math.Sqrt(3.0);
-            double sqrt5 = Math.Sqrt(5.0);
+            var waitDiff = maxWait - minWait;
+            var sqrt2 = Math.Sqrt(2.0);
+            var sqrt3 = Math.Sqrt(3.0);
+            var sqrt5 = Math.Sqrt(5.0);
 
-            dist = Hypot(xe - xs, ye - ys);
+            var dist = Hypot(xe - xs, ye - ys);
 
             while (dist > 1.0)
             {
@@ -91,14 +92,14 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
                 if (dist >= targetArea)
                 {
-                    int w = GetRandomNumber(0,(int)Math.Round(pushForce) * 2 + 1);
+                    var w = GetRandomNumber(0,(int)Math.Round(pushForce) * 2 + 1);
                     windX = windX / sqrt3 + (w - pushForce) / sqrt5;
                     windY = windY / sqrt3 + (w - pushForce) / sqrt5;
                 }
                 else
                 {
-                    windX = windX / sqrt2;
-                    windY = windY / sqrt2;
+                    windX /= sqrt2;
+                    windY /= sqrt2;
                     if (maxStep < 3)
                         maxStep = GetRandomNumber(0,3) + 3.0;
                     else
@@ -107,18 +108,18 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
                 veloX += windX;
                 veloY += windY;
-                veloX = veloX + gravity * (xe - xs) / dist;
-                veloY = veloY + gravity * (ye - ys) / dist;
+                veloX += gravity * (xe - xs) / dist;
+                veloY += gravity * (ye - ys) / dist;
 
                 if (Hypot(veloX, veloY) > maxStep)
                 {
-                    randomDist = maxStep / 2.0 + GetRandomNumber(0,(int)Math.Round(maxStep) / 2);
+                    var randomDist = maxStep / 2.0 + GetRandomNumber(0,(int)Math.Round(maxStep) / 2);
                     veloMag = Hypot(veloX, veloY);
                     veloX = (veloX / veloMag) * randomDist;
                     veloY = (veloY / veloMag) * randomDist;
                 }
 
-                oldX = (int)Math.Round(xs);
+                var oldX = (int)Math.Round(xs);
                 oldY = (int)Math.Round(ys);
                 xs += veloX;
                 ys += veloY;
@@ -130,17 +131,18 @@ namespace DolphinScript.Lib.ScriptEventClasses
                     SetCursorPos(newX, newY);
 
                 step = Hypot(xs - oldX, ys - oldY);
-                int wait = (int)Math.Round(waitDiff * (step / maxStep) + minWait);
+                var wait = (int)Math.Round(waitDiff * (step / maxStep) + minWait);
 
                 Task.WaitAll(Task.Delay(wait));
             }
 
-            int endX = (int)Math.Round(xe);
-            int endY = (int)Math.Round(ye);
+            var endX = (int)Math.Round(xe);
+            var endY = (int)Math.Round(ye);
 
             if (!IsRunning)
                 return;
-            else if (endX != newX || endY != newY)
+
+            if (endX != newX || endY != newY)
                 SetCursorPos(endX, endY);
         }
 
@@ -151,7 +153,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
         {
             // update the status label on the main form
             //
-            Status = $"Mouse move: {CoordsToMoveTo.ToString()}.";
+            Status = $"Mouse move: {CoordsToMoveTo}.";
 
             MoveMouse(CoordsToMoveTo);
         }
@@ -162,10 +164,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
         }
 
         /// <summary>

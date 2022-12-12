@@ -1,13 +1,12 @@
 ﻿using System;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.PointReturns;
+using static DolphinScript.Classes.Backend.RandomNumber;
+using static DolphinScript.Classes.Backend.WindowControl;
+using static DolphinScript.Classes.ScriptEventClasses.MouseMoveToColour;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.PointReturns;
-using static DolphinScript.Lib.Backend.RandomNumber;
-using static DolphinScript.Lib.Backend.WindowControl;
-using static DolphinScript.Lib.ScriptEventClasses.MouseMoveToColour;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class MouseMoveToMultiColourOnWindow : ScriptEvent
@@ -27,8 +26,8 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
             // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
             //
-            int newSearchColour = SearchColours[GetRandomNumber(0, SearchColours.Count - 1)];
-            RECT newClickArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+            var newSearchColour = SearchColours[GetRandomNumber(0, SearchColours.Count - 1)];
+            var newClickArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
             
             MoveMouseToColour(newClickArea, newSearchColour);
         }
@@ -39,10 +38,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Move mouse to random pixel matching colour " + SearchColours.ToString() + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }
     }
 }

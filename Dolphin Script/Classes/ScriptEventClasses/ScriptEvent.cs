@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.WindowControl;
 
-using static DolphinScript.Lib.Backend.WinAPI;
-using static DolphinScript.Lib.Backend.WindowControl;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     abstract class ScriptEvent
     {
         // private window variables
         //
-        private RECT windowRECT;
-        private IntPtr windowHandle;
+        private Rect _windowRect;
+        private IntPtr _windowHandle;
 
         // mandatory override methods
         //
@@ -25,22 +24,22 @@ namespace DolphinScript.Lib.ScriptEventClasses
         {
             get
             {
-                windowHandle = FindWindow(null, WindowToClickTitle);
-                return windowHandle;
+                _windowHandle = FindWindow(null, WindowToClickTitle);
+                return _windowHandle;
             }
-            set { windowHandle = value; }
+            set { _windowHandle = value; }
         }
 
         // gets the window location (because the window can move/scale often)
         //
-        public RECT WindowToClickLocation
+        public Rect WindowToClickLocation
         {
             get
             {
-                GetWindowRect(WindowToClickHandle, ref windowRECT);
-                return windowRECT;
+                GetWindowRect(WindowToClickHandle, ref _windowRect);
+                return _windowRect;
             }
-            set { windowRECT = value; }
+            set { _windowRect = value; }
         }
 
         // gets/sets the title of the window, if the name of the window changes then the event will break
@@ -50,11 +49,11 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
         // POINT we are going to move the mouse to in mouse move events
         //
-        public POINT CoordsToMoveTo { get; set; }
+        public Point CoordsToMoveTo { get; set; }
 
         // screen region we are going to move the mouse to in mouse move events
         //
-        public RECT ClickArea { get; set; }
+        public Rect ClickArea { get; set; }
         
         // click event mouse button
         //
@@ -80,7 +79,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
         // area we will search for colour in colour search events
         //
-        public RECT ColourSearchArea { get; set; }
+        public Rect ColourSearchArea { get; set; }
 
         // repeat group event list
         //
@@ -92,7 +91,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
 
         // gives us the Id of the group that this event is part of
         //
-        public int GroupID { get; set; }
+        public int GroupId { get; set; }
 
         // gives us the index of the event inside it's event group
         //
@@ -100,7 +99,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
         {
             get
             {
-                for (int i = 0; i < EventsInGroup.Count; i++)
+                for (var i = 0; i < EventsInGroup.Count; i++)
                     if (EventsInGroup[i] == this)
                         return i;
 
@@ -118,10 +117,10 @@ namespace DolphinScript.Lib.ScriptEventClasses
         public ScriptEvent()
         {
             WindowToClickHandle = IntPtr.Zero;
-            WindowToClickLocation = new RECT();
+            WindowToClickLocation = new Rect();
             WindowToClickTitle = "NoWindow";
-            CoordsToMoveTo = new POINT();
-            ClickArea = new RECT();
+            CoordsToMoveTo = new Point();
+            ClickArea = new Rect();
             MouseButton = VirtualMouseStates.None;
             KeyboardKeys = "NoKey";
             DelayDuration = -1.0;
@@ -129,10 +128,10 @@ namespace DolphinScript.Lib.ScriptEventClasses
             DelayMaximum = -1.0;
             SearchColour = -1;
             SearchColours = new List<int>();
-            ColourSearchArea = new RECT();
+            ColourSearchArea = new Rect();
             EventsInGroup = new List<ScriptEvent>();
             IsPartOfGroup = false;
-            GroupID = -1;
+            GroupId = -1;
             NumberOfCycles = -1;
         }
     }

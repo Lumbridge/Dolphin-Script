@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.ColourEvent;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.ColourEvent;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class PauseWhileColourDoesntExistInArea : ScriptEvent
@@ -30,10 +29,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.WindowControl;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.WindowControl;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class MoveWindowToFront : ScriptEvent
@@ -26,10 +25,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Move " + WindowTitle + " window to front.";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Move " + WindowTitle + " window to front.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move " + WindowTitle + " window to front.";
         }
     }
 }

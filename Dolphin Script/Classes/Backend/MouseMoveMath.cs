@@ -1,9 +1,8 @@
 ﻿using System;
+using static DolphinScript.Classes.Backend.RandomNumber;
+using static DolphinScript.Classes.Backend.WinApi;
 
-using static DolphinScript.Lib.Backend.RandomNumber;
-using static DolphinScript.Lib.Backend.WinAPI;
-
-namespace DolphinScript.Lib.Backend
+namespace DolphinScript.Classes.Backend
 {
     /// <summary>
     /// Contains math functions which are used in the mouse move methods
@@ -16,7 +15,7 @@ namespace DolphinScript.Lib.Backend
         /// <param name="dx"></param>
         /// <param name="dy"></param>
         /// <returns></returns>
-        static public double Hypot(double dx, double dy)
+        public static double Hypot(double dx, double dy)
         {
             return Math.Sqrt(dx * dx + dy * dy);
         }
@@ -24,85 +23,85 @@ namespace DolphinScript.Lib.Backend
         /// <summary>
         /// Returns the length between two points (Euclidean calc)
         /// </summary>
-        /// <param name="A"></param>
-        /// <param name="B"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         /// <returns></returns>
-        static public double LineLength(POINT A, POINT B)
+        public static double LineLength(Point a, Point b)
         {
-            return Math.Sqrt((A.X - B.X) * (A.X - B.X) + (A.Y - B.Y) * (A.Y - B.Y));
+            return Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
         }
 
         /// <summary>
         /// Returns the angle of the line (direction)
         /// </summary>
-        /// <param name="A"></param>
-        /// <param name="B"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         /// <returns></returns>
-        static public double PointDirection(POINT A, POINT B)
+        public static double PointDirection(Point a, Point b)
         {
-            return Math.Atan2(B.Y + A.Y, A.X + B.X);
+            return Math.Atan2(b.Y + a.Y, a.X + b.X);
         }
 
         /// <summary>
         /// Returns the cosine of the line on on the X axis using distance and direction
         /// </summary>
-        /// <param name="Distance"></param>
-        /// <param name="Direction"></param>
+        /// <param name="distance"></param>
+        /// <param name="direction"></param>
         /// <returns></returns>
-        static public double LengthDirX(double Distance, double Direction)
+        public static double LengthDirX(double distance, double direction)
         {
-            return Math.Cos(Direction) * Distance;
+            return Math.Cos(direction) * distance;
         }
 
         /// <summary>
         /// Returns the cosine of the line on on the Y axis using distance and direction
         /// </summary>
-        /// <param name="Distance"></param>
-        /// <param name="Direction"></param>
+        /// <param name="distance"></param>
+        /// <param name="direction"></param>
         /// <returns></returns>
-        static public double LengthDirY(double Distance, double Direction)
+        public static double LengthDirY(double distance, double direction)
         {
-            return Math.Sin(Direction) * Distance;
+            return Math.Sin(direction) * distance;
         }
 
         /// <summary>
         /// This method generates the next point in a curved path between two points
         /// </summary>
-        /// <param name="A"></param>
-        /// <param name="B"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         /// <returns></returns>
-        static public POINT GetPointCurve(POINT A, POINT B)
+        public static Point GetPointCurve(Point a, Point b)
         {
-            double P = 0.12;
+            var p = 0.12;
             
             // calculate the remaining length between point A and B
             //
-            double L = LineLength(A, B);
+            var l = LineLength(a, b);
             
-            POINT C = new POINT((int)(P * B.X - P * A.X + B.X), (int)(P * B.Y - P * A.Y + B.Y));
-            POINT D = new POINT((int)(P * A.Y - P * B.X + A.X), (int)(P * A.Y - P * B.Y + A.Y));
+            var c = new Point((int)(p * b.X - p * a.X + b.X), (int)(p * b.Y - p * a.Y + b.Y));
+            var d = new Point((int)(p * a.Y - p * b.X + a.X), (int)(p * a.Y - p * b.Y + a.Y));
 
             // calculate the direction of the path movement
             //
-            double Dir = PointDirection(B, A);
+            var dir = PointDirection(b, a);
             
-            POINT E = new POINT((int)(C.X + LengthDirX(L * P * 2, Dir + Math.PI / 2)), (int)(C.Y + LengthDirY(L * P * 2, Dir + Math.PI / 2)));
-            POINT F = new POINT((int)(C.X + LengthDirX(L * P * 2, Dir - Math.PI / 2)), (int)(C.Y + LengthDirY(L * P * 2, Dir - Math.PI / 2)));
-            POINT G = new POINT((int)(D.X + LengthDirX(L * P * 2, Dir + Math.PI / 2)), (int)(D.Y + LengthDirY(L * P * 2, Dir + Math.PI / 2)));
-            POINT H = new POINT((int)(D.X + LengthDirX(L * P * 2, Dir - Math.PI / 2)), (int)(D.Y + LengthDirY(L * P * 2, Dir - Math.PI / 2)));
+            var e = new Point((int)(c.X + LengthDirX(l * p * 2, dir + Math.PI / 2)), (int)(c.Y + LengthDirY(l * p * 2, dir + Math.PI / 2)));
+            var f = new Point((int)(c.X + LengthDirX(l * p * 2, dir - Math.PI / 2)), (int)(c.Y + LengthDirY(l * p * 2, dir - Math.PI / 2)));
+            var g = new Point((int)(d.X + LengthDirX(l * p * 2, dir + Math.PI / 2)), (int)(d.Y + LengthDirY(l * p * 2, dir + Math.PI / 2)));
+            var h = new Point((int)(d.X + LengthDirX(l * p * 2, dir - Math.PI / 2)), (int)(d.Y + LengthDirY(l * p * 2, dir - Math.PI / 2)));
 
             // variables used to randomise curvature based on length of line left
             //
-            double Pa = GetRandomDouble(0.0, 1.0) * LineLength(E, F);
-            double Pb = GetRandomDouble(0.0, 1.0) * LineLength(E, G);
+            var pa = GetRandomDouble(0.0, 1.0) * LineLength(e, f);
+            var pb = GetRandomDouble(0.0, 1.0) * LineLength(e, g);
 
-            POINT I = new POINT((int)((Pa / LineLength(E, F)) * (E.X - F.X) + F.X), (int)((Pa / LineLength(E, F)) * (E.Y - F.Y) + F.Y));
-            POINT J = new POINT((int)((Pa / LineLength(E, F)) * (G.X - H.X) + H.X), (int)((Pa / LineLength(E, F)) * (G.Y - H.Y) + H.Y));
-            POINT K = new POINT((int)((Pb / LineLength(I, J)) * (I.X - J.X) + J.X), (int)((Pb / LineLength(I, J)) * (I.Y - J.Y) + J.Y));
+            var I = new Point((int)((pa / LineLength(e, f)) * (e.X - f.X) + f.X), (int)((pa / LineLength(e, f)) * (e.Y - f.Y) + f.Y));
+            var j = new Point((int)((pa / LineLength(e, f)) * (g.X - h.X) + h.X), (int)((pa / LineLength(e, f)) * (g.Y - h.Y) + h.Y));
+            var k = new Point((int)((pb / LineLength(I, j)) * (I.X - j.X) + j.X), (int)((pb / LineLength(I, j)) * (I.Y - j.Y) + j.Y));
 
             // return the next point in the path
             //
-            return K;
+            return k;
         }
     }
 }

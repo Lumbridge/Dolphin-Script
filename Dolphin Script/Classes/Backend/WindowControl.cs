@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using static DolphinScript.Lib.Backend.WinAPI;
+using static DolphinScript.Classes.Backend.WinApi;
 
-namespace DolphinScript.Lib.Backend
+namespace DolphinScript.Classes.Backend
 {
     /// <summary>
     /// This class contains functionality around process windows such as getting the title of them and bringing them to the front if needed.
@@ -23,19 +23,19 @@ namespace DolphinScript.Lib.Backend
 
             // create a stringbuilder with max capacity
             //
-            StringBuilder Buff = new StringBuilder(nChars);
+            var buff = new StringBuilder(nChars);
 
             // get the handle of the currently active window
             //
-            IntPtr handle = GetForegroundWindow();
+            var handle = GetForegroundWindow();
 
             // check that the window has more than 0 characters
             //
-            if (GetWindowText(handle, Buff, nChars) > 0)
+            if (GetWindowText(handle, buff, nChars) > 0)
             {
                 // return the window title as a string
                 //
-                return Buff.ToString();
+                return buff.ToString();
             }
 
             // if the window title has no characters null is returned
@@ -56,15 +56,15 @@ namespace DolphinScript.Lib.Backend
 
             // create a stringbuilder with max capacity
             //
-            StringBuilder Buff = new StringBuilder(nChars);
+            var buff = new StringBuilder(nChars);
 
             // check that the window has more than 0 characters
             //
-            if (GetWindowText(handle, Buff, nChars) > 0)
+            if (GetWindowText(handle, buff, nChars) > 0)
             {
                 // return the window title as a string
                 //
-                return Buff.ToString();
+                return buff.ToString();
             }
 
             // if the window title has no characters null is returned
@@ -73,39 +73,34 @@ namespace DolphinScript.Lib.Backend
         }
 
         /// <summary>
-        /// checks if a window exists by class and windowname
+        /// checks if a window exists by class and window name
         /// </summary>
-        /// <param name="WindowClass"></param>
-        /// <param name="WindowName"></param>
+        /// <param name="windowClass"></param>
+        /// <param name="windowName"></param>
         /// <returns></returns>
-        public static bool WindowExists(string WindowClass, string WindowName)
+        public static bool WindowExists(string windowClass, string windowName)
         {
-            // if the gamewindow handle doesn't have a valid handle then we return false
+            // if the window name doesn't have a valid handle then we return false
             //
-            if (FindWindow(WindowClass, WindowName) == IntPtr.Zero)
-                return false;
-            // otherwise we return true
-            //
-            else
-                return true;
+            return FindWindow(windowClass, windowName) != IntPtr.Zero;
         }
 
         /// <summary>
         /// this function brings a selected window to the front
         /// </summary>
-        /// <param name="WindowClass"></param>
-        /// <param name="WindowName"></param>
-        public static void SetWindowTopMostIfExists(string WindowClass, string WindowName)
+        /// <param name="windowClass"></param>
+        /// <param name="windowName"></param>
+        public static void SetWindowTopMostIfExists(string windowClass, string windowName)
         {
-            IntPtr handle = FindWindow(WindowClass, WindowName);
+            var handle = FindWindow(windowClass, windowName);
 
             // we check if the window exists first then if it does
             //
-            if (WindowExists(WindowClass, WindowName))
+            if (WindowExists(windowClass, windowName))
             {
                 // un-minimises window
                 //
-                ShowWindowAsync(handle, SW_SHOWNORMAL);
+                ShowWindowAsync(handle, SwShownormal);
 
                 // then we set it as the foreground window
                 //
@@ -119,20 +114,21 @@ namespace DolphinScript.Lib.Backend
         /// <param name="ev"></param>
         public static void BringEventWindowToFront(ScriptEventClasses.ScriptEvent ev)
         {
-            if (GetActiveWindowTitle() != ev.WindowToClickTitle)
-            {
-                // un-minimises window
-                //
-                ShowWindowAsync(ev.WindowToClickHandle, SW_SHOWNORMAL);
+            // if the window is already top most we can return
+            if (GetActiveWindowTitle() == ev.WindowToClickTitle) 
+                return;
 
-                // sets window to front
-                //
-                SetForegroundWindow(ev.WindowToClickHandle);
+            // un-minimise window
+            //
+            ShowWindowAsync(ev.WindowToClickHandle, SwShownormal);
 
-                // small delay to prevent click area errors
-                //
-                Thread.Sleep(1);
-            }
+            // sets window to front
+            //
+            SetForegroundWindow(ev.WindowToClickHandle);
+
+            // small delay to prevent click area errors
+            //
+            Thread.Sleep(RandomNumber.GetRandomNumber(300,500));
         }
 
         /// <summary>
@@ -160,7 +156,7 @@ namespace DolphinScript.Lib.Backend
         /// <returns></returns>
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+        public static extern bool GetWindowRect(IntPtr hWnd, ref Rect lpRect);
 
         /// <summary>
         /// imported method which allows you to get the title of a window

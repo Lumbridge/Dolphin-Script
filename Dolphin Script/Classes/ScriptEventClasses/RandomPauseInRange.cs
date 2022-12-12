@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading;
+using static DolphinScript.Classes.Backend.Common;
+using static DolphinScript.Classes.Backend.RandomNumber;
 
-using static DolphinScript.Lib.Backend.Common;
-using static DolphinScript.Lib.Backend.RandomNumber;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class RandomPauseInRange : ScriptEvent
@@ -14,7 +13,7 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// </summary>
         public override void DoEvent()
         {
-            double delay = GetRandomDouble(DelayMinimum, DelayMaximum);
+            var delay = GetRandomDouble(DelayMinimum, DelayMaximum);
 
             // update the status label on the main form
             //
@@ -31,10 +30,9 @@ namespace DolphinScript.Lib.ScriptEventClasses
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
         }
     }
 }

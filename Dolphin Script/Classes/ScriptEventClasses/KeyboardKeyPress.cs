@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using static DolphinScript.Classes.Backend.Common;
 
-using static DolphinScript.Lib.Backend.Common;
-
-namespace DolphinScript.Lib.ScriptEventClasses
+namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
     class KeyboardKeyPress : ScriptEvent
@@ -12,17 +11,16 @@ namespace DolphinScript.Lib.ScriptEventClasses
         {
             // update the status label on the main form
             //
-            Status = $"";
+            Status = "";
 
             SendKeys.SendWait(KeyboardKeys);
         }
 
         public override string GetEventListBoxString()
         {
-            if (GroupID == -1)
+            if (GroupId == -1)
                 return "Keypress (Key(s): " + KeyboardKeys + ")";
-            else
-                return "[Group " + GroupID + " Repeat x" + NumberOfCycles + "] Keypress (Key: " + KeyboardKeys + ").";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Keypress (Key: " + KeyboardKeys + ").";
         }
     }
 }
