@@ -1,12 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using static DolphinScript.Classes.Backend.WinApi;
 using static DolphinScript.Classes.Backend.WindowControl;
 
 namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
-    abstract class ScriptEvent
+    [XmlInclude(typeof(FixedPause))]
+    [XmlInclude(typeof(KeyboardHoldKey))]
+    [XmlInclude(typeof(KeyboardKeyPress))]
+    [XmlInclude(typeof(KeyboardReleaseKey))]
+    [XmlInclude(typeof(MouseClick))]
+    [XmlInclude(typeof(MouseMove))]
+    [XmlInclude(typeof(MouseMoveToArea))]
+    [XmlInclude(typeof(MouseMoveToAreaOnWindow))]
+    [XmlInclude(typeof(MouseMoveToColour))]
+    [XmlInclude(typeof(MouseMoveToColourOnWindow))]
+    [XmlInclude(typeof(MouseMoveToMultiColourOnWindow))]
+    [XmlInclude(typeof(MouseMoveToPointOnWindow))]
+    [XmlInclude(typeof(MoveWindowToFront))]
+    [XmlInclude(typeof(PauseWhileColourDoesntExistInArea))]
+    [XmlInclude(typeof(PauseWhileColourDoesntExistInAreaOnWindow))]
+    [XmlInclude(typeof(PauseWhileColourExistsInArea))]
+    [XmlInclude(typeof(PauseWhileColourExistsInAreaOnWindow))]
+    [XmlInclude(typeof(PauseWhileWindowNotFound))]
+    [XmlInclude(typeof(RandomPauseInRange))]
+    public abstract class ScriptEvent
     {
         // private window variables
         //
@@ -20,6 +40,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
 
         // gets the window handle by title (because handle ID can change often)
         //
+        [XmlIgnore]
         public IntPtr WindowToClickHandle
         {
             get

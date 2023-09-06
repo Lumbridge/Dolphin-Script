@@ -2,8 +2,8 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using static DolphinScript.Classes.Backend.Common;
-using static DolphinScript.Classes.Backend.WinApi;
 using static DolphinScript.Classes.Backend.RandomNumber;
+using static DolphinScript.Classes.Backend.WinApi;
 
 namespace DolphinScript.Classes.ScriptEventClasses
 {
@@ -11,7 +11,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
     /// This event can be used to simulate a variety of different mouse clicks
     /// </summary>
     [Serializable]
-    class MouseClick : ScriptEvent
+    public class MouseClick : ScriptEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event

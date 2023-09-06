@@ -9,7 +9,7 @@ using static DolphinScript.Classes.ScriptEventClasses.MouseMoveToColour;
 namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
-    class MouseMoveToMultiColourOnWindow : ScriptEvent
+    public class MouseMoveToMultiColourOnWindow : ScriptEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event

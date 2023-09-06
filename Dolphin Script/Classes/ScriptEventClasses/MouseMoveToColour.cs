@@ -10,7 +10,7 @@ using static DolphinScript.Classes.ScriptEventClasses.MouseMove;
 namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
-    class MouseMoveToColour : ScriptEvent
+    public class MouseMoveToColour : ScriptEvent
     {
         /// <summary>
         /// Moves mouse to a colour in a given search area

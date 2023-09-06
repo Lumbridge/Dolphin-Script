@@ -14,17 +14,25 @@ namespace DolphinScript.Classes.ScriptEventClasses
     /// This class provides the core mouse moving functionality.
     /// </summary>
     [Serializable]
-    class MouseMove : ScriptEvent
+    public class MouseMove : ScriptEvent
     {
         // mouse movement variables
         //
         private static double
             _gravity = GetRandomDouble(8.0, 10.0),
-            _pushForce = GetRandomDouble(1.0, 2.0),
-            _minWait = GetRandomDouble(8.0, 10.0),
-            _maxWait = GetRandomDouble(13.0, 15.0),
-            _maxStep = GetRandomDouble(3.0, 6.0),
-            _targetArea = GetRandomDouble(12.0, 15.0);
+            _pushForce = GetRandomDouble(2.0, 4.0),
+            _minWait = GetRandomDouble(9.0, 11.0),
+            _maxWait = GetRandomDouble(14.0, 16.0),
+            _maxStep = GetRandomDouble(9.0, 11.0),
+            _targetArea = GetRandomDouble(14.0, 16.0);
+
+        //private static double
+        //    _gravity = 9.0,
+        //    _pushForce = 3.0,
+        //    _minWait = 10.0,
+        //    _maxWait = 15.0,
+        //    _maxStep = 10.0,
+        //    _targetArea = 15.0;
 
         /// <summary>
         /// moves the mouse from it's current location to the end point passed in
@@ -38,7 +46,8 @@ namespace DolphinScript.Classes.ScriptEventClasses
 
             // generate a random mouse speed close to the one set on the form
             //
-            var randomSpeed = Math.Max((GetRandomNumber(0, MouseSpeed) / 2.0 + MouseSpeed) / 10.0, 0.1);
+            var randomSpeed = Math.Max((GetRandomNumber(0, MinMouseSpeed) / 2.0 + MaxMouseSpeed) / 10.0, 0.1);
+            //var randomSpeed = GetRandomDouble(MinMouseSpeed, MaxMouseSpeed) / 10.0;
 
             // call the main mouse move loop and pass in the global params
             //
@@ -103,7 +112,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
                     if (maxStep < 3)
                         maxStep = GetRandomNumber(0,3) + 3.0;
                     else
-                        maxStep = maxStep / sqrt5;
+                        maxStep /= sqrt5;
                 }
 
                 veloX += windX;

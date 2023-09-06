@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.button_StartScript = new System.Windows.Forms.Button();
             this.ListBox_Events = new System.Windows.Forms.ListBox();
             this.button_MoveEventUp = new System.Windows.Forms.Button();
@@ -92,8 +93,10 @@
             this.TextBox_ActiveWindowMouseY_1 = new System.Windows.Forms.TextBox();
             this.TextBox_ActiveWindowMouseX_1 = new System.Windows.Forms.TextBox();
             this.groupBox_MouseSpeed = new System.Windows.Forms.GroupBox();
-            this.TrackBar_MouseSpeed = new System.Windows.Forms.TrackBar();
-            this.NumericUpDown_MouseSpeed = new System.Windows.Forms.NumericUpDown();
+            this.label_MaxMouseSpeed = new System.Windows.Forms.Label();
+            this.label_MinMouseSpeed = new System.Windows.Forms.Label();
+            this.NumericUpDown_MaxMouseSpeed = new System.Windows.Forms.NumericUpDown();
+            this.NumericUpDown_MinMouseSpeed = new System.Windows.Forms.NumericUpDown();
             this.tabPage_MouseMoveToColour = new System.Windows.Forms.TabPage();
             this.groupBox24 = new System.Windows.Forms.GroupBox();
             this.Picturebox_ColourSelectionArea = new System.Windows.Forms.PictureBox();
@@ -157,8 +160,8 @@
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox_MouseSpeed.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TrackBar_MouseSpeed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MouseSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MaxMouseSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MinMouseSpeed)).BeginInit();
             this.tabPage_MouseMoveToColour.SuspendLayout();
             this.groupBox24.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).BeginInit();
@@ -182,7 +185,7 @@
             this.button_StartScript.Name = "button_StartScript";
             this.button_StartScript.Size = new System.Drawing.Size(56, 50);
             this.button_StartScript.TabIndex = 0;
-            this.button_StartScript.Text = "Start Script (F5)";
+            this.button_StartScript.Text = "Start Script";
             this.button_StartScript.UseVisualStyleBackColor = true;
             this.button_StartScript.Click += new System.EventHandler(this.StartButton_Click);
             // 
@@ -303,14 +306,14 @@
             // saveScriptToolStripMenuItem
             // 
             this.saveScriptToolStripMenuItem.Name = "saveScriptToolStripMenuItem";
-            this.saveScriptToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveScriptToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.saveScriptToolStripMenuItem.Text = "Save Script";
             this.saveScriptToolStripMenuItem.Click += new System.EventHandler(this.SaveScriptToolStripMenuItem_Click);
             // 
             // loadScriptToolStripMenuItem1
             // 
             this.loadScriptToolStripMenuItem1.Name = "loadScriptToolStripMenuItem1";
-            this.loadScriptToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.loadScriptToolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
             this.loadScriptToolStripMenuItem1.Text = "Load Script";
             this.loadScriptToolStripMenuItem1.Click += new System.EventHandler(this.LoadScriptToolStripMenuItem1_Click);
             // 
@@ -327,21 +330,21 @@
             // wikiToolStripMenuItem
             // 
             this.wikiToolStripMenuItem.Name = "wikiToolStripMenuItem";
-            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.wikiToolStripMenuItem.Text = "Wiki";
             this.wikiToolStripMenuItem.Click += new System.EventHandler(this.WikiToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // refreshFormToolStripMenuItem
             // 
             this.refreshFormToolStripMenuItem.Name = "refreshFormToolStripMenuItem";
-            this.refreshFormToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshFormToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.refreshFormToolStripMenuItem.Text = "Refresh Form";
             this.refreshFormToolStripMenuItem.Click += new System.EventHandler(this.RefreshFormToolStripMenuItem_Click);
             // 
@@ -868,48 +871,70 @@
             // 
             // groupBox_MouseSpeed
             // 
-            this.groupBox_MouseSpeed.Controls.Add(this.TrackBar_MouseSpeed);
-            this.groupBox_MouseSpeed.Controls.Add(this.NumericUpDown_MouseSpeed);
+            this.groupBox_MouseSpeed.Controls.Add(this.label_MaxMouseSpeed);
+            this.groupBox_MouseSpeed.Controls.Add(this.label_MinMouseSpeed);
+            this.groupBox_MouseSpeed.Controls.Add(this.NumericUpDown_MaxMouseSpeed);
+            this.groupBox_MouseSpeed.Controls.Add(this.NumericUpDown_MinMouseSpeed);
             this.groupBox_MouseSpeed.Location = new System.Drawing.Point(3, 296);
             this.groupBox_MouseSpeed.Name = "groupBox_MouseSpeed";
-            this.groupBox_MouseSpeed.Size = new System.Drawing.Size(458, 82);
+            this.groupBox_MouseSpeed.Size = new System.Drawing.Size(176, 82);
             this.groupBox_MouseSpeed.TabIndex = 41;
             this.groupBox_MouseSpeed.TabStop = false;
             this.groupBox_MouseSpeed.Text = "Mouse Speed";
             // 
-            // TrackBar_MouseSpeed
+            // label_MaxMouseSpeed
             // 
-            this.TrackBar_MouseSpeed.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.TrackBar_MouseSpeed.Cursor = System.Windows.Forms.Cursors.Default;
-            this.TrackBar_MouseSpeed.LargeChange = 500;
-            this.TrackBar_MouseSpeed.Location = new System.Drawing.Point(6, 31);
-            this.TrackBar_MouseSpeed.Maximum = 50;
-            this.TrackBar_MouseSpeed.Name = "TrackBar_MouseSpeed";
-            this.TrackBar_MouseSpeed.RightToLeftLayout = true;
-            this.TrackBar_MouseSpeed.Size = new System.Drawing.Size(292, 45);
-            this.TrackBar_MouseSpeed.SmallChange = 100;
-            this.TrackBar_MouseSpeed.TabIndex = 39;
-            this.TrackBar_MouseSpeed.TickFrequency = 5;
-            this.TrackBar_MouseSpeed.Value = 15;
-            this.TrackBar_MouseSpeed.Scroll += new System.EventHandler(this.TrackBar_MouseSpeed_Scroll);
+            this.label_MaxMouseSpeed.AutoSize = true;
+            this.label_MaxMouseSpeed.Location = new System.Drawing.Point(6, 53);
+            this.label_MaxMouseSpeed.Name = "label_MaxMouseSpeed";
+            this.label_MaxMouseSpeed.Size = new System.Drawing.Size(61, 13);
+            this.label_MaxMouseSpeed.TabIndex = 42;
+            this.label_MaxMouseSpeed.Text = "Max Speed";
             // 
-            // NumericUpDown_MouseSpeed
+            // label_MinMouseSpeed
             // 
-            this.NumericUpDown_MouseSpeed.Location = new System.Drawing.Point(304, 46);
-            this.NumericUpDown_MouseSpeed.Maximum = new decimal(new int[] {
+            this.label_MinMouseSpeed.AutoSize = true;
+            this.label_MinMouseSpeed.Location = new System.Drawing.Point(6, 26);
+            this.label_MinMouseSpeed.Name = "label_MinMouseSpeed";
+            this.label_MinMouseSpeed.Size = new System.Drawing.Size(58, 13);
+            this.label_MinMouseSpeed.TabIndex = 41;
+            this.label_MinMouseSpeed.Text = "Min Speed";
+            // 
+            // NumericUpDown_MaxMouseSpeed
+            // 
+            this.NumericUpDown_MaxMouseSpeed.Location = new System.Drawing.Point(73, 51);
+            this.NumericUpDown_MaxMouseSpeed.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
-            this.NumericUpDown_MouseSpeed.Name = "NumericUpDown_MouseSpeed";
-            this.NumericUpDown_MouseSpeed.Size = new System.Drawing.Size(120, 20);
-            this.NumericUpDown_MouseSpeed.TabIndex = 38;
-            this.NumericUpDown_MouseSpeed.Value = new decimal(new int[] {
-            15,
+            this.NumericUpDown_MaxMouseSpeed.Name = "NumericUpDown_MaxMouseSpeed";
+            this.NumericUpDown_MaxMouseSpeed.Size = new System.Drawing.Size(87, 20);
+            this.NumericUpDown_MaxMouseSpeed.TabIndex = 40;
+            this.NumericUpDown_MaxMouseSpeed.Value = new decimal(new int[] {
+            40,
             0,
             0,
             0});
-            this.NumericUpDown_MouseSpeed.ValueChanged += new System.EventHandler(this.NumericUpDown_MouseSpeed_ValueChanged);
+            this.NumericUpDown_MaxMouseSpeed.ValueChanged += new System.EventHandler(this.NumericUpDown_MaxMouseSpeed_ValueChanged);
+            // 
+            // NumericUpDown_MinMouseSpeed
+            // 
+            this.NumericUpDown_MinMouseSpeed.Location = new System.Drawing.Point(73, 26);
+            this.NumericUpDown_MinMouseSpeed.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.NumericUpDown_MinMouseSpeed.Name = "NumericUpDown_MinMouseSpeed";
+            this.NumericUpDown_MinMouseSpeed.Size = new System.Drawing.Size(87, 20);
+            this.NumericUpDown_MinMouseSpeed.TabIndex = 38;
+            this.NumericUpDown_MinMouseSpeed.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.NumericUpDown_MinMouseSpeed.ValueChanged += new System.EventHandler(this.NumericUpDown_MinMouseSpeed_ValueChanged);
             // 
             // tabPage_MouseMoveToColour
             // 
@@ -1343,10 +1368,12 @@
             this.Controls.Add(this.ListBox_Events);
             this.Controls.Add(this.button_StartScript);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MenuStrip_MainForm;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Dolphin Script";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).EndInit();
             this.MenuStrip_MainForm.ResumeLayout(false);
             this.MenuStrip_MainForm.PerformLayout();
@@ -1375,8 +1402,8 @@
             this.groupBox3.PerformLayout();
             this.groupBox_MouseSpeed.ResumeLayout(false);
             this.groupBox_MouseSpeed.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TrackBar_MouseSpeed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MouseSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MaxMouseSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_MinMouseSpeed)).EndInit();
             this.tabPage_MouseMoveToColour.ResumeLayout(false);
             this.groupBox24.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).EndInit();
@@ -1421,8 +1448,7 @@
         private System.Windows.Forms.TabPage tabPage2_KeyboardEvent;
         private System.Windows.Forms.TabPage tabPage_MouseMoveEvent;
         private System.Windows.Forms.GroupBox groupBox_MouseSpeed;
-        private System.Windows.Forms.TrackBar TrackBar_MouseSpeed;
-        private System.Windows.Forms.NumericUpDown NumericUpDown_MouseSpeed;
+        private System.Windows.Forms.NumericUpDown NumericUpDown_MinMouseSpeed;
         private System.Windows.Forms.TabPage tabPage_MouseClick;
         private System.Windows.Forms.GroupBox groupBox_RelativeToScreen;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -1509,6 +1535,9 @@
         private System.Windows.Forms.PictureBox Picturebox_ColourSelectionArea;
         private System.Windows.Forms.GroupBox groupBox24;
         private System.Windows.Forms.ToolStripMenuItem refreshFormToolStripMenuItem;
+        private System.Windows.Forms.Label label_MaxMouseSpeed;
+        private System.Windows.Forms.Label label_MinMouseSpeed;
+        private System.Windows.Forms.NumericUpDown NumericUpDown_MaxMouseSpeed;
     }
 }
 

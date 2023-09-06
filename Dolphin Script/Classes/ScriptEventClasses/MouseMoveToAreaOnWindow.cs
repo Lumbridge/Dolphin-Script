@@ -12,7 +12,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
     /// This event moves the mouse cursor to a random point in a given area on a specific window.
     /// </summary>
     [Serializable]
-    class MouseMoveToAreaOnWindow : ScriptEvent
+    public class MouseMoveToAreaOnWindow : ScriptEvent
     {
         /// <summary>
         /// this method will move the mouse cursor to a random point in the selected area

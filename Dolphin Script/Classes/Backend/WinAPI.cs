@@ -6,7 +6,7 @@ namespace DolphinScript.Classes.Backend
     /// <summary>
     /// This class contains methods and variables invoked from other languages and are used in multiple different classes.
     /// </summary>
-    class WinApi
+    public class WinApi
     {
         // minimise/maximise window flags
         //

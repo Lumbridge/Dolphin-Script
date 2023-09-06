@@ -37,7 +37,7 @@ namespace DolphinScript.Classes.Backend
 
                 // then override the current status
                 //
-                _status = value;
+                _status = $"Status: {value}";
             }
         }
 
@@ -47,7 +47,8 @@ namespace DolphinScript.Classes.Backend
 
         // this is the speed the mouse will move at during mouse move events
         //
-        public static int MouseSpeed = 15;
+        public static int MinMouseSpeed = 10;
+        public static int MaxMouseSpeed = 15;
 
         // this is a list of lists of scripts events which stores the grouped events
         //
@@ -117,7 +118,7 @@ namespace DolphinScript.Classes.Backend
         {
             // listen for the equals key
             //
-            if (GetAsyncKeyState(VirtualKeyStates.VkOemPlus) < 0)
+            if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
             {
                 // set is running flag to false
                 IsRunning = false;

@@ -9,7 +9,7 @@ using static DolphinScript.Classes.ScriptEventClasses.MouseMove;
 namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
-    class MouseMoveToPointOnWindow : ScriptEvent
+    public class MouseMoveToPointOnWindow : ScriptEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event

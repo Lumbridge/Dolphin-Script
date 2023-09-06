@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,13 +48,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Resources\dolphin_vmz_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -71,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Classes\Backend\ColourEvent.cs" />
     <Compile Include="Classes\Backend\Common.cs" />
+    <Compile Include="Classes\Backend\Constants.cs" />
     <Compile Include="Classes\Backend\LockBitmap.cs" />
     <Compile Include="Classes\Backend\MouseMoveMath.cs" />
     <Compile Include="Classes\ScriptEventClasses\MouseMoveToMultiColourOnWindow.cs" />

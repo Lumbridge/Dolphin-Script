@@ -1,19 +1,20 @@
-﻿using System;
+﻿using DolphinScript.Classes.Backend;
+using DolphinScript.Classes.ScriptEventClasses;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DolphinScript.Classes.Backend;
-using DolphinScript.Classes.ScriptEventClasses;
-using static DolphinScript.Classes.Backend.Common;
-using static DolphinScript.Classes.Backend.WinApi;
+using System.Xml.Serialization;
 using static DolphinScript.Classes.Backend.ColourEvent;
+using static DolphinScript.Classes.Backend.Common;
 using static DolphinScript.Classes.Backend.PointReturns;
-using static DolphinScript.Classes.Backend.WindowControl;
 using static DolphinScript.Classes.Backend.ScreenCapture;
+using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.WindowControl;
 
 namespace DolphinScript.Forms
 {
@@ -26,8 +27,8 @@ namespace DolphinScript.Forms
         {
             InitializeComponent();
 
-            Status = "Status: Idle";
-            LastAction = "Last Action: None";
+            Status = Constants.IdleStatus;
+            LastAction = Constants.NoLastAction;
 
             // add all keys to the key event combo box
             //
@@ -54,7 +55,7 @@ namespace DolphinScript.Forms
         /// </summary>
         private void MainLoop()
         {
-            // loop while the IsRunning varaible is true
+            // loop while the IsRunning variable is true
             //
             while (IsRunning)
             {
@@ -68,7 +69,7 @@ namespace DolphinScript.Forms
                     {
                         for (var i = 0; i < ev.NumberOfCycles; i++)
                         {
-                            // do each subevent in the group list
+                            // do each sub-event in the group list
                             //
                             foreach (var subEvent in ev.EventsInGroup)
                             {
@@ -101,7 +102,7 @@ namespace DolphinScript.Forms
 
             // change the text back to normal while the script isn't running
             //
-            button_StartScript.Text = "Start script";
+            button_StartScript.Text = Constants.StartScript;
 
             // if the loop has ended then we reenable the form buttons
             //
@@ -126,8 +127,8 @@ namespace DolphinScript.Forms
 
             // mouse speed toggles
             //
-            NumericUpDown_MouseSpeed.Enabled = state;
-            TrackBar_MouseSpeed.Enabled = state;
+            NumericUpDown_MinMouseSpeed.Enabled = state;
+            NumericUpDown_MaxMouseSpeed.Enabled = state;
 
             // repeat group toggles
             //
@@ -196,8 +197,7 @@ namespace DolphinScript.Forms
                     TextBox_ActiveWindowMouseY_1.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
                     TextBox_ActiveWindowMouseX_2.Text = GetCursorPositionOnWindow(GetForegroundWindow()).X.ToString();
                     TextBox_ActiveWindowMouseY_2.Text = GetCursorPositionOnWindow(GetForegroundWindow()).Y.ToString();
-
-
+                    
                     // add a delay to minimise CPU usage
                     //
                     Thread.Sleep(1);
@@ -213,7 +213,7 @@ namespace DolphinScript.Forms
         {
             while (true)
             {
-                if (!IsRunning && GetAsyncKeyState(VirtualKeyStates.VkOemMinus) < 0)
+                if (!IsRunning && GetAsyncKeyState(VirtualKeyStates.VkInsert) < 0)
                 {
                     StartButton_Click(null, null);
                     Task.Delay(TimeSpan.FromSeconds(1));
@@ -241,6 +241,11 @@ namespace DolphinScript.Forms
             return false;
         }
 
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Process.GetCurrentProcess().Kill();
+        }
+
         #endregion
 
         #region Form Control Events
@@ -264,7 +269,7 @@ namespace DolphinScript.Forms
 
                 // change script button text while running
                 //
-                button_StartScript.Text = "Script Running (F5 to stop)...";
+                button_StartScript.Text = Constants.ScriptRunning;
 
                 // disable controls while script is running
                 //
@@ -279,7 +284,7 @@ namespace DolphinScript.Forms
                 // if the user clicks start when there are no events then
                 // we show them this message box
                 //
-                MessageBox.Show("No events have been added.");
+                MessageBox.Show(Constants.NoEventsAdded);
             }
         }
 
@@ -364,7 +369,7 @@ namespace DolphinScript.Forms
                 //
                 else
                 {
-                    MessageBox.Show("Error moving event.");
+                    MessageBox.Show(Constants.ErrorMovingEvent);
                 }
 
                 UpdateListBox();
@@ -477,7 +482,7 @@ namespace DolphinScript.Forms
                 //
                 else
                 {
-                    MessageBox.Show("Error moving event.");
+                    MessageBox.Show(Constants.ErrorMovingEvent);
                 }
 
                 UpdateListBox();
@@ -548,7 +553,7 @@ namespace DolphinScript.Forms
                 {
                     if (AllEvents[i].IsPartOfGroup)
                     {
-                        MessageBox.Show("One or more selected events are already part of a group, events can only be part of one group.");
+                        MessageBox.Show(Constants.OneGroupMaxError);
                         return;
                     }
                 }
@@ -595,7 +600,7 @@ namespace DolphinScript.Forms
             {
                 // if the user doesn't have multiple events selected then they can't make a group
                 //
-                MessageBox.Show("Select more than 1 item to create a group.");
+                MessageBox.Show(Constants.SelectMoreThanOneItemToMakeAGroup);
             }
         }
 
@@ -687,7 +692,7 @@ namespace DolphinScript.Forms
 
             // set the default file extension
             //
-            sfd.DefaultExt = ".txt";
+            sfd.DefaultExt = "xml";
 
             // make windows attach the extension to the end of the filename
             //
@@ -703,7 +708,7 @@ namespace DolphinScript.Forms
 
             // set a default name to use for the file being saved
             //
-            sfd.FileName = "My Script";
+            sfd.FileName = Constants.DefaultFileName;
 
             // store the result of the open file dialog interaction
             //
@@ -713,14 +718,8 @@ namespace DolphinScript.Forms
             {
                 using (Stream s = File.Open(sfd.FileName, FileMode.Create))
                 {
-                    var b = new BinaryFormatter();
-
-                    b.Serialize(s, AllEvents);
-
-                    //// use overriden save config string method on each script event in the list to save them to the file
-                    ////
-                    //foreach (var ev in AllEvents)
-                    //    writer.Write(ev.SaveConfigString());
+                    var serializer = new XmlSerializer(typeof(List<ScriptEvent>));
+                    serializer.Serialize(s, AllEvents);
                 }
             }
         }
@@ -742,7 +741,7 @@ namespace DolphinScript.Forms
 
             // set the default file extension
             //
-            ofd.DefaultExt = ".txt";
+            ofd.DefaultExt = "xml";
 
             // make windows attach the extension to the end of the filename
             //
@@ -764,9 +763,8 @@ namespace DolphinScript.Forms
             {
                 using (Stream s = File.Open(ofd.FileName, FileMode.Open))
                 {
-                    var b = new BinaryFormatter();
-
-                    AllEvents = (List<ScriptEvent>)b.Deserialize(s);
+                    var serializer = new XmlSerializer(typeof(List<ScriptEvent>));
+                    AllEvents = (List<ScriptEvent>)serializer.Deserialize(s);
                 }
             }
 
@@ -782,7 +780,7 @@ namespace DolphinScript.Forms
         /// <param name="e"></param>
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Created by Ryan Sainty @ https://github.com/Lumbridge");
+            MessageBox.Show(Constants.AboutString);
         }
 
         /// <summary>
@@ -792,7 +790,7 @@ namespace DolphinScript.Forms
         /// <param name="e"></param>
         private void WikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Lumbridge/Dolphin-Script/wiki");
+            Process.Start("https://github.com/Lumbridge/Dolphin-Script/wiki");
         }
 
         #endregion
@@ -834,15 +832,18 @@ namespace DolphinScript.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NumericUpDown_MouseSpeed_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown_MinMouseSpeed_ValueChanged(object sender, EventArgs e)
         {
             // update the global mouse speed variable
             //
-            MouseSpeed = (int)NumericUpDown_MouseSpeed.Value;
+            MinMouseSpeed = (int)NumericUpDown_MinMouseSpeed.Value;
+        }
 
-            // update the mouse speed trackbar with the new speed
+        private void NumericUpDown_MaxMouseSpeed_ValueChanged(object sender, EventArgs e)
+        {
+            // update the global mouse speed variable
             //
-            TrackBar_MouseSpeed.Value = (int)NumericUpDown_MouseSpeed.Value;
+            MaxMouseSpeed = (int)NumericUpDown_MaxMouseSpeed.Value;
         }
 
         #endregion
@@ -864,7 +865,7 @@ namespace DolphinScript.Forms
             //
             button_MoveEventDown.Enabled = ListBox_Events.SelectedIndex < ListBox_Events.Items.Count - 1;
 
-            // if the listbox has no item selected then diable the remove item button
+            // if the listbox has no item selected then disable the remove item button
             //
             if (ListBox_Events.SelectedIndex <= ListBox_Events.Items.Count - 1 && ListBox_Events.SelectedIndex >= 0)
                 button_RemoveEvent.Enabled = true;
@@ -874,26 +875,6 @@ namespace DolphinScript.Forms
 
         #endregion
 
-        #region Trackbar Events
-
-        /// <summary>
-        /// when this value is changed we update the global mouse speed variable and the value in the mouse speed number box
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TrackBar_MouseSpeed_Scroll(object sender, EventArgs e)
-        {
-            // update the global mouse speed variable
-            //
-            NumericUpDown_MouseSpeed.Value = TrackBar_MouseSpeed.Value;
-
-            // update the mouse speed number box with the new speed
-            //
-            MouseSpeed = TrackBar_MouseSpeed.Value;
-        }
-
-        #endregion
-        
         #endregion Form Control Events
 
         #region Pause Event Buttons
@@ -1083,7 +1064,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourExistsInArea.Text;
 
-            Button_InsertPauseWhileColourExistsInArea.Text = "Selecting area to search... (F5 to cancel).";
+            Button_InsertPauseWhileColourExistsInArea.Text = Constants.SelectingAreaToSearch;
 
             while (xChosen == false)
             {
@@ -1110,7 +1091,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourExistsInArea.Text = "Selecting colour to search for in area... (F5 to cancel).";
+            Button_InsertPauseWhileColourExistsInArea.Text = Constants.SelectingColourToSearchForInArea;
 
             while (!colourChosen)
             {
@@ -1147,7 +1128,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourDoesntExistInArea.Text;
 
-            Button_InsertPauseWhileColourDoesntExistInArea.Text = "Selecting area to search... (F5 to cancel).";
+            Button_InsertPauseWhileColourDoesntExistInArea.Text = Constants.SelectingAreaToSearch;
 
             while (xChosen == false)
             {
@@ -1173,7 +1154,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourDoesntExistInArea.Text = "Selecting colour to search for in area... (F5 to cancel).";
+            Button_InsertPauseWhileColourDoesntExistInArea.Text = Constants.SelectingColourToSearchForInArea;
 
             while (!colourChosen)
             {
@@ -1210,7 +1191,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourExistsInAreaOnWindow.Text;
 
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = "Selecting area to search... (F5 to cancel).";
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = Constants.SelectingAreaToSearch;
 
             while (xChosen == false)
             {
@@ -1236,7 +1217,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = "Selecting colour to search for in area... (F5 to cancel).";
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = Constants.SelectingColourToSearchForInArea;
 
             while (!colourChosen)
             {
@@ -1273,7 +1254,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text;
 
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = "Selecting area to search... (F5 to cancel).";
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = Constants.SelectingAreaToSearch;
 
             while (xChosen == false)
             {
@@ -1299,7 +1280,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = "Selecting colour to search for in area... (F5 to cancel).";
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = Constants.SelectingColourToSearchForInArea;
 
             while (!colourChosen)
             {
@@ -1335,7 +1316,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveEvent.Text;
 
-            Button_InsertMouseMoveEvent.Text = "Selecting points to click... (F5 to finish).";
+            Button_InsertMouseMoveEvent.Text = Constants.SelectingPointsToClick;
 
             while (IsRegistering)
             {
@@ -1369,7 +1350,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveToAreaEvent.Text;
 
-            Button_InsertMouseMoveToAreaEvent.Text = "Selecting area to click... (F5 to cancel).";
+            Button_InsertMouseMoveToAreaEvent.Text = Constants.SelectingAreaToClick;
 
             while (IsRegistering)
             {
@@ -1409,7 +1390,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveToPointOnWindowEvent.Text;
 
-            Button_InsertMouseMoveToPointOnWindowEvent.Text = "Selecting point to click... (F5 to cancel).";
+            Button_InsertMouseMoveToPointOnWindowEvent.Text = Constants.SelectingPointToClick;
 
             while (IsRegistering)
             {
@@ -1443,7 +1424,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveToAreaOnWindowEvent.Text;
 
-            Button_InsertMouseMoveToAreaOnWindowEvent.Text = "Selecting area to click... (F5 to cancel).";
+            Button_InsertMouseMoveToAreaOnWindowEvent.Text = Constants.SelectingAreaToClick;
 
             while (IsRegistering)
             {
@@ -1483,7 +1464,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertColourSearchAreaEvent.Text;
 
-            Button_InsertColourSearchAreaEvent.Text = "Selecting area to search... (F5 to cancel).";
+            Button_InsertColourSearchAreaEvent.Text = Constants.SelectingAreaToSearch;
 
             while (IsRegistering)
             {
@@ -1497,7 +1478,7 @@ namespace DolphinScript.Forms
 
                     var p2 = GetCursorPosition();
 
-                    Button_InsertColourSearchAreaEvent.Text = "Selecting colour to search for in area... (F5 to cancel).";
+                    Button_InsertColourSearchAreaEvent.Text = Constants.SelectingColourToSearchForInArea;
 
                     while (!colourPicked)
                     {
@@ -1505,7 +1486,7 @@ namespace DolphinScript.Forms
                         {
                             colourPicked = true;
 
-                            Button_InsertColourSearchAreaEvent.Text = "Selecting area to search... (F5 to cancel).";
+                            Button_InsertColourSearchAreaEvent.Text = Constants.SelectingAreaToSearch;
 
                             var searchColour = GetColorAt(Cursor.Position);
 
@@ -1547,7 +1528,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertColourSearchAreaWindowEvent.Text;
 
-            Button_InsertColourSearchAreaWindowEvent.Text = "Selecting area to search... (F5 to cancel).";
+            Button_InsertColourSearchAreaWindowEvent.Text = Constants.SelectingAreaToSearch;
 
             while (IsRegistering)
             {
@@ -1561,14 +1542,14 @@ namespace DolphinScript.Forms
 
                     var p2 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-                    Button_InsertColourSearchAreaWindowEvent.Text = "Selecting colour to search for in area... (F5 to cancel).";
+                    Button_InsertColourSearchAreaWindowEvent.Text = Constants.SelectingColourToSearchForInArea;
 
                     while (!colourPicked)
                     {
                         if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
                         {
                             colourPicked = true;
-                            Button_InsertColourSearchAreaWindowEvent.Text = "Selecting area to search... (F5 to cancel).";
+                            Button_InsertColourSearchAreaWindowEvent.Text = Constants.SelectingAreaToSearch;
 
                             var searchColour = GetColorAt(Cursor.Position);
 

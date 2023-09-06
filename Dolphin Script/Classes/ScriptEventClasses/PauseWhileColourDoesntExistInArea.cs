@@ -6,7 +6,7 @@ using static DolphinScript.Classes.Backend.ColourEvent;
 namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
-    class PauseWhileColourDoesntExistInArea : ScriptEvent
+    public class PauseWhileColourDoesntExistInArea : ScriptEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event

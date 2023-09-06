@@ -9,7 +9,7 @@ using static DolphinScript.Classes.Backend.WindowControl;
 namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
-    class PauseWhileColourDoesntExistInAreaOnWindow : ScriptEvent
+    public class PauseWhileColourDoesntExistInAreaOnWindow : ScriptEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event

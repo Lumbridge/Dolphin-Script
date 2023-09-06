@@ -8,7 +8,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
     /// This event will pause the script for a fixed period of time .
     /// </summary>
     [Serializable]
-    class FixedPause : ScriptEvent
+    public class FixedPause : ScriptEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event

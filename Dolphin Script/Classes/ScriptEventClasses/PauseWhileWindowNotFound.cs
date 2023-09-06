@@ -6,7 +6,7 @@ using static DolphinScript.Classes.Backend.WindowControl;
 namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
-    class PauseWhileWindowNotFound : ScriptEvent
+    public class PauseWhileWindowNotFound : ScriptEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event
