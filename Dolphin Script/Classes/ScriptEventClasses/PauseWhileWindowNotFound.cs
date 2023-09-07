@@ -11,9 +11,9 @@ namespace DolphinScript.Classes.ScriptEventClasses
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void DoEvent()
+        public override void Invoke()
         {
-            while (!WindowExists(WindowClass, WindowTitle))
+            RunWhileLoop(() =>
             {
                 // update the status label on the main form
                 //
@@ -22,7 +22,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
                 // wait before continuing
                 //
                 Thread.Sleep(TimeSpan.FromSeconds(ReSearchPause));
-            }
+            }, () => !WindowExists(WindowClass, WindowTitle));
         }
 
         /// <summary>

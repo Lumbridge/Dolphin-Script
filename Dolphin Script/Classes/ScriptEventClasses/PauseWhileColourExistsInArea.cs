@@ -11,16 +11,17 @@ namespace DolphinScript.Classes.ScriptEventClasses
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void DoEvent()
+        public override void Invoke()
         {
-            while (ColourExistsInArea(ColourSearchArea, SearchColour))
+            RunWhileLoop(() =>
             {
                 // update the status label on the main form
                 //
-                Status = $"Pause while colour: {SearchColour} is found in area: {ColourSearchArea.PrintArea()}, waiting {ReSearchPause} seconds before re-searching.";
+                Status =
+                    $"Pause while colour: {SearchColour} is found in area: {ColourSearchArea.PrintArea()}, waiting {ReSearchPause} seconds before re-searching.";
 
                 Thread.Sleep(TimeSpan.FromSeconds(ReSearchPause));
-            }
+            }, () => ColourExistsInArea(ColourSearchArea, SearchColour));
         }
 
         /// <summary>

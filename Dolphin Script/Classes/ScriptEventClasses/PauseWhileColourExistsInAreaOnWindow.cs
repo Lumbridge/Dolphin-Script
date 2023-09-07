@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading;
-using static DolphinScript.Classes.Backend.Common;
-using static DolphinScript.Classes.Backend.WinApi;
 using static DolphinScript.Classes.Backend.ColourEvent;
+using static DolphinScript.Classes.Backend.Common;
 using static DolphinScript.Classes.Backend.PointReturns;
 using static DolphinScript.Classes.Backend.WindowControl;
 
@@ -14,9 +13,9 @@ namespace DolphinScript.Classes.ScriptEventClasses
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void DoEvent()
+        public override void Invoke()
         {
-            // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
+            // don't override original click area or it will cause the mouse position to increment every time this method is called
             //
             var newSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
 
@@ -24,7 +23,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
             //
             Status = $"Pause while colour: {SearchColour} is found in area: {newSearchArea.PrintArea()} on window: {WindowToClickTitle}, waiting {ReSearchPause} seconds before re-searching.";
 
-            while (ColourExistsInArea(newSearchArea, SearchColour))
+            RunWhileLoop(() =>
             {
                 // bring the window associated with this event to the front
                 //
@@ -35,7 +34,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
                 // update the search area incase the window has moved
                 //
                 newSearchArea = GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
-            }
+            }, () => ColourExistsInArea(newSearchArea, SearchColour));
         }
 
         /// <summary>

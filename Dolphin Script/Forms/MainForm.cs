@@ -78,7 +78,7 @@ namespace DolphinScript.Forms
 
                                 // call overriden do method
                                 //
-                                subEvent.DoEvent();
+                                subEvent.Invoke();
                             }
                         }
                     }
@@ -92,10 +92,10 @@ namespace DolphinScript.Forms
                         if (UpdateListboxCurrentEventIndex(ev))
                             break;
 
-                        // each script event has overriden the DoEvent method so each
-                        // script event completes their own DoEvent method before the next one is carried out
+                        // each script event has overriden the Invoke method so each
+                        // script event completes their own Invoke method before the next one is carried out
                         //
-                        ev.DoEvent();
+                        ev.Invoke();
                     }
                 }
             }
@@ -857,6 +857,11 @@ namespace DolphinScript.Forms
         /// <param name="e"></param>
         private void ListBox_Events_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (IsRunning)
+            {
+                return;
+            }
+
             // disable the move item up button if it's already at the top
             //
             button_MoveEventUp.Enabled = ListBox_Events.SelectedIndex > 0;

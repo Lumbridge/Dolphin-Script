@@ -7,17 +7,17 @@ namespace DolphinScript.Classes.Backend
     /// <summary>
     /// Contains math functions which are used in the mouse move methods
     /// </summary>
-    class MouseMoveMath
+    public class MouseMoveMath
     {
         /// <summary>
         /// returns the hypotenuse of two double points
         /// </summary>
-        /// <param name="dx"></param>
-        /// <param name="dy"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         /// <returns></returns>
-        public static double Hypot(double dx, double dy)
+        public static double CalculateHypotenuse(double x, double y)
         {
-            return Math.Sqrt(dx * dx + dy * dy);
+            return Math.Sqrt(x * x + y * y);
         }
 
         /// <summary>

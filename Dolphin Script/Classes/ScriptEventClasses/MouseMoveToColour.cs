@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using static DolphinScript.Classes.Backend.Common;
 using static DolphinScript.Classes.Backend.WinApi;
 using static DolphinScript.Classes.Backend.ColourEvent;
@@ -43,7 +42,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void DoEvent()
+        public override void Invoke()
         {
             // update the status label on the main form
             //

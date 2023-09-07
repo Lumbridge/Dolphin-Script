@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using DolphinScript.Classes.Backend;
 using static DolphinScript.Classes.Backend.Common;
-using static DolphinScript.Classes.Backend.WinApi;
+using static DolphinScript.Classes.Backend.MouseMoveMath;
 using static DolphinScript.Classes.Backend.PointReturns;
 using static DolphinScript.Classes.Backend.RandomNumber;
-using static DolphinScript.Classes.Backend.MouseMoveMath;
+using static DolphinScript.Classes.Backend.WinApi;
 
 namespace DolphinScript.Classes.ScriptEventClasses
 {
@@ -26,14 +25,6 @@ namespace DolphinScript.Classes.ScriptEventClasses
             _maxStep = GetRandomDouble(9.0, 11.0),
             _targetArea = GetRandomDouble(14.0, 16.0);
 
-        //private static double
-        //    _gravity = 9.0,
-        //    _pushForce = 3.0,
-        //    _minWait = 10.0,
-        //    _maxWait = 15.0,
-        //    _maxStep = 10.0,
-        //    _targetArea = 15.0;
-
         /// <summary>
         /// moves the mouse from it's current location to the end point passed in
         /// </summary>
@@ -47,7 +38,6 @@ namespace DolphinScript.Classes.ScriptEventClasses
             // generate a random mouse speed close to the one set on the form
             //
             var randomSpeed = Math.Max((GetRandomNumber(0, MinMouseSpeed) / 2.0 + MaxMouseSpeed) / 10.0, 0.1);
-            //var randomSpeed = GetRandomDouble(MinMouseSpeed, MaxMouseSpeed) / 10.0;
 
             // call the main mouse move loop and pass in the global params
             //
@@ -93,13 +83,13 @@ namespace DolphinScript.Classes.ScriptEventClasses
             var sqrt3 = Math.Sqrt(3.0);
             var sqrt5 = Math.Sqrt(5.0);
 
-            var dist = Hypot(xe - xs, ye - ys);
+            var distanceFromTargetPixel = CalculateHypotenuse(xe - xs, ye - ys);
 
-            while (dist > 1.0)
+            while (distanceFromTargetPixel > 1.0)
             {
-                pushForce = Math.Min(pushForce, dist);
+                pushForce = Math.Min(pushForce, distanceFromTargetPixel);
 
-                if (dist >= targetArea)
+                if (distanceFromTargetPixel >= targetArea)
                 {
                     var w = GetRandomNumber(0,(int)Math.Round(pushForce) * 2 + 1);
                     windX = windX / sqrt3 + (w - pushForce) / sqrt5;
@@ -117,13 +107,13 @@ namespace DolphinScript.Classes.ScriptEventClasses
 
                 veloX += windX;
                 veloY += windY;
-                veloX += gravity * (xe - xs) / dist;
-                veloY += gravity * (ye - ys) / dist;
+                veloX += gravity * (xe - xs) / distanceFromTargetPixel;
+                veloY += gravity * (ye - ys) / distanceFromTargetPixel;
 
-                if (Hypot(veloX, veloY) > maxStep)
+                if (CalculateHypotenuse(veloX, veloY) > maxStep)
                 {
-                    var randomDist = maxStep / 2.0 + GetRandomNumber(0,(int)Math.Round(maxStep) / 2);
-                    veloMag = Hypot(veloX, veloY);
+                    var randomDist = maxStep / 2.0 + GetRandomNumber(0, (int)Math.Round(maxStep) / 2);
+                    veloMag = CalculateHypotenuse(veloX, veloY);
                     veloX = (veloX / veloMag) * randomDist;
                     veloY = (veloY / veloMag) * randomDist;
                 }
@@ -132,14 +122,14 @@ namespace DolphinScript.Classes.ScriptEventClasses
                 oldY = (int)Math.Round(ys);
                 xs += veloX;
                 ys += veloY;
-                dist = Hypot(xe - xs, ye - ys);
+                distanceFromTargetPixel = CalculateHypotenuse(xe - xs, ye - ys);
                 newX = (int)Math.Round(xs);
                 newY = (int)Math.Round(ys);
 
                 if (oldX != newX || oldY != newY)
                     SetCursorPos(newX, newY);
 
-                step = Hypot(xs - oldX, ys - oldY);
+                step = CalculateHypotenuse(xs - oldX, ys - oldY);
                 var wait = (int)Math.Round(waitDiff * (step / maxStep) + minWait);
 
                 Task.WaitAll(Task.Delay(wait));
@@ -158,7 +148,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void DoEvent()
+        public override void Invoke()
         {
             // update the status label on the main form
             //

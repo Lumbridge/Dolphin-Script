@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using static DolphinScript.Classes.Backend.WinApi;
 using static DolphinScript.Classes.Backend.WindowControl;
+using static DolphinScript.Classes.Backend.Common;
+
 
 namespace DolphinScript.Classes.ScriptEventClasses
 {
@@ -35,8 +37,20 @@ namespace DolphinScript.Classes.ScriptEventClasses
 
         // mandatory override methods
         //
-        public abstract void DoEvent();
+        public abstract void Invoke();
         public abstract string GetEventListBoxString();
+
+        public void RunWhileLoop(Action whileLoopBody, Func<bool> condition)
+        {
+            while (condition())
+            {
+                if (!IsRunning)
+                {
+                    return;
+                }
+                whileLoopBody();
+            }
+        }
 
         // gets the window handle by title (because handle ID can change often)
         //
@@ -87,8 +101,8 @@ namespace DolphinScript.Classes.ScriptEventClasses
         // double variables to use in pause events
         //
         public double DelayDuration { get; set; }
-        public double DelayMinimum { get; set; }
-        public double DelayMaximum { get; set; }
+        public double? DelayMinimum { get; set; }
+        public double? DelayMaximum { get; set; }
 
         // colour integer we are going to use when searching for colour in colour search events
         //

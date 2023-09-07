@@ -6,7 +6,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
     [Serializable]
     public class KeyboardReleaseKey : ScriptEvent
     {
-        public override void DoEvent()
+        public override void Invoke()
         {
             // update the status label on the main form
             //

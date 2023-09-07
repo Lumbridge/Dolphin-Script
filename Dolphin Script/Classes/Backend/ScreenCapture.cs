@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
+﻿using System.Drawing;
 using static DolphinScript.Classes.Backend.WinApi;
 
 namespace DolphinScript.Classes.Backend

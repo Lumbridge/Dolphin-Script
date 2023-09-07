@@ -1,34 +1,21 @@
 ﻿using System;
-using System.Threading;
 using static DolphinScript.Classes.Backend.Common;
-using static DolphinScript.Classes.Backend.RandomNumber;
 
 namespace DolphinScript.Classes.ScriptEventClasses
 {
     [Serializable]
-    public class RandomPauseInRange : ScriptEvent
+    public class RandomPauseInRange : PauseEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void DoEvent()
+        public override void Invoke()
         {
-            var delay = GetRandomDouble(DelayMinimum, DelayMaximum);
-
-            var endDateTime = DateTime.Now.AddSeconds(delay);
-
             // update the status label on the main form
             //
-            Status = $"Random pause for {delay} seconds (Between {DelayMinimum} & {DelayMaximum} secs).";
+            Status = $"Random pause Between {DelayMinimum} & {DelayMaximum} secs.";
 
-            // wait for the randomly generated time before continuing
-            //
-            while (DateTime.Now < endDateTime)
-            {
-                if (!IsRunning)
-                    return;
-                Thread.Sleep(1);
-            }
+            base.Invoke();
         }
 
         /// <summary>

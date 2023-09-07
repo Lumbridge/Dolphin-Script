@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using static DolphinScript.Classes.Backend.Common;
 
 namespace DolphinScript.Classes.ScriptEventClasses
@@ -8,20 +7,18 @@ namespace DolphinScript.Classes.ScriptEventClasses
     /// This event will pause the script for a fixed period of time .
     /// </summary>
     [Serializable]
-    public class FixedPause : ScriptEvent
+    public class FixedPause : PauseEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void DoEvent()
+        public override void Invoke()
         {
             // update the status label on the main form
             //
             Status = $"Fixed pause for {DelayDuration} seconds.";
 
-            // sleep this thread for the specified time
-            //
-            Thread.Sleep(TimeSpan.FromSeconds(DelayDuration));
+            base.Invoke();
         }
 
         /// <summary>
