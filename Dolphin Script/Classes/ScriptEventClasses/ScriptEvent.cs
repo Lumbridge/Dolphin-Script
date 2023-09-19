@@ -158,10 +158,6 @@ namespace DolphinScript.Classes.ScriptEventClasses
             ClickArea = new Rect();
             MouseButton = VirtualMouseStates.None;
             KeyboardKeys = "NoKey";
-            DelayDuration = -1.0;
-            DelayMinimum = -1.0;
-            DelayMaximum = -1.0;
-            SearchColour = -1;
             SearchColours = new List<int>();
             ColourSearchArea = new Rect();
             EventsInGroup = new List<ScriptEvent>();

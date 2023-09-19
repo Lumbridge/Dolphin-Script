@@ -54,7 +54,7 @@ namespace DolphinScript.Classes.Backend
             {
                 // listen for left shift key
                 //
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     // return the pixel colour under the cursor position
                     //

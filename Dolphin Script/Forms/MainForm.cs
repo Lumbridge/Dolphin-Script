@@ -213,7 +213,7 @@ namespace DolphinScript.Forms
         {
             while (true)
             {
-                if (!IsRunning && GetAsyncKeyState(VirtualKeyStates.VkInsert) < 0)
+                if (!IsRunning && GetAsyncKeyState(Constants.StartScriptShortcut) < 0)
                 {
                     StartButton_Click(null, null);
                     Task.Delay(TimeSpan.FromSeconds(1));
@@ -232,12 +232,19 @@ namespace DolphinScript.Forms
         {
             if (!IsRunning)
             {
-                ListBox_Events.ClearSelected();
+                ListBox_Events.Invoke(new Action(() =>
+                {
+                    ListBox_Events.ClearSelected();
+                }));
                 return true;
             }
 
-            ListBox_Events.ClearSelected();
-            ListBox_Events.SelectedIndex = AllEvents.IndexOf(ev);
+            ListBox_Events.Invoke(new Action(() =>
+            {
+                ListBox_Events.ClearSelected();
+                ListBox_Events.SelectedIndex = AllEvents.IndexOf(ev);
+            })); 
+            
             return false;
         }
 
@@ -1073,16 +1080,16 @@ namespace DolphinScript.Forms
 
             while (xChosen == false)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     p1 = GetCursorPosition();
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/
                     }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInArea.Text = temp;
                     return;
@@ -1100,12 +1107,12 @@ namespace DolphinScript.Forms
 
             while (!colourChosen)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     searchColour = GetColorAt(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInArea.Text = temp;
                     return;
@@ -1137,15 +1144,15 @@ namespace DolphinScript.Forms
 
             while (xChosen == false)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     p1 = GetCursorPosition();
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
                     return;
@@ -1163,12 +1170,12 @@ namespace DolphinScript.Forms
 
             while (!colourChosen)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     searchColour = GetColorAt(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
                     return;
@@ -1200,15 +1207,15 @@ namespace DolphinScript.Forms
 
             while (xChosen == false)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
                     return;
@@ -1226,12 +1233,12 @@ namespace DolphinScript.Forms
 
             while (!colourChosen)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     searchColour = GetColorAt(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
                     return;
@@ -1263,15 +1270,15 @@ namespace DolphinScript.Forms
 
             while (xChosen == false)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
                     xChosen = true;
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
                     return;
@@ -1289,12 +1296,12 @@ namespace DolphinScript.Forms
 
             while (!colourChosen)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     searchColour = GetColorAt(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
                     return;
@@ -1325,7 +1332,7 @@ namespace DolphinScript.Forms
 
             while (IsRegistering)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     var p1 = GetCursorPosition();
 
@@ -1335,7 +1342,7 @@ namespace DolphinScript.Forms
 
                     Thread.Sleep(1);
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertMouseMoveEvent.Text = temp;
                     IsRegistering = false;
@@ -1359,11 +1366,11 @@ namespace DolphinScript.Forms
 
             while (IsRegistering)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     var p1 = GetCursorPosition();
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                     var p2 = GetCursorPosition();
 
@@ -1373,7 +1380,7 @@ namespace DolphinScript.Forms
 
                     Thread.Sleep(1);
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertMouseMoveToAreaEvent.Text = temp;
 
@@ -1399,7 +1406,7 @@ namespace DolphinScript.Forms
 
             while (IsRegistering)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     var p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
@@ -1409,7 +1416,7 @@ namespace DolphinScript.Forms
 
                     Thread.Sleep(1);
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertMouseMoveToPointOnWindowEvent.Text = temp;
                     IsRegistering = false;
@@ -1433,11 +1440,11 @@ namespace DolphinScript.Forms
 
             while (IsRegistering)
             {
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     var p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                     var p2 = GetCursorPositionOnWindow(GetForegroundWindow());
 
@@ -1447,7 +1454,7 @@ namespace DolphinScript.Forms
 
                     Thread.Sleep(1);
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertMouseMoveToAreaOnWindowEvent.Text = temp;
 
@@ -1475,11 +1482,11 @@ namespace DolphinScript.Forms
             {
                 var colourPicked = false;
 
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     var p1 = GetCursorPosition();
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                     var p2 = GetCursorPosition();
 
@@ -1487,7 +1494,7 @@ namespace DolphinScript.Forms
 
                     while (!colourPicked)
                     {
-                        if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                        if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                         {
                             colourPicked = true;
 
@@ -1501,7 +1508,7 @@ namespace DolphinScript.Forms
 
                             Thread.Sleep(1);
                         }
-                        else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                        else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                         {
                             Button_InsertColourSearchAreaEvent.Text = temp;
 
@@ -1511,7 +1518,7 @@ namespace DolphinScript.Forms
                         }
                     }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertColourSearchAreaEvent.Text = temp;
 
@@ -1539,11 +1546,11 @@ namespace DolphinScript.Forms
             {
                 var colourPicked = false;
 
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     var p1 = GetCursorPositionOnWindow(GetForegroundWindow());
 
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                     var p2 = GetCursorPositionOnWindow(GetForegroundWindow());
 
@@ -1551,7 +1558,7 @@ namespace DolphinScript.Forms
 
                     while (!colourPicked)
                     {
-                        if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                        if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                         {
                             colourPicked = true;
                             Button_InsertColourSearchAreaWindowEvent.Text = Constants.SelectingAreaToSearch;
@@ -1564,7 +1571,7 @@ namespace DolphinScript.Forms
 
                             Thread.Sleep(1);
                         }
-                        else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                        else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                         {
                             Button_InsertColourSearchAreaWindowEvent.Text = temp;
 
@@ -1574,7 +1581,7 @@ namespace DolphinScript.Forms
                         }
                     }
                 }
-                else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertColourSearchAreaWindowEvent.Text = temp;
 
@@ -1617,7 +1624,7 @@ namespace DolphinScript.Forms
 
             // change the button text to show we're currently registering
             //
-            Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area to search... (F6 to cancel).";
+            Button_InsertMultiColourSearchAreaWindowEvent.Text = $"Selecting area to search... ({Constants.DefaultSecondaryStopCancelButton} to cancel).";
 
             // register loop
             //
@@ -1625,7 +1632,7 @@ namespace DolphinScript.Forms
             {
                 // listen for the left shift key
                 //
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     // store the top left of the search area
                     //
@@ -1633,7 +1640,7 @@ namespace DolphinScript.Forms
 
                     // pause here while the user is still holding shift
                     //
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                     // store bottom left of search area after user lets go of shift key
                     //
@@ -1649,7 +1656,7 @@ namespace DolphinScript.Forms
 
                     // change the button text to show we've moved on to selecting the search colours
                     //
-                    Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting colours to search for in area... (F5 to continue).";
+                    Button_InsertMultiColourSearchAreaWindowEvent.Text = $"Selecting colours to search for in area... ({Constants.DefaultStopCancelButton} to continue).";
 
                     // loop here while we're not done selecting colours to search for
                     //
@@ -1657,7 +1664,7 @@ namespace DolphinScript.Forms
                     {
                         // listen for the shift key
                         //
-                        if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                        if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                         {
                             // each time we hit shift key we add the colour under the mouse to the search colours list
                             //
@@ -1675,7 +1682,7 @@ namespace DolphinScript.Forms
                             //
                             Thread.Sleep(1);
                         }
-                        else if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+                        else if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                         {
                             // we change the button text to ask the user to choose the area on the window they'd like to search for these colours on
                             //
@@ -1687,7 +1694,7 @@ namespace DolphinScript.Forms
                             {
                                 // listen for the shift key
                                 //
-                                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                                 {
                                     // set the top left of the search area to the point under the mouse
                                     //
@@ -1695,7 +1702,7 @@ namespace DolphinScript.Forms
 
                                     // wait here while the user holds shift key
                                     //
-                                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                                     // set the bottom right of the search area to the point under the mouse
                                     //
@@ -1734,7 +1741,7 @@ namespace DolphinScript.Forms
                     }
                 }
 
-                if (GetAsyncKeyState(VirtualKeyStates.VkF6) < 0)
+                if (GetAsyncKeyState(Constants.DefaultSecondaryStopCancelButton) < 0)
                 {
                     //
                     // user can cancel the operation early by pressing F6

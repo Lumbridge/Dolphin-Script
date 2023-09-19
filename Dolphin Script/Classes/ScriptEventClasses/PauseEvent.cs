@@ -10,7 +10,7 @@ namespace DolphinScript.Classes.ScriptEventClasses
         {
             double delay;
 
-            if (DelayMinimum != null && DelayMaximum != null)
+            if (DelayMinimum.HasValue && DelayMaximum.HasValue)
             {
                 delay = GetRandomDouble(DelayMinimum.Value, DelayMaximum.Value);
             }

@@ -110,15 +110,15 @@ namespace DolphinScript.Classes.Backend
             "{MULTIPLY}",
             "{DIVIDE}"
         };
-        
+
         /// <summary>
-        /// this method is used to determine if the user is pressing the F6 key to stop the script
+        /// this method is used to determine if the user is pressing the DefaultStopCancelButton key to stop the script
         /// </summary>
         public static void CheckForTerminationKey()
         {
             // listen for the equals key
             //
-            if (GetAsyncKeyState(VirtualKeyStates.VkF5) < 0)
+            if (GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
             {
                 // set is running flag to false
                 IsRunning = false;

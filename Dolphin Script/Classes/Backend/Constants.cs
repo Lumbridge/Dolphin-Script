@@ -4,11 +4,11 @@ namespace DolphinScript.Classes.Backend
 {
     public class Constants
     {
-        public const string SelectingPointToClick = "Selecting point to click... (F5 to finish).";
-        public const string SelectingPointsToClick = "Selecting points to click... (F5 to finish).";
-        public const string SelectingAreaToClick = "Selecting area to click... (F5 to finish).";
-        public const string SelectingAreaToSearch = "Selecting area to search... (F5 to finish).";
-        public const string SelectingColourToSearchForInArea = "Selecting colour to search for in area... (F5 to finish).";
+        public static string SelectingPointToClick => $"Selecting point to click... ({DefaultStopCancelButton} to finish).";
+        public static string SelectingPointsToClick => $"Selecting points to click... ({DefaultStopCancelButton} to finish).";
+        public static string SelectingAreaToClick => $"Selecting area to click... ({DefaultStopCancelButton} to finish).";
+        public static string SelectingAreaToSearch => $"Selecting area to search... ({DefaultStopCancelButton} to finish).";
+        public static string SelectingColourToSearchForInArea => $"Selecting colour to search for in area... ({DefaultStopCancelButton} to finish).";
 
         public static string DefaultFileName = $"MyScript-{Guid.NewGuid()}.xml";
 
@@ -23,6 +23,10 @@ namespace DolphinScript.Classes.Backend
         public const string OneGroupMaxError = "One or more selected events are already part of a group, events can only be part of one group.";
         public const string SelectMoreThanOneItemToMakeAGroup = "Select more than 1 item to create a group.";
 
-        public static string ScriptRunning { get; set; } = "Script Running (F5 to stop)...";
+        public static string ScriptRunning => $"Script Running ({DefaultStopCancelButton} to stop)...";
+
+        public static WinApi.VirtualKeyStates DefaultStopCancelButton = WinApi.VirtualKeyStates.F5;
+        public static WinApi.VirtualKeyStates DefaultSecondaryStopCancelButton = WinApi.VirtualKeyStates.F6;
+        public static WinApi.VirtualKeyStates StartScriptShortcut = WinApi.VirtualKeyStates.Insert;
     }
 }

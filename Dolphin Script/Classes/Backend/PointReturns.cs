@@ -138,7 +138,7 @@ namespace DolphinScript.Classes.Backend
             {
                 // listen for the shift key to start the area register
                 //
-                if (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0)
+                if (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0)
                 {
                     // store the top left of the register area
                     //
@@ -151,7 +151,7 @@ namespace DolphinScript.Classes.Backend
 
                     // now we wait here until the user releases the shift key
                     //
-                    while (GetAsyncKeyState(VirtualKeyStates.VkLshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
+                    while (GetAsyncKeyState(VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                     // when user releases shift key we register the bottom right point
                     //
