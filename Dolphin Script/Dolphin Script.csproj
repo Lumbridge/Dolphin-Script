@@ -73,7 +73,6 @@
     <Compile Include="Classes\Backend\ColourEvent.cs" />
     <Compile Include="Classes\Backend\Common.cs" />
     <Compile Include="Classes\Backend\Constants.cs" />
-    <Compile Include="Classes\Backend\EnumHelper.cs" />
     <Compile Include="Classes\Backend\LockBitmap.cs" />
     <Compile Include="Classes\Backend\MouseMoveMath.cs" />
     <Compile Include="Classes\ScriptEventClasses\MouseMoveToMultiColourOnWindow.cs" />
