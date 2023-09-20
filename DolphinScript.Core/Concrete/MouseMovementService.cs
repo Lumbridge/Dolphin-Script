@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DolphinScript.Core.Interfaces;
+﻿using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
+using System;
+using System.Drawing;
+using System.Threading.Tasks;
+using DolphinScript.Core.Classes;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -13,27 +11,25 @@ namespace DolphinScript.Core.Concrete
     {
         private readonly IRandomService _randomService;
         private readonly IPointService _pointService;
-        private readonly IScriptState _scriptState;
         private readonly IMouseMathService _mouseMathService;
         private readonly IColourService _colourService;
 
-        public MouseMovementService(IRandomService randomService, IPointService pointService, IScriptState scriptState, IMouseMathService mouseMathService, IColourService colourService)
+        public MouseMovementService(IRandomService randomService, IPointService pointService, IMouseMathService mouseMathService, IColourService colourService)
         {
             _randomService = randomService;
             _pointService = pointService;
-            _scriptState = scriptState;
             _mouseMathService = mouseMathService;
             _colourService = colourService;
         }
 
         // mouse movement variables
         //
-        private double _gravity => _randomService.GetRandomDouble(8.0, 10.0);
-        private double _pushForce => _randomService.GetRandomDouble(2.0, 4.0);
-        private double _minWait => _randomService.GetRandomDouble(9.0, 11.0);
-        private double _maxWait => _randomService.GetRandomDouble(14.0, 16.0);
-        private double _maxStep => _randomService.GetRandomDouble(9.0, 11.0);
-        private double _targetArea => _randomService.GetRandomDouble(14.0, 16.0);
+        private double Gravity => _randomService.GetRandomDouble(8.0, 10.0);
+        private double PushForce => _randomService.GetRandomDouble(2.0, 4.0);
+        private double MinWait => _randomService.GetRandomDouble(9.0, 11.0);
+        private double MaxWait => _randomService.GetRandomDouble(14.0, 16.0);
+        private double MaxStep => _randomService.GetRandomDouble(9.0, 11.0);
+        private double TargetArea => _randomService.GetRandomDouble(14.0, 16.0);
 
         /// <summary>
         /// moves the mouse from it's current location to the end point passed in
@@ -47,19 +43,19 @@ namespace DolphinScript.Core.Concrete
 
             // generate a random mouse speed close to the one set on the form
             //
-            var randomSpeed = Math.Max((_randomService.GetRandomNumber(0, _scriptState.MinimumMouseSpeed) / 2.0 + _scriptState.MaximumMouseSpeed) / 10.0, 0.1);
+            var randomSpeed = Math.Max((_randomService.GetRandomNumber(0, ScriptState.MinimumMouseSpeed) / 2.0 + ScriptState.MaximumMouseSpeed) / 10.0, 0.1);
 
             // call the main mouse move loop and pass in the global params
             //
             MouseMoveCoreLoop(
                 start,
                 end,
-                _gravity,
-                _pushForce,
-                _minWait / randomSpeed,
-                _maxWait / randomSpeed,
-                _maxStep * randomSpeed,
-                _targetArea * randomSpeed);
+                Gravity,
+                PushForce,
+                MinWait / randomSpeed,
+                MaxWait / randomSpeed,
+                MaxStep * randomSpeed,
+                TargetArea * randomSpeed);
         }
 
         /// <summary>
@@ -176,7 +172,7 @@ namespace DolphinScript.Core.Concrete
             var endX = (int)Math.Round(xe);
             var endY = (int)Math.Round(ye);
 
-            if (!_scriptState.IsRunning)
+            if (!ScriptState.IsRunning)
                 return;
 
             if (endX != newX || endY != newY)

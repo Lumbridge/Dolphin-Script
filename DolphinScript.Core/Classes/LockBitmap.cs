@@ -1,10 +1,9 @@
-﻿using DolphinScript.Core.Interfaces;
+﻿using System;
 using System.Drawing;
-using System;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace DolphinScript.Core.Concrete
+namespace DolphinScript.Core.Classes
 {
     public class LockBitmap
     {

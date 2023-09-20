@@ -51,6 +51,11 @@ namespace DolphinScript.Core.Concrete
             return null;
         }
 
+        public IntPtr GetActiveWindowHandle()
+        {
+            return PInvokeReferences.GetForegroundWindow();
+        }
+
         /// <summary>
         /// returns the title of the window handle passed in
         /// </summary>
@@ -119,24 +124,28 @@ namespace DolphinScript.Core.Concrete
         /// <summary>
         /// brings the window associated with the script event passed in to the front
         /// </summary>
-        /// <param name="ev"></param>
-        public void BringEventWindowToFront(ScriptEvent ev)
+        /// <param name="handle"></param>
+        public void BringWindowToFront(IntPtr handle)
         {
             // if the window is already top most we can return
-            if (GetActiveWindowTitle() == ev.WindowToClickTitle) 
+            if (GetActiveWindowHandle() == handle) 
                 return;
 
             // un-minimise window
-            //
-            PInvokeReferences.ShowWindowAsync(ev.WindowToClickHandle, Constants.SwShowNormal);
+            PInvokeReferences.ShowWindowAsync(handle, Constants.SwShowNormal);
 
             // sets window to front
-            //
-            PInvokeReferences.SetForegroundWindow(ev.WindowToClickHandle);
+            PInvokeReferences.SetForegroundWindow(handle);
 
-            // small delay to prevent click area errors
-            //
+            // delay to prevent click area errors
             Thread.Sleep(_randomService.GetRandomNumber(300,500));
+        }
+
+        public CommonTypes.Rect GetWindowLocation(IntPtr handle)
+        {
+            var rect = new CommonTypes.Rect();
+            PInvokeReferences.GetWindowRect(handle, ref rect);
+            return rect;
         }
     }
 }

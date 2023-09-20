@@ -57,7 +57,6 @@
     <Compile Include="Mouse\MouseMoveToMultiColourOnWindow.cs" />
     <Compile Include="Mouse\MouseMoveToPointOnWindow.cs" />
     <Compile Include="Window\MoveWindowToFront.cs" />
-    <Compile Include="BaseEvents\PauseEvent.cs" />
     <Compile Include="Pause\PauseWhileColourDoesntExistInArea.cs" />
     <Compile Include="Pause\PauseWhileColourDoesntExistInAreaOnWindow.cs" />
     <Compile Include="Pause\PauseWhileColourExistsInArea.cs" />

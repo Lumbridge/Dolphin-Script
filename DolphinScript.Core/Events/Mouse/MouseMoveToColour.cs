@@ -1,26 +1,29 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
-using DolphinScript.Core.WindowsApi;
-using DolphinScript.Event.BaseEvents;
-using static DolphinScript.Event.Mouse.MouseMove;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
 
-namespace DolphinScript.Event.Mouse
+namespace DolphinScript.Core.Events.Mouse
 {
     [Serializable]
-    public class MouseMoveToColour : ScriptEvent
+    public class MouseMoveToColour : MouseMoveEvent
     {
+        public MouseMoveToColour() { }
+
+        public MouseMoveToColour(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        {
+        }
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
         public override void Invoke()
         {
             // update the status label on the main form
-            //
-            _scriptState.Status = $"Mouse move to colour: {SearchColour} in area: {ColourSearchArea.PrintArea()}.";
+            ScriptState.Status = $"Mouse move to colour: {SearchColour} in area: {ColourSearchArea.PrintArea()}.";
 
             // perform the mouse move method
-            //
-            _mouseMovementService.MoveMouseToColour(ColourSearchArea, SearchColour);
+            MouseMovementService.MoveMouseToColour(ColourSearchArea, SearchColour);
         }
 
         /// <summary>
@@ -29,7 +32,7 @@ namespace DolphinScript.Event.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
         }

@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Threading;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
-using DolphinScript.Event.BaseEvents;
-using DolphinScript.Event.Interfaces;
 
-namespace DolphinScript.Event.Pause
+namespace DolphinScript.Core.Events.Pause
 {
     [Serializable]
     public class PauseWhileColourDoesntExistInAreaOnWindow : PauseEvent
     {
-        public PauseWhileColourDoesntExistInAreaOnWindow() { }
-
-        public PauseWhileColourDoesntExistInAreaOnWindow(IScriptState scriptState, IRandomService randomService,
-            IColourService colourService, IPointService pointService, IWindowControlService windowControlService)
-            : base(scriptState, randomService, colourService, pointService, windowControlService)
+        public PauseWhileColourDoesntExistInAreaOnWindow(IRandomService randomService, IColourService colourService, IPointService pointService, IWindowControlService windowControlService) : base(randomService, colourService, pointService, windowControlService)
         {
         }
 
@@ -25,24 +20,24 @@ namespace DolphinScript.Event.Pause
         {
             // don't override original click area or it will cause the mouse position to increment every time this method is called
             //
-            var newSearchArea = _pointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+            var newSearchArea = PointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
 
             // update the status label on the main form
             //
-            _scriptState.Status = $"Pause while colour: {SearchColour} not found in area: {newSearchArea.PrintArea()} on window: {WindowToClickTitle}, waiting {_scriptState.SearchPause} seconds before re-searching.";
+            ScriptState.Status = $"Pause while colour: {SearchColour} not found in area: {newSearchArea.PrintArea()} on window: {WindowToClickTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
 
             ExecuteWhileLoop(() =>
             {
                 // bring the window associated with this event to the front
                 //
-                _windowControlService.BringWindowToFront(WindowToClickHandle);
+                WindowControlService.BringWindowToFront(WindowToClickHandle);
 
-                Thread.Sleep(TimeSpan.FromSeconds(_scriptState.SearchPause));
+                Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
 
                 // update the search area incase the window has moved
                 //
-                newSearchArea = _pointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
-            }, () => !_colourService.ColourExistsInArea(newSearchArea, SearchColour));
+                newSearchArea = PointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+            }, () => !ColourService.ColourExistsInArea(newSearchArea, SearchColour));
         }
 
         /// <summary>
@@ -51,7 +46,7 @@ namespace DolphinScript.Event.Pause
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
 

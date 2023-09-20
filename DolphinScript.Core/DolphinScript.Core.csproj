@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concrete\GlobalMethodService.cs" />
-    <Compile Include="Classes\ScriptEvent.cs" />
     <Compile Include="Concrete\ColourService.cs" />
     <Compile Include="Concrete\ListService.cs" />
     <Compile Include="Concrete\MouseMathService.cs" />
@@ -52,8 +52,30 @@
     <Compile Include="Concrete\PointService.cs" />
     <Compile Include="Concrete\RandomService.cs" />
     <Compile Include="Concrete\ScreenCaptureService.cs" />
-    <Compile Include="Concrete\ScriptState.cs" />
     <Compile Include="Concrete\WindowControlService.cs" />
+    <Compile Include="Events\BaseEvents\MouseMoveEvent.cs" />
+    <Compile Include="Events\BaseEvents\PauseEvent.cs" />
+    <Compile Include="Events\BaseEvents\ScriptEvent.cs" />
+    <Compile Include="Classes\ScriptState.cs" />
+    <Compile Include="Events\Keyboard\KeyboardHoldKey.cs" />
+    <Compile Include="Events\Keyboard\KeyboardKeyPress.cs" />
+    <Compile Include="Events\Keyboard\KeyboardReleaseKey.cs" />
+    <Compile Include="Events\Mouse\MouseClick.cs" />
+    <Compile Include="Events\Mouse\MouseMove.cs" />
+    <Compile Include="Events\Mouse\MouseMoveToArea.cs" />
+    <Compile Include="Events\Mouse\MouseMoveToAreaOnWindow.cs" />
+    <Compile Include="Events\Mouse\MouseMoveToColour.cs" />
+    <Compile Include="Events\Mouse\MouseMoveToColourOnWindow.cs" />
+    <Compile Include="Events\Mouse\MouseMoveToMultiColourOnWindow.cs" />
+    <Compile Include="Events\Mouse\MouseMoveToPointOnWindow.cs" />
+    <Compile Include="Events\Pause\FixedPause.cs" />
+    <Compile Include="Events\Pause\PauseWhileColourDoesntExistInArea.cs" />
+    <Compile Include="Events\Pause\PauseWhileColourDoesntExistInAreaOnWindow.cs" />
+    <Compile Include="Events\Pause\PauseWhileColourExistsInArea.cs" />
+    <Compile Include="Events\Pause\PauseWhileColourExistsInAreaOnWindow.cs" />
+    <Compile Include="Events\Pause\PauseWhileWindowNotFound.cs" />
+    <Compile Include="Events\Pause\RandomPauseInRange.cs" />
+    <Compile Include="Events\Window\MoveWindowToFront.cs" />
     <Compile Include="Interfaces\IColourService.cs" />
     <Compile Include="Interfaces\IGlobalMethodService.cs" />
     <Compile Include="Interfaces\IListService.cs" />
@@ -62,12 +84,12 @@
     <Compile Include="Interfaces\IPointService.cs" />
     <Compile Include="Interfaces\IRandomService.cs" />
     <Compile Include="Interfaces\IScreenCaptureService.cs" />
-    <Compile Include="Interfaces\IScriptState.cs" />
     <Compile Include="Interfaces\IWindowControlService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowsApi\CommonTypes.cs" />
     <Compile Include="Classes\Constants.cs" />
     <Compile Include="WindowsApi\PInvokeReferences.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

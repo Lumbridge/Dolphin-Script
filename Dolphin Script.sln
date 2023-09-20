@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DolphinScript.Presentation"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DolphinScript.Core", "DolphinScript.Core\DolphinScript.Core.csproj", "{31532848-456C-45F0-AE61-9D6B6EA58FB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DolphinScript.Event", "DolphinScript.Event\DolphinScript.Event.csproj", "{6F1A842A-7614-4DEB-8147-E7C8BC6B60B1}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{31532848-456C-45F0-AE61-9D6B6EA58FB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31532848-456C-45F0-AE61-9D6B6EA58FB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31532848-456C-45F0-AE61-9D6B6EA58FB3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F1A842A-7614-4DEB-8147-E7C8BC6B60B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F1A842A-7614-4DEB-8147-E7C8BC6B60B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F1A842A-7614-4DEB-8147-E7C8BC6B60B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F1A842A-7614-4DEB-8147-E7C8BC6B60B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,17 +1,17 @@
-﻿using DolphinScript.Core.Interfaces;
-using DolphinScript.Event.BaseEvents;
-using System;
+﻿using System;
 using System.Threading;
-using DolphinScript.Event.Interfaces;
+using DolphinScript.Core.Classes;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
 
-namespace DolphinScript.Event.Pause
+namespace DolphinScript.Core.Events.Pause
 {
     [Serializable]
     public class PauseWhileWindowNotFound : PauseEvent
     {
-        public PauseWhileWindowNotFound(IScriptState scriptState, IRandomService randomService,
+        public PauseWhileWindowNotFound(IRandomService randomService,
             IColourService colourService, IPointService pointService, IWindowControlService windowControlService)
-            : base(scriptState, randomService, colourService, pointService, windowControlService)
+            : base(randomService, colourService, pointService, windowControlService)
         {
         }
 
@@ -24,12 +24,12 @@ namespace DolphinScript.Event.Pause
             {
                 // update the status label on the main form
                 //
-                _scriptState.Status = $"Pause while window: {WindowToClickTitle} not found, waiting {_scriptState.SearchPause} seconds before searching again.";
+                ScriptState.Status = $"Pause while window: {WindowToClickTitle} not found, waiting {ScriptState.SearchPause} seconds before searching again.";
 
                 // wait before continuing
                 //
-                Thread.Sleep(TimeSpan.FromSeconds(_scriptState.SearchPause));
-            }, () => !_windowControlService.WindowExists(WindowClass, WindowTitle));
+                Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
+            }, () => !WindowControlService.WindowExists(WindowClass, WindowTitle));
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace DolphinScript.Event.Pause
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Pause while window " + WindowTitle + " can't be found.";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while window " + WindowTitle + " can't be found.";
         }

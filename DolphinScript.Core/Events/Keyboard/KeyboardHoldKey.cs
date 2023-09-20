@@ -1,17 +1,17 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
-using DolphinScript.Event.BaseEvents;
+using DolphinScript.Core.Events.BaseEvents;
 
-namespace DolphinScript.Event.Keyboard
+namespace DolphinScript.Core.Events.Keyboard
 {
     [Serializable]
-    public class KeyboardReleaseKey : ScriptEvent
+    public class KeyboardHoldKey : ScriptEvent
     {
         public override void Invoke()
         {
             // update the status label on the main form
             //
-            _scriptState.Status = "";
+            ScriptState.Status = "";
 
             throw new NotImplementedException();
         }

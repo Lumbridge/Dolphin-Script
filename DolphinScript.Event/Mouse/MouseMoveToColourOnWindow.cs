@@ -1,6 +1,7 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
 using DolphinScript.Core.WindowsApi;
+using DolphinScript.Event.BaseEvents;
 using static DolphinScript.Event.Mouse.MouseMoveToColour;
 
 namespace DolphinScript.Event.Mouse

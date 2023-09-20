@@ -1,5 +1,6 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
+using DolphinScript.Event.BaseEvents;
 
 namespace DolphinScript.Event.Keyboard
 {

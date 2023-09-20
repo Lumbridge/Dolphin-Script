@@ -1,9 +1,9 @@
 ﻿using System;
+using DolphinScript.Core.Classes;
+using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
-using DolphinScript.Event.BaseEvents;
-using DolphinScript.Event.Interfaces;
 
-namespace DolphinScript.Event.Pause
+namespace DolphinScript.Core.Events.Pause
 {
     /// <summary>
     /// This event will pause the script for a fixed period of time .
@@ -11,11 +11,9 @@ namespace DolphinScript.Event.Pause
     [Serializable]
     public class FixedPause : PauseEvent
     {
-        public FixedPause(){ }
-
-        public FixedPause(IScriptState scriptState, IRandomService randomService,
+        public FixedPause(IRandomService randomService,
             IColourService colourService, IPointService pointService, IWindowControlService windowControlService)
-            : base(scriptState, randomService, colourService, pointService, windowControlService)
+            : base(randomService, colourService, pointService, windowControlService)
         {
         }
 
@@ -26,7 +24,7 @@ namespace DolphinScript.Event.Pause
         {
             // update the status label on the main form
             //
-            _scriptState.Status = $"Fixed pause for {DelayDuration} seconds.";
+            ScriptState.Status = $"Fixed pause for {DelayDuration} seconds.";
 
             base.Invoke();
         }
@@ -41,7 +39,7 @@ namespace DolphinScript.Event.Pause
             // check if the event is part of a group to add a group tag to the list box string
             //
 
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Fixed Pause for " + DelayDuration + " seconds.";
             
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Fixed Pause for " + DelayDuration + " seconds.";

@@ -41,7 +41,7 @@ namespace DolphinScript.Core.Classes
 
         // list of special send key codes
         //
-        public static List<string> SpecialKeys = new List<string>()
+        public static List<string> SpecialKeys = new List<string>
         {
             "+",
             "%",

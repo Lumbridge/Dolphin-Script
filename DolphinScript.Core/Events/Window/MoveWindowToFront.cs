@@ -1,12 +1,15 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
-using DolphinScript.Event.BaseEvents;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
 
-namespace DolphinScript.Event.Window
+namespace DolphinScript.Core.Events.Window
 {
     [Serializable]
     public class MoveWindowToFront : ScriptEvent
     {
+        private readonly IWindowControlService _windowControlService;
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
@@ -14,7 +17,7 @@ namespace DolphinScript.Event.Window
         {
             // update the status label on the main form
             //
-            _scriptState.Status = $"Bring window to front: {WindowToClickTitle}.";
+            ScriptState.Status = $"Bring window to front: {WindowToClickTitle}.";
 
             _windowControlService.SetWindowTopMostIfExists(WindowClass, WindowTitle);
         }
@@ -25,7 +28,7 @@ namespace DolphinScript.Event.Window
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Move " + WindowTitle + " window to front.";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move " + WindowTitle + " window to front.";
         }

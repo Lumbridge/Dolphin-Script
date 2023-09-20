@@ -137,10 +137,6 @@
       <Project>{31532848-456c-45f0-ae61-9d6b6ea58fb3}</Project>
       <Name>DolphinScript.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DolphinScript.Event\DolphinScript.Event.csproj">
-      <Project>{6f1a842a-7614-4deb-8147-e7c8bc6b60b1}</Project>
-      <Name>DolphinScript.Event</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

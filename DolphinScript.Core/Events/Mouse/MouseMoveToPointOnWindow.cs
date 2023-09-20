@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using DolphinScript.Core.Classes;
-using DolphinScript.Event.BaseEvents;
-using static DolphinScript.Event.Mouse.MouseMove;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
 
-namespace DolphinScript.Event.Mouse
+namespace DolphinScript.Core.Events.Mouse
 {
     [Serializable]
-    public class MouseMoveToPointOnWindow : ScriptEvent
+    public class MouseMoveToPointOnWindow : MouseMoveEvent
     {
         /// <summary>
         /// main overriden method used to perform this script event
@@ -16,17 +16,17 @@ namespace DolphinScript.Event.Mouse
         {
             // update the status label on the main form
             //
-            _scriptState.Status = $"Move mouse to {CoordsToMoveTo} on window: {WindowTitle}.";
+            ScriptState.Status = $"Move mouse to {CoordsToMoveTo} on window: {WindowTitle}.";
 
             // bring the window associated with this event to the front
             //
-            _windowControlService.BringEventWindowToFront(this);
+            WindowControlService.BringWindowToFront(WindowToClickHandle);
 
             var newClickPoint = new Point(
-                _pointService.GetWindowPosition(WindowToClickHandle).Left + CoordsToMoveTo.X,
-                _pointService.GetWindowPosition(WindowToClickHandle).Top + CoordsToMoveTo.Y);
+                PointService.GetWindowPosition(WindowToClickHandle).Left + CoordsToMoveTo.X,
+                PointService.GetWindowPosition(WindowToClickHandle).Top + CoordsToMoveTo.Y);
 
-            _mouseMovementService.MoveMouseToPoint(newClickPoint);
+            MouseMovementService.MoveMouseToPoint(newClickPoint);
         }
 
         /// <summary>
@@ -35,9 +35,15 @@ namespace DolphinScript.Event.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + " on " + WindowToClickTitle + " window.";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }
+
+        public MouseMoveToPointOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        {
+        }
+
+        public MouseMoveToPointOnWindow() { }
     }
 }

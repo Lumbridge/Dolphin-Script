@@ -1,10 +1,11 @@
-﻿using DolphinScript.Core.Classes;
-using DolphinScript.Core.WindowsApi;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using DolphinScript.Event.BaseEvents;
+using DolphinScript.Core.Classes;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
+using DolphinScript.Core.WindowsApi;
 
-namespace DolphinScript.Event.Mouse
+namespace DolphinScript.Core.Events.Mouse
 {
     /// <summary>
     /// This event can be used to simulate a variety of different mouse clicks
@@ -12,6 +13,15 @@ namespace DolphinScript.Event.Mouse
     [Serializable]
     public class MouseClick : ScriptEvent
     {
+        private readonly IRandomService _randomService;
+
+        public MouseClick() { }
+
+        public MouseClick(IRandomService randomService)
+        {
+            _randomService = randomService;
+        }
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
@@ -19,7 +29,7 @@ namespace DolphinScript.Event.Mouse
         {
             // update the status label on the main form
             //
-            _scriptState.Status = $"Mouse Click: {MouseButton}";
+            ScriptState.Status = $"Mouse Click: {MouseButton}";
 
             switch (MouseButton)
             {
@@ -61,7 +71,7 @@ namespace DolphinScript.Event.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Mouse Click: " + MouseButton + ".";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Mouse Click:  " + MouseButton + ".";
         }

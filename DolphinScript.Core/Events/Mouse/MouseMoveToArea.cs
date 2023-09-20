@@ -1,24 +1,21 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
-using DolphinScript.Event.BaseEvents;
 
-namespace DolphinScript.Event.Mouse
+namespace DolphinScript.Core.Events.Mouse
 {
     /// <summary>
     /// This event moves the mouse cursor to a random point in a given area.
     /// </summary>
     [Serializable]
-    public class MouseMoveToArea : ScriptEvent
+    public class MouseMoveToArea : MouseMoveEvent
     {
-        /// <summary>
-        /// wrote this function in here for clarity in the doevent method
-        /// </summary>
-        /// <param name="clickArea"></param>
-        public void MoveMouseToArea(CommonTypes.Rect clickArea)
+        public MouseMoveToArea() { }
+
+        public MouseMoveToArea(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
         {
-            var endPoint = _pointService.GetRandomPointInArea(clickArea);
-            _mouseMovementService.MoveMouseToPoint(endPoint); // move mouse to picked pixel
         }
 
         /// <summary>
@@ -27,8 +24,9 @@ namespace DolphinScript.Event.Mouse
         public override void Invoke()
         {
             // update the status label on the main form
-            _scriptState.Status = $"Mouse move to random point in area: {ClickArea.PrintArea()}.";
-            MoveMouseToArea(ClickArea);
+            ScriptState.Status = $"Mouse move to random point in area: {ClickArea.PrintArea()}.";
+            CoordsToMoveTo = PointService.GetRandomPointInArea(ClickArea);
+            base.Invoke();
         }
 
         /// <summary>
@@ -37,7 +35,7 @@ namespace DolphinScript.Event.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Move mouse to random point in area " + ClickArea.PrintArea() + ".";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + ".";
         }

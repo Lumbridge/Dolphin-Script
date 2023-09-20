@@ -1,8 +1,8 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
-using DolphinScript.Event.BaseEvents;
+using DolphinScript.Core.Events.BaseEvents;
 
-namespace DolphinScript.Event.Keyboard
+namespace DolphinScript.Core.Events.Keyboard
 {
     [Serializable]
     public class KeyboardReleaseKey : ScriptEvent
@@ -11,7 +11,7 @@ namespace DolphinScript.Event.Keyboard
         {
             // update the status label on the main form
             //
-            _scriptState.Status = "";
+            ScriptState.Status = "";
 
             throw new NotImplementedException();
         }

@@ -1,18 +1,22 @@
-﻿using DolphinScript.Core.Classes;
-using DolphinScript.Core.WindowsApi;
-using System;
-using System.Drawing;
-using System.Threading.Tasks;
-using DolphinScript.Event.BaseEvents;
+﻿using System;
+using DolphinScript.Core.Classes;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
 
-namespace DolphinScript.Event.Mouse
+namespace DolphinScript.Core.Events.Mouse
 {
     /// <summary>
     /// This class provides the core mouse moving functionality.
     /// </summary>
     [Serializable]
-    public class MouseMove : ScriptEvent
+    public class MouseMove : MouseMoveEvent
     {
+        public MouseMove() { }
+
+        public MouseMove(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        {
+        }
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
@@ -20,8 +24,8 @@ namespace DolphinScript.Event.Mouse
         {
             // update the status label on the main form
             //
-            _scriptState.Status = $"Mouse move: {CoordsToMoveTo}.";
-            _mouseMovementService.MoveMouseToPoint(CoordsToMoveTo);
+            ScriptState.Status = $"Mouse move: {CoordsToMoveTo}.";
+            MouseMovementService.MoveMouseToPoint(CoordsToMoveTo);
         }
 
         /// <summary>
@@ -30,7 +34,7 @@ namespace DolphinScript.Event.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (GroupId == -1)
+            if (!IsPartOfGroup)
                 return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
         }
