@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Xml.Serialization;
-using DolphinScript.Core.Interfaces;
 
 namespace DolphinScript.Core.Events.BaseEvents
 {
@@ -50,7 +49,7 @@ namespace DolphinScript.Core.Events.BaseEvents
         }
 
         // click event mouse button
-        public CommonTypes.VirtualMouseStates MouseButton { get; set; }
+        public CommonTypes.VirtualMouseStates MouseButton { get; set; } = CommonTypes.VirtualMouseStates.None;
 
         // string of keys we are sending during a keyboard type event
         public string KeyboardKeys { get; set; }

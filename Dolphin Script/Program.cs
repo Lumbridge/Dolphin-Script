@@ -1,10 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
-using DolphinScript.Core.Classes;
-using DolphinScript.Core.Concrete;
-using DolphinScript.Core.Events.BaseEvents;
+﻿using DolphinScript.Core.Concrete;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Forms;
+using System;
+using System.Windows.Forms;
 using Unity;
 
 namespace DolphinScript
@@ -20,6 +18,8 @@ namespace DolphinScript
         static void Main()
         {
             _container = new UnityContainer();
+            _container.RegisterType<IEventFactory, EventFactory>();
+            _container.RegisterType<IScriptPersistenceService, ScriptPersistenceService>();
             _container.RegisterType<IGlobalMethodService, GlobalMethodService>();
             _container.RegisterType<IListService, ListService>();
             _container.RegisterType<IRandomService, RandomService>();

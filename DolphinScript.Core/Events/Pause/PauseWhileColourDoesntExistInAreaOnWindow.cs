@@ -35,7 +35,7 @@ namespace DolphinScript.Core.Events.Pause
 
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
 
-                // update the search area incase the window has moved
+                // update the search area in case the window has moved
                 newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
             }, () => !ColourService.ColourExistsInArea(newSearchArea, SearchColour));
         }
@@ -49,7 +49,6 @@ namespace DolphinScript.Core.Events.Pause
             if (!IsPartOfGroup)
                 return "Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
-
         }
     }
 }
