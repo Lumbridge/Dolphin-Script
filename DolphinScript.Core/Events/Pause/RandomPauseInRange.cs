@@ -8,6 +8,8 @@ namespace DolphinScript.Core.Events.Pause
     [Serializable]
     public class RandomPauseInRange : PauseEvent
     {
+        public RandomPauseInRange() { }
+
         public RandomPauseInRange(IRandomService randomService, IColourService colourService, IPointService pointService, IWindowControlService windowControlService) : base(randomService, colourService, pointService, windowControlService)
         {
         }

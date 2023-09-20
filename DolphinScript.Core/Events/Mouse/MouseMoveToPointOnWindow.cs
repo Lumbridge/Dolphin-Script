@@ -14,17 +14,17 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Invoke()
         {
+            var windowHandle = WindowControlService.GetWindowHandle(WindowToClickTitle);
+
             // update the status label on the main form
-            //
             ScriptState.Status = $"Move mouse to {CoordsToMoveTo} on window: {WindowTitle}.";
 
             // bring the window associated with this event to the front
-            //
-            WindowControlService.BringWindowToFront(WindowToClickHandle);
+            WindowControlService.BringWindowToFront(windowHandle);
 
             var newClickPoint = new Point(
-                PointService.GetWindowPosition(WindowToClickHandle).Left + CoordsToMoveTo.X,
-                PointService.GetWindowPosition(WindowToClickHandle).Top + CoordsToMoveTo.Y);
+                PointService.GetWindowPosition(windowHandle).Left + CoordsToMoveTo.X,
+                PointService.GetWindowPosition(windowHandle).Top + CoordsToMoveTo.Y);
 
             MouseMovementService.MoveMouseToPoint(newClickPoint);
         }

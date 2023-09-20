@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using DolphinScript.Core.Classes;
@@ -139,6 +140,19 @@ namespace DolphinScript.Core.Concrete
 
             // delay to prevent click area errors
             Thread.Sleep(_randomService.GetRandomNumber(300,500));
+        }
+
+        public IntPtr GetWindowHandle(string windowTitle)
+        {
+            foreach (Process pList in Process.GetProcesses())
+            {
+                if (pList.MainWindowTitle == windowTitle)
+                {
+                    return pList.MainWindowHandle;
+                }
+            }
+
+            return IntPtr.Zero;
         }
 
         public CommonTypes.Rect GetWindowLocation(IntPtr handle)

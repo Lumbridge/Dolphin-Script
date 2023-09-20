@@ -24,14 +24,16 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Invoke()
         {
+            var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
+
             // update the status label on the main form
             ScriptState.Status = $"Mouse move to area: {ClickArea.PrintArea()} on window: {WindowToClickTitle}.";
 
             // bring the window associated with this event to the front
-            WindowControlService.BringWindowToFront(WindowToClickHandle);
+            WindowControlService.BringWindowToFront(windowHandle);
 
             // don't override original click area or it will cause the mouse position to increment every time this method is called
-            var clickArea = PointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+            var clickArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
 
             CoordsToMoveTo = PointService.GetRandomPointInArea(clickArea);
 
@@ -45,8 +47,8 @@ namespace DolphinScript.Core.Events.Mouse
         public override string GetEventListBoxString()
         {
             if (!IsPartOfGroup)
-                return "Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowControlService.GetWindowTitle(WindowToClickHandle) + " window.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowControlService.GetWindowTitle(WindowToClickHandle) + " window.";
+                return "Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }
     }
 }

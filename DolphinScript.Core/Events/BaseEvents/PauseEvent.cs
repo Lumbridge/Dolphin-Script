@@ -11,6 +11,8 @@ namespace DolphinScript.Core.Events.BaseEvents
         protected readonly IPointService PointService;
         protected readonly IWindowControlService WindowControlService;
 
+        public PauseEvent() { }
+
         public PauseEvent(IRandomService randomService, IColourService colourService, IPointService pointService, IWindowControlService windowControlService)
         {
             RandomService = randomService;

@@ -13,16 +13,16 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Invoke()
         {
+            var windowHandle = WindowControlService.GetWindowHandle(WindowToClickTitle);
+
             // update the status label on the main form
-            //
             ScriptState.Status = $"Mouse move to colour: {SearchColour} on window: {WindowToClickTitle}.";
 
             // bring the window associated with this event to the front
-            //
-            WindowControlService.BringWindowToFront(WindowToClickHandle);
+            WindowControlService.BringWindowToFront(windowHandle);
 
             // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
-            var newSearchArea = PointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+            var newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
 
             MouseMovementService.MoveMouseToColour(newSearchArea, SearchColour);
         }
@@ -34,8 +34,8 @@ namespace DolphinScript.Core.Events.Mouse
         public override string GetEventListBoxString()
         {
             if (!IsPartOfGroup)
-                return "Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowControlService.GetWindowTitle(WindowToClickHandle) + " window.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowControlService.GetWindowTitle(WindowToClickHandle) + " window.";
+                return "Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }
 
         public MouseMoveToColourOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)

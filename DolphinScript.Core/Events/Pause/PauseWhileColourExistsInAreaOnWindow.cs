@@ -9,6 +9,8 @@ namespace DolphinScript.Core.Events.Pause
     [Serializable]
     public class PauseWhileColourExistsInAreaOnWindow : PauseEvent
     {
+        public PauseWhileColourExistsInAreaOnWindow() { }
+
         public PauseWhileColourExistsInAreaOnWindow(IRandomService randomService, IColourService colourService, IPointService pointService, IWindowControlService windowControlService) : base(randomService, colourService, pointService, windowControlService)
         {
         }
@@ -18,25 +20,23 @@ namespace DolphinScript.Core.Events.Pause
         /// </summary>
         public override void Invoke()
         {
+            var windowHandle = WindowControlService.GetWindowHandle(WindowToClickTitle);
+
             // don't override original click area or it will cause the mouse position to increment every time this method is called
-            //
-            var newSearchArea = PointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+            var newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
 
             // update the status label on the main form
-            //
             ScriptState.Status = $"Pause while colour: {SearchColour} is found in area: {newSearchArea.PrintArea()} on window: {WindowToClickTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
 
             ExecuteWhileLoop(() =>
             {
                 // bring the window associated with this event to the front
-                //
-                WindowControlService.BringWindowToFront(WindowToClickHandle);
+                WindowControlService.BringWindowToFront(windowHandle);
 
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
 
                 // update the search area incase the window has moved
-                //
-                newSearchArea = PointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+                newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
             }, () => ColourService.ColourExistsInArea(newSearchArea, SearchColour));
         }
 

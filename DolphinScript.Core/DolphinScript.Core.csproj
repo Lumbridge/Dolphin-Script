@@ -76,6 +76,7 @@
     <Compile Include="Events\Pause\PauseWhileWindowNotFound.cs" />
     <Compile Include="Events\Pause\RandomPauseInRange.cs" />
     <Compile Include="Events\Window\MoveWindowToFront.cs" />
+    <Compile Include="Extensions\ControlExtensions.cs" />
     <Compile Include="Interfaces\IColourService.cs" />
     <Compile Include="Interfaces\IGlobalMethodService.cs" />
     <Compile Include="Interfaces\IListService.cs" />

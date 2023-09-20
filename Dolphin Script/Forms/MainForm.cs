@@ -13,6 +13,7 @@ using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Events.Keyboard;
 using DolphinScript.Core.Events.Mouse;
 using DolphinScript.Core.Events.Pause;
+using DolphinScript.Core.Extensions;
 using DolphinScript.Core.Interfaces;
 using Unity;
 
@@ -51,7 +52,9 @@ namespace DolphinScript.Forms
             // add all keys to the key event combo box
             //
             foreach (var key in Constants.SpecialKeys)
+            {
                 ComboBox_SpecialKeys.Items.Add(key);
+            }
 
             // set the default index for the keys combo box
             ComboBox_SpecialKeys.SelectedIndex = 17;
@@ -116,8 +119,7 @@ namespace DolphinScript.Forms
             }
 
             // change the text back to normal while the script isn't running
-            //
-            button_StartScript.Text = Constants.StartScript;
+            button_StartScript.SetPropertyThreadSafe(() => button_StartScript.Text, Constants.StartScript);
 
             // if the loop has ended then we reenable the form buttons
             //
@@ -131,25 +133,21 @@ namespace DolphinScript.Forms
         private void ToggleControls(bool state)
         {
             // start button
-            //
-            button_StartScript.Enabled = state;
+            button_StartScript.SetPropertyThreadSafe(() => Enabled, state);
 
             // move element buttons
-            //
-            button_MoveEventUp.Enabled = state;
-            button_RemoveEvent.Enabled = state;
-            button_MoveEventDown.Enabled = state;
+            button_MoveEventUp.SetPropertyThreadSafe(() => Enabled, state);
+            button_RemoveEvent.SetPropertyThreadSafe(() => Enabled, state);
+            button_MoveEventDown.SetPropertyThreadSafe(() => Enabled, state);
 
             // mouse speed toggles
-            //
-            NumericUpDown_MinMouseSpeed.Enabled = state;
-            NumericUpDown_MaxMouseSpeed.Enabled = state;
+            NumericUpDown_MinMouseSpeed.SetPropertyThreadSafe(() => Enabled, state);
+            NumericUpDown_MaxMouseSpeed.SetPropertyThreadSafe(() => Enabled, state);    
 
             // repeat group toggles
-            //
-            NumericUpDown_RepeatAmount.Enabled = state;
-            button_AddRepeatGroup.Enabled = state;
-            button_RemoveRepeatGroup.Enabled = state;
+            NumericUpDown_RepeatAmount.SetPropertyThreadSafe(() => Enabled, state);
+            button_AddRepeatGroup.SetPropertyThreadSafe(() => Enabled, state);
+            button_RemoveRepeatGroup.SetPropertyThreadSafe(() => Enabled, state);
         }
 
         /// <summary>
@@ -158,121 +156,57 @@ namespace DolphinScript.Forms
         public void UpdateListBox()
         {
             // clear the listbox
-            //
             ListBox_Events.Items.Clear();
 
-            // add all events in the eventlist to the listbox
-            //
-            foreach (var scriptevent in ScriptState.AllEvents)
-                ListBox_Events.Items.Add(scriptevent.GetEventListBoxString());
-        }
-
-        private void UpdateFormControl(Control control, Action action)
-        {
-            control.Invoke(action);
+            // add all events in the event list to the listbox
+            foreach (var scriptEvent in ScriptState.AllEvents)
+            {
+                ListBox_Events.Items.Add(scriptEvent.GetEventListBoxString());
+            }
         }
 
         private void UpdateStatusLabels()
         {
             // update the current script status
-            UpdateFormControl(statusLabel, () =>
-            {
-                statusLabel.Text = ScriptState.Status;
-            });
-
-            UpdateFormControl(lastActionLabel, () =>
-            {
-                lastActionLabel.Text = ScriptState.LastAction;
-            });
+            statusLabel.SetPropertyThreadSafe(() => Text, ScriptState.Status);
+            lastActionLabel.SetPropertyThreadSafe(() => Text, ScriptState.LastAction);
         }
 
         private void UpdateColourPreviews()
         {
             // update the colour buttons with the colour of the pixel underneath the cursor position
             var currentColour = _colourService.GetColourAtPoint(_pointService.GetCursorPosition());
-
-            UpdateFormControl(Button_ColourPreview1, () =>
-            {
-                Button_ColourPreview1.BackColor = currentColour;
-            });
-
-            UpdateFormControl(Button_ColourPreview2, () =>
-            {
-                Button_ColourPreview2.BackColor = currentColour;
-            });
-
-            UpdateFormControl(Button_ColourPreview3, () =>
-            {
-                Button_ColourPreview3.BackColor = currentColour;
-            });
+            Button_ColourPreview1.SetPropertyThreadSafe(() => BackColor, currentColour);
+            Button_ColourPreview2.SetPropertyThreadSafe(() => BackColor, currentColour);
+            Button_ColourPreview3.SetPropertyThreadSafe(() => BackColor, currentColour);
         }
 
         private void UpdateMousePositionLabels()
         {
             // update the position of the cursor in screen coordinates
             var currentMousePosition = Cursor.Position;
-
-            UpdateFormControl(TextBox_MousePosX_1, () =>
-            {
-                TextBox_MousePosX_1.Text = currentMousePosition.X.ToString();
-            });
-
-            UpdateFormControl(TextBox_MousePosX_2, () =>
-            {
-                TextBox_MousePosX_2.Text = currentMousePosition.X.ToString();
-            });
-
-            UpdateFormControl(TextBox_MousePosY_1, () =>
-            {
-                TextBox_MousePosY_1.Text = currentMousePosition.Y.ToString();
-            });
-
-            UpdateFormControl(TextBox_MousePosY_2, () =>
-            {
-                TextBox_MousePosY_2.Text = currentMousePosition.Y.ToString();
-            });
+            TextBox_MousePosX_1.SetPropertyThreadSafe(() => Text, currentMousePosition.X.ToString());
+            TextBox_MousePosX_2.SetPropertyThreadSafe(() => Text, currentMousePosition.X.ToString());
+            TextBox_MousePosY_1.SetPropertyThreadSafe(() => Text, currentMousePosition.Y.ToString());
+            TextBox_MousePosY_2.SetPropertyThreadSafe(() => Text, currentMousePosition.Y.ToString());
         }
 
         private void UpdateCurrentWindowTitleLabels()
         {
             // update the active window title box
             var currentWindowTitle = _windowControlService.GetActiveWindowTitle();
-
-            UpdateFormControl(TextBox_MousePosX_1, () =>
-            {
-                TextBox_ActiveWindowTitle_1.Text = currentWindowTitle;
-            });
-
-            UpdateFormControl(TextBox_MousePosX_1, () =>
-            {
-                TextBox_ActiveWindowTitle_2.Text = currentWindowTitle;
-            });
+            TextBox_ActiveWindowTitle_1.SetPropertyThreadSafe(() => Text, currentWindowTitle);
+            TextBox_ActiveWindowTitle_2.SetPropertyThreadSafe(() => Text, currentWindowTitle);
         }
 
         private void UpdateMousePositionOnCurrentWindowLabels()
         {
             // update the position of the cursor inside the currently active window
             var currentMousePositionOnActiveWindow = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-            UpdateFormControl(TextBox_ActiveWindowMouseX_1, () =>
-            {
-                TextBox_ActiveWindowMouseX_1.Text = currentMousePositionOnActiveWindow.X.ToString();
-            });
-
-            UpdateFormControl(TextBox_ActiveWindowMouseX_2, () =>
-            {
-                TextBox_ActiveWindowMouseX_2.Text = currentMousePositionOnActiveWindow.X.ToString();
-            });
-
-            UpdateFormControl(TextBox_ActiveWindowMouseY_1, () =>
-            {
-                TextBox_ActiveWindowMouseY_1.Text = currentMousePositionOnActiveWindow.Y.ToString();
-            });
-
-            UpdateFormControl(TextBox_ActiveWindowMouseY_2, () =>
-            {
-                TextBox_ActiveWindowMouseY_2.Text = currentMousePositionOnActiveWindow.Y.ToString();
-            });
+            TextBox_ActiveWindowMouseX_1.SetPropertyThreadSafe(() => Text, currentMousePositionOnActiveWindow.X.ToString());
+            TextBox_ActiveWindowMouseX_2.SetPropertyThreadSafe(() => Text, currentMousePositionOnActiveWindow.X.ToString());
+            TextBox_ActiveWindowMouseY_1.SetPropertyThreadSafe(() => Text, currentMousePositionOnActiveWindow.Y.ToString());
+            TextBox_ActiveWindowMouseY_2.SetPropertyThreadSafe(() => Text, currentMousePositionOnActiveWindow.Y.ToString());
         }
 
         /// <summary>
@@ -281,7 +215,7 @@ namespace DolphinScript.Forms
         /// <returns></returns>
         private void FormLoop()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(250);
 
             // stop updating if the form is being disposed
             while (!IsDisposed && !Disposing)
@@ -327,18 +261,20 @@ namespace DolphinScript.Forms
         {
             if (!ScriptState.IsRunning)
             {
-                UpdateFormControl(ListBox_Events, () =>
+                ListBox_Events.Invoke(new Action(() =>
                 {
                     ListBox_Events.ClearSelected();
-                });
+                })); 
                 return true;
             }
 
-            UpdateFormControl(ListBox_Events, () =>
+            ListBox_Events.Invoke(new Action(() =>
             {
                 ListBox_Events.ClearSelected();
-                ListBox_Events.SelectedIndex = ScriptState.AllEvents.IndexOf(ev);
-            });
+            }));
+
+            ListBox_Events.SetPropertyThreadSafe(() => ListBox_Events.SelectedIndex, ScriptState.AllEvents.IndexOf(ev));
+
             return false;
         }
 
@@ -361,30 +297,24 @@ namespace DolphinScript.Forms
         private void StartButton_Click(object sender, EventArgs e)
         {
             // check that there are events in the list before starting
-            //
             if (ScriptState.AllEvents.Count > 0)
             {
                 // set is running to true
-                //
                 ScriptState.IsRunning = true;
 
                 // change script button text while running
-                //
                 button_StartScript.Text = Constants.ScriptRunning;
 
                 // disable controls while script is running
-                //
                 ToggleControls(false);
 
                 // run the main loop
-                //
                 Task.Run(MainLoop);
             }
             else
             {
                 // if the user clicks start when there are no events then
                 // we show them this message box
-                //
                 MessageBox.Show(Constants.NoEventsAdded);
             }
         }
@@ -408,56 +338,41 @@ namespace DolphinScript.Forms
             if (ListBox_Events.SelectedIndex > 0)
             {
                 // first get the selected and above events
-                //
                 var selected = ScriptState.AllEvents[ListBox_Events.SelectedIndex];
                 var above = ScriptState.AllEvents[ListBox_Events.SelectedIndex - 1];
 
                 // get the indices of the events we're using
-                //
                 var selectedIndex = ListBox_Events.SelectedIndex;
                 var aboveIndex = ListBox_Events.SelectedIndex - 1;
 
-                //
                 // non-group selected, non-group above (normal swap - selected moves above, above event moves below)
-                //
                 if (!selected.IsPartOfGroup && !above.IsPartOfGroup)
                 {
                     _listService.Swap(ScriptState.AllEvents, aboveIndex, selectedIndex);
                 }
-                //
                 // group selected, non-group above (group moves above non-group event & non-group event above moves below group)
-                //
                 else if (selected.IsPartOfGroup && !above.IsPartOfGroup)
                 {
                     // get the size of the group we need to shift
-                    //
                     var groupSize = selected.EventsInGroup.Count;
 
                     // shift the events one by one until the non-group event is below the group
-                    //
                     _listService.ShiftItem(ScriptState.AllEvents, aboveIndex, groupSize);
                 }
-                //
                 // group selected, same group above (move the group event up within the group)
-                //
                 else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupId == above.GroupId)
                 {
                     // get the indices of the events in their group-event lists so we can swap them
-                    //
                     var selectedGroupIndex = selected.GroupEventIndex;
                     var aboveGroupIndex = above.GroupEventIndex;
 
                     // swap the events in the main event list
-                    //
                     _listService.Swap(ScriptState.AllEvents, selectedIndex, aboveIndex);
 
                     // swap the events within the group list
-                    //
                     _listService.Swap(ScriptState.AllGroups[ScriptState.AllEvents[selectedIndex].GroupId - 1], selectedGroupIndex, aboveGroupIndex);
                 }
-                //
                 // group selected, different group above (swap the position of both groups)
-                //
                 else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupId != above.GroupId)
                 {
                     var aboveGroupSize = above.EventsInGroup.Count;
@@ -465,9 +380,7 @@ namespace DolphinScript.Forms
 
                     _listService.ShiftRange(ScriptState.AllEvents, aboveIndex - aboveGroupSize + 1, aboveGroupSize, selectedGroupSize);
                 }
-                //
                 // some error occurred
-                //
                 else
                 {
                     MessageBox.Show(Constants.ErrorMovingEvent);
@@ -476,17 +389,14 @@ namespace DolphinScript.Forms
                 UpdateListBox();
 
                 // select the item again after it's moved so the user can move it again if needed
-                //
                 if (selected.IsPartOfGroup)
                 {
                     // if we move a group past another group then set the selected index to the top of the group
-                    //
                     ListBox_Events.SelectedIndex = selected.EventsInGroup.Count - selectedIndex;
                 }
                 else
                 {
                     // select the event we just moved so we can move it again quickly if we want to
-                    //
                     if (selectedIndex - 1 >= 0)
                         ListBox_Events.SelectedIndex = selectedIndex - 1;
                     else
@@ -514,73 +424,53 @@ namespace DolphinScript.Forms
             if (ListBox_Events.SelectedIndex < ListBox_Events.Items.Count)
             {
                 // first get the selected and above events
-                //
                 var selected = ScriptState.AllEvents[ListBox_Events.SelectedIndex];
                 var below = ScriptState.AllEvents[ListBox_Events.SelectedIndex + 1];
 
                 // get the indices of the events we're using
-                //
                 var selectedIndex = ListBox_Events.SelectedIndex;
                 var belowIndex = ListBox_Events.SelectedIndex + 1;
 
-                //
                 // non-group selected, non-group below (normal swap - selected moves below, below event moves above)
-                //
                 if (!selected.IsPartOfGroup && !below.IsPartOfGroup)
                 {
                     _listService.Swap(ScriptState.AllEvents, belowIndex, selectedIndex);
                 }
-                //
                 // group selected, non-group below (group moves below non-group event & non-group event below moves above group)
-                //
                 else if (selected.IsPartOfGroup && !below.IsPartOfGroup)
                 {
                     // get the size of the group we're shifting
-                    //
                     var selectedGroupSize = selected.EventsInGroup.Count;
 
                     // move the whole group under the event below us
-                    //
                     _listService.ShiftRange(ScriptState.AllEvents, selectedIndex - selectedGroupSize + 1, selectedGroupSize, 1);
                 }
-                //
                 // group selected, same group below (move the group event down within the group)
-                //
                 else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupId == below.GroupId)
                 {
                     // get the indices of the events in their group-event lists so we can swap them
-                    //
                     var selectedGroupIndex = selected.GroupEventIndex;
                     var belowGroupIndex = below.GroupEventIndex;
 
                     // swap the events in the main event list
-                    //
                     _listService.Swap(ScriptState.AllEvents, selectedIndex, belowIndex);
 
                     // swap the events within the group list
-                    //
                     _listService.Swap(ScriptState.AllGroups[ScriptState.AllEvents[selectedIndex].GroupId - 1], selectedGroupIndex, belowGroupIndex);
                 }
-                //
                 // group selected, different group below (swap the position of both groups)
-                //
                 else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupId != below.GroupId)
                 {
                     // get the size of the group below us
-                    //
                     var belowGroupSize = below.EventsInGroup.Count;
 
                     // get the size of the group we're shifting
-                    //
                     var selectedGroupSize = selected.EventsInGroup.Count;
 
                     // move the whole selected group under the group below us
-                    //
                     _listService.ShiftRange(ScriptState.AllEvents, selectedIndex - selectedGroupSize + 1, selectedGroupSize, belowGroupSize);
                 }
-                //
                 // some error occurred
-                //
                 else
                 {
                     MessageBox.Show(Constants.ErrorMovingEvent);
@@ -589,7 +479,6 @@ namespace DolphinScript.Forms
                 UpdateListBox();
 
                 // select the item again after it's moved so the user can move it again if needed
-                //
                 if (selectedIndex + 1 <= ListBox_Events.Items.Count)
                     ListBox_Events.SelectedIndex = selectedIndex + 1;
                 else
@@ -605,23 +494,18 @@ namespace DolphinScript.Forms
         private void RemoveEventButton_Click(object sender, EventArgs e)
         {
             // check that the selected item is between the bounds of the listbox
-            //
             if (ListBox_Events.SelectedIndex >= 0 && ListBox_Events.SelectedIndex <= ListBox_Events.Items.Count)
             {
                 // create a temp variable of the selected index so it's easier to type
-                //
                 var temp = ListBox_Events.SelectedIndex;
 
-                // remove the script event from the allevents list
-                //
+                // remove the script event from the all events list
                 ScriptState.AllEvents.RemoveAt(temp);
 
                 // update the listbox to show the changes
-                //
                 UpdateListBox();
 
                 // select the item next to the one we removed so the user quickly delete multiple events if needed
-                //
                 if (temp >= ListBox_Events.Items.Count)
                     ListBox_Events.SelectedIndex = temp - 1;
                 else if (temp < 0)
@@ -632,7 +516,6 @@ namespace DolphinScript.Forms
             else
             {
                 // disable the remove event button if there are no items left in the listbox
-                //
                 button_RemoveEvent.Enabled = false;
             }
         }
@@ -936,14 +819,12 @@ namespace DolphinScript.Forms
         private void NumericUpDown_MinMouseSpeed_ValueChanged(object sender, EventArgs e)
         {
             // update the global mouse speed variable
-            //
             ScriptState.MinimumMouseSpeed = (int)NumericUpDown_MinMouseSpeed.Value;
         }
 
         private void NumericUpDown_MaxMouseSpeed_ValueChanged(object sender, EventArgs e)
         {
             // update the global mouse speed variable
-            //
             ScriptState.MinimumMouseSpeed = (int)NumericUpDown_MaxMouseSpeed.Value;
         }
 
@@ -964,19 +845,13 @@ namespace DolphinScript.Forms
             }
 
             // disable the move item up button if it's already at the top
-            //
-            button_MoveEventUp.Enabled = ListBox_Events.SelectedIndex > 0;
+            button_MoveEventUp.SetPropertyThreadSafe(() => Enabled, ListBox_Events.SelectedIndex > 0);
 
             // disable the move item down button if it's already at the bottom
-            //
-            button_MoveEventDown.Enabled = ListBox_Events.SelectedIndex < ListBox_Events.Items.Count - 1;
+            button_MoveEventDown.SetPropertyThreadSafe(() => Enabled, ListBox_Events.SelectedIndex < ListBox_Events.Items.Count - 1);
 
             // if the listbox has no item selected then disable the remove item button
-            //
-            if (ListBox_Events.SelectedIndex <= ListBox_Events.Items.Count - 1 && ListBox_Events.SelectedIndex >= 0)
-                button_RemoveEvent.Enabled = true;
-            else
-                button_RemoveEvent.Enabled = false;
+            button_RemoveEvent.SetPropertyThreadSafe(() => Enabled, ListBox_Events.SelectedIndex <= ListBox_Events.Items.Count - 1 && ListBox_Events.SelectedIndex >= 0);
         }
 
         #endregion
@@ -1084,7 +959,7 @@ namespace DolphinScript.Forms
 
         private void Button_InsertMultiColourSearchAreaWindowEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(MouseMoveToMutliColourInAreaOnWindowLoop);
+            Task.Run(MouseMoveToMultiColourInAreaOnWindowLoop);
         }
 
         #endregion
@@ -1094,28 +969,24 @@ namespace DolphinScript.Forms
         private void Button_InsertLeftClickEvent_Click(object sender, EventArgs e)
         {
             ScriptState.AllEvents.Add(new MouseClick { MouseButton = CommonTypes.VirtualMouseStates.LeftClick });
-
             UpdateListBox();
         }
 
         private void Button_InsertMiddleMouseClickEvent_Click(object sender, EventArgs e)
         {
             ScriptState.AllEvents.Add(new MouseClick { MouseButton = CommonTypes.VirtualMouseStates.MiddleClick });
-
             UpdateListBox();
         }
 
         private void Button_InsertRightClickEvent_Click(object sender, EventArgs e)
         {
             ScriptState.AllEvents.Add(new MouseClick { MouseButton = CommonTypes.VirtualMouseStates.RightClick });
-
             UpdateListBox();
         }
 
         private void Button_InsertLMBDown_Click(object sender, EventArgs e)
         {
             ScriptState.AllEvents.Add(new MouseClick { MouseButton = CommonTypes.VirtualMouseStates.LmbDown });
-
             UpdateListBox();
         }
 
@@ -1129,28 +1000,24 @@ namespace DolphinScript.Forms
         private void Button_InsertRMBDown_Click(object sender, EventArgs e)
         {
             ScriptState.AllEvents.Add(new MouseClick { MouseButton = CommonTypes.VirtualMouseStates.RmbDown });
-
             UpdateListBox();
         }
 
         private void Button_InsertLMBUp_Click(object sender, EventArgs e)
         {
             ScriptState.AllEvents.Add(new MouseClick { MouseButton = CommonTypes.VirtualMouseStates.LmbUp });
-
             UpdateListBox();
         }
 
         private void Button_InsertMMBUp_Click(object sender, EventArgs e)
         {
             ScriptState.AllEvents.Add(new MouseClick { MouseButton = CommonTypes.VirtualMouseStates.MmbUp });
-
             UpdateListBox();
         }
 
         private void Button_InsertRMBUp_Click(object sender, EventArgs e)
         {
             ScriptState.AllEvents.Add(new MouseClick { MouseButton = CommonTypes.VirtualMouseStates.RmbUp });
-
             UpdateListBox();
         }
 
@@ -1173,7 +1040,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourExistsInArea.Text;
 
-            Button_InsertPauseWhileColourExistsInArea.Text = Constants.SelectingAreaToSearch;
+            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
 
             while (xChosen == false)
             {
@@ -1183,12 +1050,11 @@ namespace DolphinScript.Forms
 
                     xChosen = true;
 
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/
-                    }
+                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertPauseWhileColourExistsInArea.Text = temp;
+                    Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
                     return;
                 }
 
@@ -1200,7 +1066,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourExistsInArea.Text = Constants.SelectingColourToSearchForInArea;
+            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
 
             while (!colourChosen)
             {
@@ -1211,7 +1077,7 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertPauseWhileColourExistsInArea.Text = temp;
+                    Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
                     return;
                 }
             }
@@ -1223,7 +1089,7 @@ namespace DolphinScript.Forms
 
             UpdateListBox();
 
-            Button_InsertPauseWhileColourExistsInArea.Text = temp;
+            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
         }
 
         /// <summary>
@@ -1240,7 +1106,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourDoesntExistInArea.Text;
 
-            Button_InsertPauseWhileColourDoesntExistInArea.Text = Constants.SelectingAreaToSearch;
+            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
 
             while (xChosen == false)
             {
@@ -1254,19 +1120,18 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
+                    Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
                     return;
                 }
 
                 while (xChosen)
                 {
                     p2 = _pointService.GetCursorPosition();
-
                     break;
                 }
             }
 
-            Button_InsertPauseWhileColourDoesntExistInArea.Text = Constants.SelectingColourToSearchForInArea;
+            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
 
             while (!colourChosen)
             {
@@ -1277,7 +1142,7 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
+                    Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
                     return;
                 }
             }
@@ -1289,7 +1154,7 @@ namespace DolphinScript.Forms
 
             UpdateListBox();
 
-            Button_InsertPauseWhileColourDoesntExistInArea.Text = temp;
+            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
         }
 
         /// <summary>
@@ -1306,7 +1171,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourExistsInAreaOnWindow.Text;
 
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = Constants.SelectingAreaToSearch;
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
 
             while (xChosen == false)
             {
@@ -1320,7 +1185,7 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
+                    Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
                     return;
                 }
 
@@ -1332,7 +1197,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = Constants.SelectingColourToSearchForInArea;
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
 
             while (!colourChosen)
             {
@@ -1343,13 +1208,12 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
+                    Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
                     return;
                 }
             }
 
             var ev = _container.Resolve<PauseWhileColourExistsInAreaOnWindow>();
-            ev.WindowToClickHandle = PInvokeReferences.GetForegroundWindow();
             ev.WindowToClickTitle = _windowControlService.GetActiveWindowTitle();
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.ClickArea = new CommonTypes.Rect(p1, p2);
@@ -1358,7 +1222,7 @@ namespace DolphinScript.Forms
 
             UpdateListBox();
 
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = temp;
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
         }
 
         /// <summary>
@@ -1375,7 +1239,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text;
 
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = Constants.SelectingAreaToSearch;
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
 
             while (xChosen == false)
             {
@@ -1389,7 +1253,7 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
+                    Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
                     return;
                 }
 
@@ -1401,7 +1265,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = Constants.SelectingColourToSearchForInArea;
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
 
             while (!colourChosen)
             {
@@ -1412,13 +1276,12 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
+                    Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
                     return;
                 }
             }
 
             var ev = _container.Resolve<PauseWhileColourDoesntExistInAreaOnWindow>();
-            ev.WindowToClickHandle = PInvokeReferences.GetForegroundWindow();
             ev.WindowToClickTitle = _windowControlService.GetActiveWindowTitle();
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.ClickArea = new CommonTypes.Rect(p1, p2);
@@ -1427,7 +1290,7 @@ namespace DolphinScript.Forms
 
             UpdateListBox();
 
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = temp;
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
         }
 
         #endregion
@@ -1443,7 +1306,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveEvent.Text;
 
-            Button_InsertMouseMoveEvent.Text = Constants.SelectingPointsToClick;
+            Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingPointsToClick);
 
             while (ScriptState.IsRegistering)
             {
@@ -1459,13 +1322,13 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertMouseMoveEvent.Text = temp;
+                    Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, temp);
                     ScriptState.IsRegistering = false;
                     return;
                 }
             }
 
-            Button_InsertMouseMoveEvent.Text = temp;
+            Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, temp);
         }
 
         /// <summary>
@@ -1477,7 +1340,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveToAreaEvent.Text;
 
-            Button_InsertMouseMoveToAreaEvent.Text = Constants.SelectingAreaToClick;
+            Button_InsertMouseMoveToAreaEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToClick);
 
             while (ScriptState.IsRegistering)
             {
@@ -1497,7 +1360,7 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertMouseMoveToAreaEvent.Text = temp;
+                    Button_InsertMouseMoveToAreaEvent.SetPropertyThreadSafe(() => Text, temp);
 
                     ScriptState.IsRegistering = false;
 
@@ -1505,7 +1368,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertMouseMoveToAreaEvent.Text = temp;
+            Button_InsertMouseMoveToAreaEvent.SetPropertyThreadSafe(() => Text, temp);
         }
 
         /// <summary>
@@ -1525,7 +1388,7 @@ namespace DolphinScript.Forms
                 {
                     var p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
-                    ScriptState.AllEvents.Add(new MouseMoveToPointOnWindow { WindowToClickHandle = PInvokeReferences.GetForegroundWindow(), WindowToClickTitle = _windowControlService.GetActiveWindowTitle(), CoordsToMoveTo = p1 });
+                    ScriptState.AllEvents.Add(new MouseMoveToPointOnWindow { WindowToClickTitle = _windowControlService.GetActiveWindowTitle(), CoordsToMoveTo = p1 });
 
                     UpdateListBox();
 
@@ -1563,7 +1426,7 @@ namespace DolphinScript.Forms
 
                     var p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
-                    ScriptState.AllEvents.Add(new MouseMoveToAreaOnWindow { WindowToClickHandle = PInvokeReferences.GetForegroundWindow(), WindowToClickTitle = _windowControlService.GetActiveWindowTitle(), ClickArea = new CommonTypes.Rect(p1, p2) });
+                    ScriptState.AllEvents.Add(new MouseMoveToAreaOnWindow { WindowToClickTitle = _windowControlService.GetActiveWindowTitle(), ClickArea = new CommonTypes.Rect(p1, p2) });
 
                     UpdateListBox();
 
@@ -1655,10 +1518,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertColourSearchAreaWindowEvent.Text;
 
-            UpdateFormControl(Button_InsertColourSearchAreaWindowEvent, () =>
-            {
-                Button_InsertColourSearchAreaWindowEvent.Text = Constants.SelectingAreaToSearch;
-            });
+            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
 
             while (ScriptState.IsRegistering)
             {
@@ -1672,10 +1532,7 @@ namespace DolphinScript.Forms
 
                     var p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
-                    UpdateFormControl(Button_InsertColourSearchAreaWindowEvent, () =>
-                    {
-                        Button_InsertColourSearchAreaWindowEvent.Text = Constants.SelectingColourToSearchForInArea;
-                    });
+                    Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
 
                     while (!colourPicked)
                     {
@@ -1683,14 +1540,11 @@ namespace DolphinScript.Forms
                         {
                             colourPicked = true;
 
-                            UpdateFormControl(Button_InsertColourSearchAreaWindowEvent, () =>
-                            {
-                                Button_InsertColourSearchAreaWindowEvent.Text = Constants.SelectingAreaToSearch;
-                            });
+                            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
 
                             var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
 
-                            ScriptState.AllEvents.Add(new MouseMoveToColourOnWindow { WindowToClickHandle = PInvokeReferences.GetForegroundWindow(), WindowToClickTitle = _windowControlService.GetActiveWindowTitle(), ColourSearchArea = new CommonTypes.Rect(p1, p2), ClickArea = new CommonTypes.Rect(p1, p2), SearchColour = searchColour.ToArgb() });
+                            ScriptState.AllEvents.Add(new MouseMoveToColourOnWindow { WindowToClickTitle = _windowControlService.GetActiveWindowTitle(), ColourSearchArea = new CommonTypes.Rect(p1, p2), ClickArea = new CommonTypes.Rect(p1, p2), SearchColour = searchColour.ToArgb() });
 
                             UpdateListBox();
 
@@ -1698,10 +1552,7 @@ namespace DolphinScript.Forms
                         }
                         else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                         {
-                            UpdateFormControl(Button_InsertColourSearchAreaWindowEvent, () =>
-                            {
-                                Button_InsertColourSearchAreaWindowEvent.Text = temp;
-                            });
+                            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
 
                             ScriptState.IsRegistering = false;
 
@@ -1711,10 +1562,7 @@ namespace DolphinScript.Forms
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                 {
-                    UpdateFormControl(Button_InsertColourSearchAreaWindowEvent, () =>
-                    {
-                        Button_InsertColourSearchAreaWindowEvent.Text = temp;
-                    });
+                    Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
 
                     ScriptState.IsRegistering = false;
 
@@ -1722,13 +1570,13 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertColourSearchAreaWindowEvent.Text = temp;
+            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
         }
 
         /// <summary>
         /// this is the register loop used to register a mouse move to multi colour in area on window event
         /// </summary>
-        void MouseMoveToMutliColourInAreaOnWindowLoop()
+        void MouseMoveToMultiColourInAreaOnWindowLoop()
         {
             // will store the colours we will be searching for
             var searchColours = new List<int>();
@@ -1746,10 +1594,7 @@ namespace DolphinScript.Forms
             var temp = Button_InsertMultiColourSearchAreaWindowEvent.Text;
 
             // change the button text to show we're currently registering
-            UpdateFormControl(Button_InsertMultiColourSearchAreaWindowEvent, () =>
-            {
-                Button_InsertMultiColourSearchAreaWindowEvent.Text = $@"Selecting area to search... ({Constants.DefaultSecondaryStopCancelButton} to cancel).";
-            });
+            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, $@"Selecting area to search... ({Constants.DefaultSecondaryStopCancelButton} to cancel).");
 
             // register loop
             while (ScriptState.IsRegistering)
@@ -1773,10 +1618,7 @@ namespace DolphinScript.Forms
                     Picturebox_ColourSelectionArea.Image = colourSelectionScreenshot;
 
                     // change the button text to show we've moved on to selecting the search colours
-                    UpdateFormControl(Button_InsertMultiColourSearchAreaWindowEvent, () =>
-                    {
-                        Button_InsertMultiColourSearchAreaWindowEvent.Text = $@"Selecting colours to search for in area... ({Constants.DefaultStopCancelButton} to continue).";
-                    });
+                    Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, $@"Selecting colours to search for in area... ({Constants.DefaultStopCancelButton} to continue).");
 
                     // loop here while we're not done selecting colours to search for
                     while (true)
@@ -1785,25 +1627,21 @@ namespace DolphinScript.Forms
                         if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
                         {
                             // each time we hit shift key we add the colour under the mouse to the search colours list
-                            //
                             searchColours.Add(_colourService.GetColourAtPoint(Cursor.Position).ToArgb());
 
                             // change the colour we selected on the screenshot to red to show we've added it to the search list
-                            //
                             colourSelectionScreenshot = _colourService.SetMatchingColourPixels(colourSelectionScreenshot, searchColours[searchColours.Count - 1], Color.Red);
 
                             // override the original picturebox image with the new one to show the selected colours
-                            //
                             Picturebox_ColourSelectionArea.Image = colourSelectionScreenshot;
 
                             // sleep here so we don't add more than one colour when we press shift once
-                            //
                             Thread.Sleep(1);
                         }
                         else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
                         {
                             // we change the button text to ask the user to choose the area on the window they'd like to search for these colours on
-                            Button_InsertMultiColourSearchAreaWindowEvent.Text = "Selecting area & window to search for colour in.... (Make sure window is top-most)";
+                            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, "Selecting area & window to search for colour in.... (Make sure window is top-most)");
 
                             // loop here while the area hasn't been selected
                             while (!areaPicked)
@@ -1826,16 +1664,13 @@ namespace DolphinScript.Forms
                             }
 
                             // add the event to the event list
-                            ScriptState.AllEvents.Add(new MouseMoveToMultiColourOnWindow { WindowToClickHandle = PInvokeReferences.GetForegroundWindow(), WindowToClickTitle = _windowControlService.GetActiveWindowTitle(), ColourSearchArea = new CommonTypes.Rect(p1, p2), ClickArea = new CommonTypes.Rect(p1, p2), SearchColours = new List<int>(searchColours) });
+                            ScriptState.AllEvents.Add(new MouseMoveToMultiColourOnWindow { WindowToClickTitle = _windowControlService.GetActiveWindowTitle(), ColourSearchArea = new CommonTypes.Rect(p1, p2), ClickArea = new CommonTypes.Rect(p1, p2), SearchColours = new List<int>(searchColours) });
 
                             // update the event listbox to show the new event
                             UpdateListBox();
 
                             // set the button text back to normal
-                            UpdateFormControl(Button_InsertMultiColourSearchAreaWindowEvent, () =>
-                            {
-                                Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
-                            });
+                            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
 
                             // set global registering as false
                             ScriptState.IsRegistering = false;
@@ -1851,10 +1686,7 @@ namespace DolphinScript.Forms
                 if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultSecondaryStopCancelButton) < 0)
                 {
                     // set the button text back to normal
-                    UpdateFormControl(Button_InsertMultiColourSearchAreaWindowEvent, () =>
-                    {
-                        Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
-                    });
+                    Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
 
                     // set global registering as false
                     ScriptState.IsRegistering = false;
@@ -1864,8 +1696,7 @@ namespace DolphinScript.Forms
             }
 
             // set the button text back to normal if the normal operation fails somehow
-            //
-            Button_InsertMultiColourSearchAreaWindowEvent.Text = temp;
+            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
         }
 
         #endregion

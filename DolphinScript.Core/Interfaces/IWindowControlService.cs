@@ -11,5 +11,6 @@ namespace DolphinScript.Core.Interfaces
         void SetWindowTopMostIfExists(string windowClass, string windowName);
         void BringWindowToFront(IntPtr handle);
         IntPtr GetActiveWindowHandle();
+        IntPtr GetWindowHandle(string windowTitle);
     }
 }

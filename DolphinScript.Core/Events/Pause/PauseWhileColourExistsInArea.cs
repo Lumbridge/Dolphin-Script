@@ -9,6 +9,8 @@ namespace DolphinScript.Core.Events.Pause
     [Serializable]
     public class PauseWhileColourExistsInArea : PauseEvent
     {
+        public PauseWhileColourExistsInArea() { }
+
         public PauseWhileColourExistsInArea(IRandomService randomService, IColourService colourService, IPointService pointService, IWindowControlService windowControlService) : base(randomService, colourService, pointService, windowControlService)
         {
         }

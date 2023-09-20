@@ -11,6 +11,8 @@ namespace DolphinScript.Core.Events.Pause
     [Serializable]
     public class FixedPause : PauseEvent
     {
+        public FixedPause() { }
+
         public FixedPause(IRandomService randomService,
             IColourService colourService, IPointService pointService, IWindowControlService windowControlService)
             : base(randomService, colourService, pointService, windowControlService)

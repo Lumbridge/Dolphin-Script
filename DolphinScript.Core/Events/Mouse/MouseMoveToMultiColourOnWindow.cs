@@ -13,18 +13,17 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Invoke()
         {
+            var windowHandle = WindowControlService.GetWindowHandle(WindowToClickTitle);
+
             // update the status label on the main form
-            //
             ScriptState.Status = $"Mouse move to any colour in list of selected colours on window: {WindowToClickTitle}.";
 
             // bring the window associated with this event to the front
-            //
-            WindowControlService.BringWindowToFront(WindowToClickHandle);
+            WindowControlService.BringWindowToFront(windowHandle);
 
             // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
-            //
             var newSearchColour = SearchColours[RandomService.GetRandomNumber(0, SearchColours.Count - 1)];
-            var newClickArea = PointService.GetClickAreaPositionOnWindow(WindowToClickHandle, ClickArea);
+            var newClickArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
             
             MouseMovementService.MoveMouseToColour(newClickArea, newSearchColour);
         }
@@ -36,7 +35,7 @@ namespace DolphinScript.Core.Events.Mouse
         public override string GetEventListBoxString()
         {
             if (!IsPartOfGroup)
-                return "Move mouse to random pixel matching colour " + SearchColours.ToString() + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+                return "Move mouse to random pixel matching colour " + SearchColours + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
             return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
         }
 

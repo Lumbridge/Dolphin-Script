@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Xml.Serialization;
-using DolphinScript.Core.Classes;
+﻿using DolphinScript.Core.Classes;
 using DolphinScript.Core.Events.Keyboard;
 using DolphinScript.Core.Events.Mouse;
 using DolphinScript.Core.Events.Pause;
 using DolphinScript.Core.Events.Window;
-using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Xml.Serialization;
+using DolphinScript.Core.Interfaces;
 
 namespace DolphinScript.Core.Events.BaseEvents
 {
@@ -37,7 +37,6 @@ namespace DolphinScript.Core.Events.BaseEvents
         // mandatory override methods
         public abstract void Invoke();
         public abstract string GetEventListBoxString();
-
         public void ExecuteWhileLoop(Action whileLoopBody, Func<bool> runCondition)
         {
             while (runCondition())
@@ -77,7 +76,7 @@ namespace DolphinScript.Core.Events.BaseEvents
         public string WindowClass { get; set; }
         public string WindowTitle { get; set; }
         public string WindowToClickTitle { get; set; }
-        public IntPtr WindowToClickHandle { get; set; }
+
         public CommonTypes.Rect WindowToClickLocation { get; set; }
 
         // mouse move specific properties
