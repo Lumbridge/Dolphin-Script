@@ -1,12 +1,9 @@
-﻿using DolphinScript.Core.Classes;
+﻿using AutoMapper;
+using DolphinScript.Core.Classes;
 using DolphinScript.Core.Interfaces;
+using DolphinScript.Core.Models;
 using System.IO;
 using System.Windows.Forms;
-using System;
-using System.Collections.Generic;
-using AutoMapper;
-using DolphinScript.Core.Events.BaseEvents;
-using DolphinScript.Core.Models;
 
 namespace DolphinScript.Core.Concrete
 {
