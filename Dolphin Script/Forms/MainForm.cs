@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using AutoMapper;
 using DolphinScript.Core.Classes;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Events.Keyboard;
@@ -15,6 +16,7 @@ using DolphinScript.Core.Events.Mouse;
 using DolphinScript.Core.Events.Pause;
 using DolphinScript.Core.Extensions;
 using DolphinScript.Core.Interfaces;
+using DolphinScript.Core.Models;
 using Unity;
 
 namespace DolphinScript.Forms
@@ -28,14 +30,16 @@ namespace DolphinScript.Forms
         private readonly IListService _listService;
         private readonly IScreenCaptureService _screenCaptureService;
         private readonly IEventFactory _eventFactory;
-        private readonly IScriptPersistenceService _scriptPersistenceService;
+        private readonly IUserInterfaceService _userInterfaceService;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// main form constructor
         /// </summary>
         public MainForm(IColourService colourService, IPointService pointService, 
             IWindowControlService windowControlService, IGlobalMethodService globalMethodService, 
-            IListService listService, IScreenCaptureService screenCaptureService, IEventFactory eventFactory, IScriptPersistenceService scriptPersistenceService)
+            IListService listService, IScreenCaptureService screenCaptureService, IEventFactory eventFactory, 
+            IUserInterfaceService userInterfaceService, IMapper mapper)
         {
             InitializeComponent();
 
@@ -46,7 +50,8 @@ namespace DolphinScript.Forms
             _listService = listService;
             _screenCaptureService = screenCaptureService;
             _eventFactory = eventFactory;
-            _scriptPersistenceService = scriptPersistenceService;
+            _userInterfaceService = userInterfaceService;
+            _mapper = mapper;
 
             ScriptState.Status = Constants.IdleStatus;
             ScriptState.LastAction = Constants.NoLastAction;
@@ -669,46 +674,13 @@ namespace DolphinScript.Forms
         /// <param name="e"></param>
         private void SaveScriptToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //
-            // Save Config File Function
-            //
-
-            // create a new instance of the save file dialog object
-            //
-            var sfd = new SaveFileDialog();
-
-            // set the default file extension
-            //
-            sfd.DefaultExt = "xml";
-
-            // make windows attach the extension to the end of the filename
-            //
-            sfd.AddExtension = true;
-
-            // set the initial directory to the desktop
-            //
-            sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-            // make windows use the directory we set initially
-            //
-            sfd.RestoreDirectory = true;
-
-            // set a default name to use for the file being saved
-            //
-            sfd.FileName = Constants.DefaultFileName;
-
-            // store the result of the open file dialog interaction
-            //
-            var result = sfd.ShowDialog();
-
-            if (result == DialogResult.OK)
+            var model = new FileDialogModel
             {
-                using (Stream s = File.Open(sfd.FileName, FileMode.Create))
-                {
-                    var serializer = new XmlSerializer(typeof(List<ScriptEvent>));
-                    serializer.Serialize(s, ScriptState.AllEvents);
-                }
-            }
+                FileName = Constants.DefaultFileName,
+                DefaultExt = "xml",
+                FileContent = ScriptState.AllEvents
+            };
+            _userInterfaceService.SaveFileDialog(model);
         }
 
         /// <summary>
@@ -718,40 +690,15 @@ namespace DolphinScript.Forms
         /// <param name="e"></param>
         private void LoadScriptToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            //
-            // Load Config File Function
-            //
+            var model = new FileDialogModel();
 
-            // create a new instance of the open file dialog object
-            //
-            var ofd = new OpenFileDialog();
+            var loadedEvents = _userInterfaceService.OpenFileDialog<List<ScriptEvent>>(model);
 
-            // set the default file extension
-            //
-            ofd.DefaultExt = "xml";
-
-            // make windows attach the extension to the end of the filename
-            //
-            ofd.AddExtension = true;
-
-            // set the initial directory to the desktop
-            //
-            ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-            // make windows use the directory we set initially
-            //
-            ofd.RestoreDirectory = true;
-
-            // store the result of the open file dialog interaction
-            //
-            var result = ofd.ShowDialog();
-
-            if (result == DialogResult.OK)
+            foreach (var loadedEvent in loadedEvents)
             {
-                using (Stream s = File.Open(ofd.FileName, FileMode.Open))
-                {
-                    ScriptState.AllEvents = _scriptPersistenceService.LoadScriptEvents(s);
-                }
+                var ev = (ScriptEvent)_eventFactory.CreateEvent(loadedEvent.GetType());
+                _mapper.Map(loadedEvent, ev);
+                ScriptState.AllEvents.Add(ev);
             }
 
             // show the changes in the listbox

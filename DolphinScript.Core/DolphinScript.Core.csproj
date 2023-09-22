@@ -65,7 +65,8 @@
     <Compile Include="Concrete\PointService.cs" />
     <Compile Include="Concrete\RandomService.cs" />
     <Compile Include="Concrete\ScreenCaptureService.cs" />
-    <Compile Include="Concrete\ScriptPersistenceService.cs" />
+    <Compile Include="Concrete\DiskService.cs" />
+    <Compile Include="Concrete\UserInterfaceService.cs" />
     <Compile Include="Concrete\WindowControlService.cs" />
     <Compile Include="Events\BaseEvents\MouseMoveEvent.cs" />
     <Compile Include="Events\BaseEvents\PauseEvent.cs" />
@@ -100,8 +101,10 @@
     <Compile Include="Interfaces\IPointService.cs" />
     <Compile Include="Interfaces\IRandomService.cs" />
     <Compile Include="Interfaces\IScreenCaptureService.cs" />
-    <Compile Include="Interfaces\IScriptPersistenceService.cs" />
+    <Compile Include="Interfaces\IDiskService.cs" />
+    <Compile Include="Interfaces\IUserInterfaceService.cs" />
     <Compile Include="Interfaces\IWindowControlService.cs" />
+    <Compile Include="Models\FileDialogModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowsApi\CommonTypes.cs" />
     <Compile Include="Classes\Constants.cs" />
@@ -110,5 +113,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

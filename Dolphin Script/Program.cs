@@ -3,7 +3,10 @@ using DolphinScript.Core.Interfaces;
 using DolphinScript.Forms;
 using System;
 using System.Windows.Forms;
+using AutoMapper;
 using Unity;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Models;
 
 namespace DolphinScript
 {
@@ -17,9 +20,20 @@ namespace DolphinScript
         [STAThread]
         static void Main()
         {
+            var mapperConfiguration = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ScriptEvent, ScriptEvent>().ReverseMap();
+                cfg.CreateMap<SaveFileDialog, FileDialogModel>().ReverseMap();
+                cfg.CreateMap<OpenFileDialog, FileDialogModel>().ReverseMap();
+            });
+
+            IMapper mapper = mapperConfiguration.CreateMapper();
+
             _container = new UnityContainer();
+            _container.RegisterInstance(mapper, InstanceLifetime.Singleton);
             _container.RegisterType<IEventFactory, EventFactory>();
-            _container.RegisterType<IScriptPersistenceService, ScriptPersistenceService>();
+            _container.RegisterType<IDiskService, DiskService>();
+            _container.RegisterType<IUserInterfaceService, UserInterfaceService>();
             _container.RegisterType<IGlobalMethodService, GlobalMethodService>();
             _container.RegisterType<IListService, ListService>();
             _container.RegisterType<IRandomService, RandomService>();

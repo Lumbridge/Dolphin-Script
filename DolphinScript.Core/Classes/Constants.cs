@@ -15,7 +15,7 @@ namespace DolphinScript.Core.Classes
         public static string SelectingAreaToSearch => $"Selecting area to search... ({DefaultStopCancelButton} to finish).";
         public static string SelectingColourToSearchForInArea => $"Selecting colour to search for in area... ({DefaultStopCancelButton} to finish).";
 
-        public static string DefaultFileName = $"MyScript-{Guid.NewGuid()}.xml";
+        public static string DefaultFileName = $"UserScript_{DateTime.Now:s}.xml".Replace(":", string.Empty);
 
         public const string AboutString = "Created by Ryan Sainty @ https://github.com/Lumbridge";
 
