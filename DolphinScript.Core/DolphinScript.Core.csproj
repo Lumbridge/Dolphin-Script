@@ -65,9 +65,9 @@
     <Compile Include="Concrete\PointService.cs" />
     <Compile Include="Concrete\RandomService.cs" />
     <Compile Include="Concrete\ScreenCaptureService.cs" />
-    <Compile Include="Concrete\DiskService.cs" />
     <Compile Include="Concrete\UserInterfaceService.cs" />
     <Compile Include="Concrete\WindowControlService.cs" />
+    <Compile Include="Concrete\XmlSerializerService.cs" />
     <Compile Include="Events\BaseEvents\MouseMoveEvent.cs" />
     <Compile Include="Events\BaseEvents\PauseEvent.cs" />
     <Compile Include="Events\BaseEvents\ScriptEvent.cs" />
@@ -101,9 +101,11 @@
     <Compile Include="Interfaces\IPointService.cs" />
     <Compile Include="Interfaces\IRandomService.cs" />
     <Compile Include="Interfaces\IScreenCaptureService.cs" />
-    <Compile Include="Interfaces\IDiskService.cs" />
     <Compile Include="Interfaces\IUserInterfaceService.cs" />
     <Compile Include="Interfaces\IWindowControlService.cs" />
+    <Compile Include="Interfaces\IXmlSerializerService.cs" />
+    <Compile Include="Models\BoxPlotModel.cs" />
+    <Compile Include="Models\BoxPlotResult.cs" />
     <Compile Include="Models\FileDialogModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowsApi\CommonTypes.cs" />

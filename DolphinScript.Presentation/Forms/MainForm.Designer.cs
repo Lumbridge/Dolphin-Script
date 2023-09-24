@@ -136,6 +136,8 @@
             this.Button_InsertRightClickEvent = new System.Windows.Forms.Button();
             this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
             this.button_RemoveRepeatGroup = new System.Windows.Forms.Button();
+            this.groupBox_mouseMovementMode = new System.Windows.Forms.GroupBox();
+            this.comboBox_mouseMovementMode = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).BeginInit();
             this.MenuStrip_MainForm.SuspendLayout();
             this.tabControl_ScriptEvents.SuspendLayout();
@@ -176,6 +178,7 @@
             this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
+            this.groupBox_mouseMovementMode.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_StartScript
@@ -624,6 +627,7 @@
             // 
             // ComboBox_SpecialKeys
             // 
+            this.ComboBox_SpecialKeys.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBox_SpecialKeys.FormattingEnabled = true;
             this.ComboBox_SpecialKeys.Location = new System.Drawing.Point(26, 121);
             this.ComboBox_SpecialKeys.Name = "ComboBox_SpecialKeys";
@@ -642,6 +646,7 @@
             // 
             // tabPage_MouseMoveEvent
             // 
+            this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox_mouseMovementMode);
             this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox20);
             this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox_RelativeToScreen);
             this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox1);
@@ -1339,6 +1344,26 @@
             this.button_RemoveRepeatGroup.UseVisualStyleBackColor = true;
             this.button_RemoveRepeatGroup.Click += new System.EventHandler(this.Button_RemoveRepeatGroup_Click);
             // 
+            // groupBox_mouseMovementMode
+            // 
+            this.groupBox_mouseMovementMode.Controls.Add(this.comboBox_mouseMovementMode);
+            this.groupBox_mouseMovementMode.Location = new System.Drawing.Point(185, 297);
+            this.groupBox_mouseMovementMode.Name = "groupBox_mouseMovementMode";
+            this.groupBox_mouseMovementMode.Size = new System.Drawing.Size(227, 65);
+            this.groupBox_mouseMovementMode.TabIndex = 64;
+            this.groupBox_mouseMovementMode.TabStop = false;
+            this.groupBox_mouseMovementMode.Text = "Mouse Movement Mode";
+            // 
+            // comboBox_mouseMovementMode
+            // 
+            this.comboBox_mouseMovementMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_mouseMovementMode.FormattingEnabled = true;
+            this.comboBox_mouseMovementMode.Location = new System.Drawing.Point(14, 24);
+            this.comboBox_mouseMovementMode.Name = "comboBox_mouseMovementMode";
+            this.comboBox_mouseMovementMode.Size = new System.Drawing.Size(195, 21);
+            this.comboBox_mouseMovementMode.TabIndex = 0;
+            this.comboBox_mouseMovementMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_mouseMovementMode_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1411,6 +1436,7 @@
             this.groupBox10.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
+            this.groupBox_mouseMovementMode.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1526,6 +1552,8 @@
         private System.Windows.Forms.Label label_MaxMouseSpeed;
         private System.Windows.Forms.Label label_MinMouseSpeed;
         private System.Windows.Forms.NumericUpDown NumericUpDown_MaxMouseSpeed;
+        private System.Windows.Forms.GroupBox groupBox_mouseMovementMode;
+        private System.Windows.Forms.ComboBox comboBox_mouseMovementMode;
     }
 }
 

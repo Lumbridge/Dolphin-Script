@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using DolphinScript.Core.Classes;
 using System.Threading;
+using DolphinScript.Core.Models;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -43,7 +44,7 @@ namespace DolphinScript.Core.Concrete
         /// </summary>
         /// <param name="target"></param>
         /// <param name="mode">mouse movement mode to use</param>
-        public void MoveMouseToPoint(Point target, MouseMovementMode mode = MouseMovementMode.Realistic)
+        public void MoveMouseToPoint(Point target)
         {
             // store the current mouse position to pass into the core mouse move loop
             var start = _pointService.GetCursorPosition();
@@ -52,7 +53,7 @@ namespace DolphinScript.Core.Concrete
             var randomSpeed = Math.Max((_randomService.GetRandomNumber(0, ScriptState.MinimumMouseSpeed) / 2.0 + ScriptState.MaximumMouseSpeed) / 10.0, 0.1);
 
             // call the main mouse move loop and pass in the global params
-            switch (mode)
+            switch (ScriptState.MouseMovementMode)
             {
                 case MouseMovementMode.Realistic:
                     WindMouse(
@@ -66,13 +67,13 @@ namespace DolphinScript.Core.Concrete
                         TargetArea * randomSpeed);
                     break;
                 case MouseMovementMode.Linear:
-                    LinearSmoothMove(target, 200);
+                    LinearSmoothMove(target);
                     break;
                 case MouseMovementMode.Teleport:
                     TeleportMouse(target);
                     break;
                 default:    
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+                    throw new ArgumentOutOfRangeException(nameof(ScriptState.MouseMovementMode), ScriptState.MouseMovementMode, null);
             }
             
         }
@@ -178,9 +179,12 @@ namespace DolphinScript.Core.Concrete
 
                 var oldX = (int)Math.Round(xStart);
                 var oldY = (int)Math.Round(yStart);
+
                 xStart += veloX;
                 yStart += veloY;
+
                 distanceFromTargetPixel = _mouseMathService.CalculateHypotenuse(xEnd - xStart, yEnd - yStart);
+
                 newX = (int)Math.Round(xStart);
                 newY = (int)Math.Round(yStart);
 
@@ -204,13 +208,27 @@ namespace DolphinScript.Core.Concrete
             }
         }
 
-        private void LinearSmoothMove(Point newPosition, int steps)
+        private void LinearSmoothMove(Point target)
         {
             Point start = _pointService.GetCursorPosition();
+            
+            var totalDistance = _mouseMathService.LineLength(start, target);
+
             PointF currentPoint = start;
 
             // Find the slope of the line segment defined by start and newPosition
-            PointF slope = new PointF(newPosition.X - start.X, newPosition.Y - start.Y);
+            PointF slope = new PointF(target.X - start.X, target.Y - start.Y);
+
+            var stepsBoxPlotResult = _randomService.GetRandomNumberBoxPlot(new BoxPlotModel
+            {
+                Target = totalDistance,
+                LowerBoundPercentile = 10,
+                UpperBoundPercentile = 10,
+                OutlierPercentageChance = 20,
+                OutlierSkewPercentage = 20
+            });
+
+            var steps = (int)Math.Round(stepsBoxPlotResult.Result) / 2;
 
             // Divide by the number of steps
             slope.X /= steps;
@@ -230,7 +248,7 @@ namespace DolphinScript.Core.Concrete
             }
 
             // Move the mouse to the final destination.
-            PInvokeReferences.SetCursorPos(newPosition);
+            PInvokeReferences.SetCursorPos(target);
         }
 
         private void TeleportMouse(Point target)

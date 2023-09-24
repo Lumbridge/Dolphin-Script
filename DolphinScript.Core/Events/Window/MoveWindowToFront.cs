@@ -10,15 +10,22 @@ namespace DolphinScript.Core.Events.Window
     {
         private readonly IWindowControlService _windowControlService;
 
+        public MoveWindowToFront()
+        {
+        }
+
+        public MoveWindowToFront(IWindowControlService windowControlService)
+        {
+            _windowControlService = windowControlService;
+        }
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
         public override void Invoke()
         {
             // update the status label on the main form
-            //
             ScriptState.Status = $"Bring window to front: {WindowTitle}.";
-
             _windowControlService.SetWindowTopMostIfExists(WindowClass, WindowTitle);
         }
 
@@ -30,7 +37,7 @@ namespace DolphinScript.Core.Events.Window
         {
             if (!IsPartOfGroup)
                 return "Move " + WindowTitle + " window to front.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move " + WindowTitle + " window to front.";
+            return GroupEventBoxString + "Move " + WindowTitle + " window to front.";
         }
     }
 }

@@ -26,7 +26,7 @@ namespace DolphinScript.Core.Events.BaseEvents
 
         public override string GetEventListBoxString()
         {
-            throw new System.NotImplementedException();
+            return $"Moving mouse to X: {CoordsToMoveTo.X} Y: {CoordsToMoveTo.Y}.";
         }
     }
 }

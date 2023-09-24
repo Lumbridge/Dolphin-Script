@@ -9,12 +9,12 @@ namespace DolphinScript.Core.Concrete
 {
     public class UserInterfaceService : IUserInterfaceService
     {
-        private readonly IDiskService _diskService;
+        private readonly IXmlSerializerService _xmlSerializerService;
         private readonly IMapper _mapper;
 
-        public UserInterfaceService(IDiskService diskService, IMapper mapper)
+        public UserInterfaceService(IXmlSerializerService xmlSerializerService, IMapper mapper)
         {
-            _diskService = diskService;
+            _xmlSerializerService = xmlSerializerService;
             _mapper = mapper;
         }
         public void SaveFileDialog(FileDialogModel model)
@@ -33,7 +33,7 @@ namespace DolphinScript.Core.Concrete
 
             using (Stream s = File.Open(saveFileDialog.FileName, FileMode.Create))
             {
-                _diskService.SaveObjectToDisk(s, ScriptState.AllEvents);
+                _xmlSerializerService.Serialize(s, ScriptState.AllEvents);
             }
         }
 
@@ -57,7 +57,7 @@ namespace DolphinScript.Core.Concrete
 
             using (Stream s = File.Open(ofd.FileName, FileMode.Open))
             {
-                return _diskService.LoadObjectFromDisk<T>(s);
+                return _xmlSerializerService.Deserialize<T>(s);
             }
         }
     }

@@ -25,7 +25,7 @@ namespace DolphinScript.Core.Concrete
         }
 
         /// <summary>
-        /// returns the hypotenuse of two double points
+        /// returns the hypotenuse of two points
         /// </summary>
         /// <returns></returns>
         public double CalculateHypotenuse(Point p1, Point p2)
@@ -52,7 +52,7 @@ namespace DolphinScript.Core.Concrete
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public double PointDirection(Point a, Point b)
+        private double PointDirection(Point a, Point b)
         {
             return Math.Atan2(b.Y + a.Y, a.X + b.X);
         }
@@ -63,7 +63,7 @@ namespace DolphinScript.Core.Concrete
         /// <param name="distance"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public double LengthDirX(double distance, double direction)
+        private double LengthDirX(double distance, double direction)
         {
             return Math.Cos(direction) * distance;
         }
@@ -74,7 +74,7 @@ namespace DolphinScript.Core.Concrete
         /// <param name="distance"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public double LengthDirY(double distance, double direction)
+        private double LengthDirY(double distance, double direction)
         {
             return Math.Sin(direction) * distance;
         }
@@ -85,7 +85,7 @@ namespace DolphinScript.Core.Concrete
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public Point GetPointCurve(Point a, Point b)
+        private Point GetPointCurve(Point a, Point b)
         {
             var p = 0.12;
 

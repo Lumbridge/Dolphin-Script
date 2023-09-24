@@ -35,7 +35,7 @@ namespace DolphinScript
 
             _container.RegisterInstance(mapper, InstanceLifetime.Singleton);
             _container.RegisterType<IEventFactory, EventFactory>();
-            _container.RegisterType<IDiskService, DiskService>();
+            _container.RegisterType<IXmlSerializerService, XmlSerializerService>();
             _container.RegisterType<IUserInterfaceService, UserInterfaceService>();
             _container.RegisterType<IGlobalMethodService, GlobalMethodService>();
             _container.RegisterType<IListService, ListService>();

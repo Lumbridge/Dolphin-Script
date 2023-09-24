@@ -103,5 +103,8 @@ namespace DolphinScript.Core.WindowsApi
         /// <returns></returns>
         [DllImport("User32.Dll")]
         public static extern long SetCursorPos(Point point);
+
+        [DllImport("User32.dll")]
+        public static extern bool IsIconic(IntPtr handle);
     }
 }

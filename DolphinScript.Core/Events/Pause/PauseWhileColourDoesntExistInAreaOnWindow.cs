@@ -46,9 +46,14 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
+            var str = $"Pause while colour {SearchColour} doesn't exist in area {ColourSearchArea.PrintArea()} on {WindowTitle} window.";
+
+            if (IsPartOfGroup)
+            {
+                str = GroupEventBoxString + str;
+            }
+                
+            return str;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DolphinScript.Core.Interfaces;
 using System;
+using DolphinScript.Core.Models;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -41,6 +42,40 @@ namespace DolphinScript.Core.Concrete
                 // return the random number using the private random object
                 return _random.NextDouble() * (maximum - minimum) + minimum;
             }
+        }
+
+        public BoxPlotResult GetRandomNumberBoxPlot(BoxPlotModel model)
+        {
+            var result = new BoxPlotResult
+            {
+                LowerBound = model.Target * (model.LowerBoundPercentile / 10) - model.Target,
+                UpperBound = model.Target * (model.UpperBoundPercentile / 10) + model.Target
+            };
+
+            result.Result = GetRandomDouble(result.LowerBound, result.UpperBound);
+
+            var outlier = GetRandomDouble(0, 100);
+
+            if (outlier >= model.OutlierPercentageChance)
+            {
+                return result;
+            }
+
+            result.WasOutlier = true;
+
+            var skewResultAmount = result.Result * (model.OutlierSkewPercentage / 100);
+
+            if (result.Result < model.Target)
+            {
+                var lowerBoundCalc = result.LowerBound - skewResultAmount;
+                result.Result = lowerBoundCalc > 0 ? lowerBoundCalc : skewResultAmount;
+            }
+            else if (result.Result > model.Target)
+            {
+                result.Result = result.UpperBound + skewResultAmount;
+            }
+
+            return result;
         }
     }
 }

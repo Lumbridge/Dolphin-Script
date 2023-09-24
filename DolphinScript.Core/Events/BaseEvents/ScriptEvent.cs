@@ -36,6 +36,9 @@ namespace DolphinScript.Core.Events.BaseEvents
         // mandatory override methods
         public abstract void Invoke();
         public abstract string GetEventListBoxString();
+        
+        public string GroupEventBoxString => "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] ";
+
         public void ExecuteWhileLoop(Action whileLoopBody, Func<bool> runCondition)
         {
             while (runCondition())

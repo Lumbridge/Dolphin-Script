@@ -15,6 +15,7 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DolphinScript.Core.Concrete;
 using DolphinScript.Interfaces;
 
 namespace DolphinScript.Forms
@@ -32,7 +33,7 @@ namespace DolphinScript.Forms
         private readonly IMapper _mapper;
         private readonly IFormManager _formManager;
 
-        private List<Control> toggleableControls = new List<Control>();
+        private readonly List<Control> _toggleableControls = new List<Control>();
 
         /// <summary>
         /// main form constructor
@@ -66,7 +67,7 @@ namespace DolphinScript.Forms
 
         private void SetFormDefaults()
         {
-            toggleableControls.AddRange(new Control[]
+            _toggleableControls.AddRange(new Control[]
             {
                 // start button
                 button_StartScript,
@@ -97,6 +98,9 @@ namespace DolphinScript.Forms
 
             NumericUpDown_MinMouseSpeed.Value = Constants.DefaultMinimumMouseSpeed;
             NumericUpDown_MaxMouseSpeed.Value = Constants.DefaultMaximumMouseSpeed;
+
+            comboBox_mouseMovementMode.Items.AddRange(Enum.GetNames(typeof(MouseMovementService.MouseMovementMode)));
+            comboBox_mouseMovementMode.SelectedIndex = 0;
         }
 
         #region Main Form Methods
@@ -121,7 +125,9 @@ namespace DolphinScript.Forms
                             foreach (var subEvent in ev.EventsInGroup)
                             {
                                 if (_formManager.UpdateListboxCurrentEventIndex(subEvent))
+                                {
                                     break;
+                                }
 
                                 // call overriden do method
                                 subEvent.Invoke();
@@ -141,7 +147,7 @@ namespace DolphinScript.Forms
             button_StartScript.SetPropertyThreadSafe(() => button_StartScript.Text, Constants.StartScript);
 
             // if the loop has ended then we reenable the form buttons
-            _formManager.SetControlsEnabled(toggleableControls, true);
+            _formManager.SetControlsEnabled(_toggleableControls, true);
         }
 
         private void UpdateStatusLabels()
@@ -258,7 +264,7 @@ namespace DolphinScript.Forms
                 button_StartScript.Text = Constants.ScriptRunning;
 
                 // disable controls while script is running
-                _formManager.SetControlsEnabled(toggleableControls, false);
+                _formManager.SetControlsEnabled(_toggleableControls, false);
 
                 // run the main loop
                 Task.Run(MainLoop);
@@ -604,7 +610,7 @@ namespace DolphinScript.Forms
         {
             ScriptState.IsRunning = false;
             ScriptState.IsRegistering = false;
-            _formManager.SetControlsEnabled(toggleableControls, true);
+            _formManager.SetControlsEnabled(_toggleableControls, true);
         }
 
         /// <summary>
@@ -633,6 +639,11 @@ namespace DolphinScript.Forms
             var model = new FileDialogModel();
 
             var loadedEvents = _userInterfaceService.OpenFileDialog<List<ScriptEvent>>(model);
+
+            if (loadedEvents == null)
+            {
+                return;
+            }
 
             foreach (var loadedEvent in loadedEvents)
             {
@@ -1631,5 +1642,10 @@ namespace DolphinScript.Forms
         }
 
         #endregion
+
+        private void comboBox_mouseMovementMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ScriptState.MouseMovementMode = (MouseMovementService.MouseMovementMode) Enum.Parse(typeof(MouseMovementService.MouseMovementMode), comboBox_mouseMovementMode.Text);
+        }
     }
 }
