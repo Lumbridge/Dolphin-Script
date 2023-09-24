@@ -1,8 +1,8 @@
 ﻿using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -21,16 +21,13 @@ namespace DolphinScript.Core.Concrete
         public Point FindAreaCenter(Point p1, Point p2)
         {
             // will store the center point we will be returning
-            //
             Point temp = new Point();
 
             // work out mid points of x and y individually
-            //
             temp.X = (p1.X + p2.X) / 2;
             temp.Y = (p1.Y + p2.Y) / 2;
 
             // return the centerpoint of the area
-            //
             return temp;
         }
 
@@ -43,16 +40,13 @@ namespace DolphinScript.Core.Concrete
         public Point GetRandomPointInArea(Point topleftPoint, Point bottomRightPoint)
         {
             // will store a random point in the area
-            //
             Point temp = new Point();
 
             // randomise x and y coordinate using the area bounds as maximum random number
-            //
             temp.X = _randomService.GetRandomNumber(topleftPoint.X, bottomRightPoint.X);
             temp.Y = _randomService.GetRandomNumber(topleftPoint.Y, bottomRightPoint.Y);
 
             // return the randomised point
-            //
             return temp;
         }
 
@@ -64,16 +58,13 @@ namespace DolphinScript.Core.Concrete
         public Point GetRandomPointInArea(CommonTypes.Rect area)
         {
             // will store a random point in the area
-            //
             Point temp = new Point();
 
             // randomise x and y coordinate using the area bounds as maximum random number
-            //
-            temp.X = _randomService.GetRandomNumber(area.Left, area.Right);
-            temp.Y = _randomService.GetRandomNumber(area.Top, area.Bottom);
+            temp.X = _randomService.GetRandomNumber(area.left, area.right);
+            temp.Y = _randomService.GetRandomNumber(area.top, area.bottom);
 
             // return the randomised point
-            //
             return temp;
         }
 
@@ -84,11 +75,9 @@ namespace DolphinScript.Core.Concrete
         public Point GetCursorPosition()
         {
             // gets the position of the cursor
-            //
             PInvokeReferences.GetCursorPos(out var cursorPos);
 
             // returns the cursor to the call
-            //
             return cursorPos;
         }
 
@@ -103,20 +92,16 @@ namespace DolphinScript.Core.Concrete
             var windowBounds = new CommonTypes.Rect();
 
             // gets the window location
-            //
             PInvokeReferences.GetWindowRect(window, ref windowBounds);
 
             // gets the cursor position
-            //
             PInvokeReferences.GetCursorPos(out var cursorPos);
 
             // work out the cursor position so it's relative to the window position
-            //
-            cursorPos.X -= windowBounds.Left;
-            cursorPos.Y -= windowBounds.Top;
+            cursorPos.X -= windowBounds.left;
+            cursorPos.Y -= windowBounds.top;
 
             // return the cursor position on the window
-            //
             return cursorPos;
         }
 
@@ -126,53 +111,40 @@ namespace DolphinScript.Core.Concrete
         /// <returns></returns>
         public IList<Point> RegisterClickArea()
         {
-            // used to store the top left and bottom right of the registered area
-            //
-
             // this is returned to the caller containing points p1 and p2
-            //
             var area = new List<Point>();
 
             // these will be used in our registering mechanics
-            //
             var areaRegistered = false;
 
             while (areaRegistered == false)
             {
                 // listen for the shift key to start the area register
-                //
                 if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
                 {
                     // store the top left of the register area
-                    //
                     Point p1;
                     PInvokeReferences.GetCursorPos(out p1);
 
                     // add our top left point to the area list
-                    //
                     area.Add(p1);
 
                     // now we wait here until the user releases the shift key
-                    //
                     while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
 
                     // when user releases shift key we register the bottom right point
-                    //
                     Point p2;
                     PInvokeReferences.GetCursorPos(out p2);
 
                     // add bottom right point to area
-                    //
                     area.Add(p2);
 
                     // mark areaRegistered as true
-                    //
                     areaRegistered = true;
                 }
             }
 
             // return the registered area list
-            //
             return area;
         }
 
@@ -191,8 +163,8 @@ namespace DolphinScript.Core.Concrete
             // return the click area relative to the window position
             //
             return new CommonTypes.Rect(
-                new Point(windowLocation.Left + clickArea.Left, windowLocation.Top + clickArea.Top),
-                new Point(windowLocation.Left + clickArea.Right, windowLocation.Top + clickArea.Bottom));
+                new Point(windowLocation.left + clickArea.left, windowLocation.top + clickArea.top),
+                new Point(windowLocation.left + clickArea.right, windowLocation.top + clickArea.bottom));
         }
 
         /// <summary>
@@ -203,15 +175,12 @@ namespace DolphinScript.Core.Concrete
         public CommonTypes.Rect GetWindowPosition(IntPtr window)
         {
             // create a rect to store the window position
-            //
             var temp = new CommonTypes.Rect();
 
             // use the GetWindowRect function to get the window position
-            //
             PInvokeReferences.GetWindowRect(window, ref temp);
 
             // return the rect to the call
-            //
             return temp;
         }
     }

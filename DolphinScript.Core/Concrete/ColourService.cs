@@ -136,40 +136,32 @@ namespace DolphinScript.Core.Concrete
         public List<Point> GetMatchingPixelList(CommonTypes.Rect colourSearchArea, int searchColour)
         {
             // this list will store the list of pixels matching the search colour
-            //
             var matchingColourPixels = new List<Point>();
 
             // create a bitmap to use in the search process
-            //
             var b = _screenCaptureService.ScreenshotArea(colourSearchArea);
 
             // lock the bitmap image memory
-            //
             lock (b)
             {
                 // create a lockbitmap object to use in the search process
-                //
                 var lockBitmap = new LockBitmap(b);
 
                 try
                 {
                     // lock the bitmap memory
-                    //
                     lockBitmap.LockBits();
 
                     // loop through all pixels on the image
-                    //
                     for (var y = 0; y < lockBitmap.Height; y++)
                     {
                         for (var x = 0; x < lockBitmap.Width; x++)
                         {
                             // check if the current pixel matches the search colour
-                            //
                             if (lockBitmap.GetPixel(x, y).ToArgb() == searchColour)
                             {
                                 // if it matches then add the pixel to the matching pixels list
-                                //
-                                matchingColourPixels.Add(new Point(colourSearchArea.Left + x, colourSearchArea.Top + y));
+                                matchingColourPixels.Add(new Point(colourSearchArea.left + x, colourSearchArea.top + y));
                             }
                         }
                     }
@@ -177,13 +169,11 @@ namespace DolphinScript.Core.Concrete
                 finally
                 {
                     // when we're done, unlock the memory region
-                    //
                     lockBitmap.UnlockBits();
                 }
             }
 
             // return the list of matching pixels we found (if any)
-            //
             return matchingColourPixels;
         }
 
@@ -197,35 +187,28 @@ namespace DolphinScript.Core.Concrete
         public Bitmap SetMatchingColourPixels(Bitmap b, int searchColour, Color newColour)
         {
             // create a copy of the bitmap image we're going to edit
-            //
             var temp = b;
             
             // lock the bitmap memory region
-            //
             lock (temp)
             {
                 // create a lockbitmap object
-                //
                 var lockBitmap = new LockBitmap(temp);
 
                 try
                 {
                     // lock the image data
-                    //
                     lockBitmap.LockBits();
 
                     // loop through all pixels on the image
-                    //
                     for (var y = 0; y < lockBitmap.Height; y++)
                     {
                         for (var x = 0; x < lockBitmap.Width; x++)
                         {
                             // check if the current pixel colour matches the search colour
-                            //
                             if (lockBitmap.GetPixel(x, y).ToArgb() == searchColour)
                             {
                                 // change the matching search colour to the colour we want it to be changed to
-                                //
                                 lockBitmap.SetPixel(x, y, newColour);
                             }
                         }
@@ -234,13 +217,11 @@ namespace DolphinScript.Core.Concrete
                 finally
                 {
                     // when we're done, unlock the memory region
-                    //
                     lockBitmap.UnlockBits();
                 }
             }
 
             // return the new bitmap with the new colour for the matching pixels
-            //
             return temp;
         }
 

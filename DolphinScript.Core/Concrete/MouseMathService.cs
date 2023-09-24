@@ -25,6 +25,17 @@ namespace DolphinScript.Core.Concrete
         }
 
         /// <summary>
+        /// returns the hypotenuse of two double points
+        /// </summary>
+        /// <returns></returns>
+        public double CalculateHypotenuse(Point p1, Point p2)
+        {
+            var x = p2.X - p1.X;
+            var y = p2.Y - p1.Y;
+            return Math.Sqrt(x * x + y * y);
+        }
+
+        /// <summary>
         /// Returns the length between two points (Euclidean calc)
         /// </summary>
         /// <param name="a"></param>

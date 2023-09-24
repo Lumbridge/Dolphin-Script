@@ -4,9 +4,11 @@ using DolphinScript.Forms;
 using System;
 using System.Windows.Forms;
 using AutoMapper;
+using DolphinScript.Concrete;
 using Unity;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Models;
+using DolphinScript.Interfaces;
 
 namespace DolphinScript
 {
@@ -30,6 +32,7 @@ namespace DolphinScript
             IMapper mapper = mapperConfiguration.CreateMapper();
 
             _container = new UnityContainer();
+
             _container.RegisterInstance(mapper, InstanceLifetime.Singleton);
             _container.RegisterType<IEventFactory, EventFactory>();
             _container.RegisterType<IDiskService, DiskService>();
@@ -43,6 +46,7 @@ namespace DolphinScript
             _container.RegisterType<IScreenCaptureService, ScreenCaptureService>();
             _container.RegisterType<IColourService, ColourService>();
             _container.RegisterType<IWindowControlService, WindowControlService>();
+            _container.RegisterType<IFormManager, FormManager>();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

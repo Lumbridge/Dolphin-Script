@@ -20,8 +20,7 @@ namespace DolphinScript.Core.Events.Pause
         public override void Invoke()
         {
             // update the status label on the main form
-            //
-            ScriptState.Status = $"Random pause Between {DelayMinimum} & {DelayMaximum} secs.";
+            ScriptState.Status = $"Random pause Between {DelayMinimum} and {DelayMaximum} seconds.";
 
             base.Invoke();
         }

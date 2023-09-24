@@ -22,9 +22,9 @@ namespace DolphinScript.Core.Events.Mouse
             // bring the window associated with this event to the front
             WindowControlService.BringWindowToFront(windowHandle);
 
-            var newClickPoint = new Point(
-                PointService.GetWindowPosition(windowHandle).Left + CoordsToMoveTo.X,
-                PointService.GetWindowPosition(windowHandle).Top + CoordsToMoveTo.Y);
+            var windowLocation = PointService.GetWindowPosition(windowHandle);
+
+            var newClickPoint = new Point(windowLocation.left + CoordsToMoveTo.X, windowLocation.top + CoordsToMoveTo.Y);
 
             MouseMovementService.MoveMouseToPoint(newClickPoint);
         }

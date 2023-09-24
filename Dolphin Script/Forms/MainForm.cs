@@ -1,14 +1,4 @@
-﻿using DolphinScript.Core.WindowsApi;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-using AutoMapper;
+﻿using AutoMapper;
 using DolphinScript.Core.Classes;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Events.Keyboard;
@@ -17,7 +7,15 @@ using DolphinScript.Core.Events.Pause;
 using DolphinScript.Core.Extensions;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.Models;
-using Unity;
+using DolphinScript.Core.WindowsApi;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using DolphinScript.Interfaces;
 
 namespace DolphinScript.Forms
 {
@@ -32,6 +30,9 @@ namespace DolphinScript.Forms
         private readonly IEventFactory _eventFactory;
         private readonly IUserInterfaceService _userInterfaceService;
         private readonly IMapper _mapper;
+        private readonly IFormManager _formManager;
+
+        private List<Control> toggleableControls = new List<Control>();
 
         /// <summary>
         /// main form constructor
@@ -39,7 +40,7 @@ namespace DolphinScript.Forms
         public MainForm(IColourService colourService, IPointService pointService, 
             IWindowControlService windowControlService, IGlobalMethodService globalMethodService, 
             IListService listService, IScreenCaptureService screenCaptureService, IEventFactory eventFactory, 
-            IUserInterfaceService userInterfaceService, IMapper mapper)
+            IUserInterfaceService userInterfaceService, IMapper mapper, IFormManager formManager)
         {
             InitializeComponent();
 
@@ -52,12 +53,40 @@ namespace DolphinScript.Forms
             _eventFactory = eventFactory;
             _userInterfaceService = userInterfaceService;
             _mapper = mapper;
+            _formManager = formManager;
+
+            SetFormDefaults();
+
+            // run the cursor update method on a new thread
+            Task.Run(FormLoop);
+
+            // run the start script hotkey listener
+            Task.Run(StartScriptHotkeyListener);
+        }
+
+        private void SetFormDefaults()
+        {
+            toggleableControls.AddRange(new Control[]
+            {
+                // start button
+                button_StartScript,
+                // move element buttons
+                button_MoveEventUp,
+                button_RemoveEvent,
+                button_MoveEventDown,
+                // mouse speed toggles
+                NumericUpDown_MinMouseSpeed,
+                NumericUpDown_MaxMouseSpeed,
+                // repeat group toggles
+                NumericUpDown_RepeatAmount,
+                button_AddRepeatGroup,
+                button_RemoveRepeatGroup
+            });
 
             ScriptState.Status = Constants.IdleStatus;
             ScriptState.LastAction = Constants.NoLastAction;
 
             // add all keys to the key event combo box
-            //
             foreach (var key in Constants.SpecialKeys)
             {
                 ComboBox_SpecialKeys.Items.Add(key);
@@ -68,12 +97,6 @@ namespace DolphinScript.Forms
 
             NumericUpDown_MinMouseSpeed.Value = Constants.DefaultMinimumMouseSpeed;
             NumericUpDown_MaxMouseSpeed.Value = Constants.DefaultMaximumMouseSpeed;
-
-            // run the cursor update method on a new thread
-            Task.Run(FormLoop);
-
-            // run the start script hotkey listener
-            Task.Run(StartScriptHotkeyListener);
         }
 
         #region Main Form Methods
@@ -97,7 +120,7 @@ namespace DolphinScript.Forms
                             // do each sub-event in the group list
                             foreach (var subEvent in ev.EventsInGroup)
                             {
-                                if (UpdateListboxCurrentEventIndex(subEvent))
+                                if (_formManager.UpdateListboxCurrentEventIndex(subEvent))
                                     break;
 
                                 // call overriden do method
@@ -105,17 +128,10 @@ namespace DolphinScript.Forms
                             }
                         }
                     }
-                    else if (ev.IsPartOfGroup && ev.EventsInGroup.IndexOf(ev) != 0)
+                    else if (!ev.IsPartOfGroup)
                     {
-                        // skip the event because it was completed by the group loop
-                    }
-                    else
-                    {
-                        if (UpdateListboxCurrentEventIndex(ev))
+                        if (_formManager.UpdateListboxCurrentEventIndex(ev))
                             break;
-
-                        // each script event has overriden the Invoke method so each
-                        // script event completes their own Invoke method before the next one is carried out
                         ev.Invoke();
                     }
                 }
@@ -125,52 +141,7 @@ namespace DolphinScript.Forms
             button_StartScript.SetPropertyThreadSafe(() => button_StartScript.Text, Constants.StartScript);
 
             // if the loop has ended then we reenable the form buttons
-            ToggleControls(true);
-        }
-
-        /// <summary>
-        /// toggles certain controls on the form between enabled and disabled
-        /// </summary>
-        /// <param name="state"></param>
-        private void ToggleControls(bool state)
-        {
-            // start button
-            button_StartScript.SetPropertyThreadSafe(() => Enabled, state);
-
-            // move element buttons
-            button_MoveEventUp.SetPropertyThreadSafe(() => Enabled, state);
-            button_RemoveEvent.SetPropertyThreadSafe(() => Enabled, state);
-            button_MoveEventDown.SetPropertyThreadSafe(() => Enabled, state);
-
-            // mouse speed toggles
-            NumericUpDown_MinMouseSpeed.SetPropertyThreadSafe(() => Enabled, state);
-            NumericUpDown_MaxMouseSpeed.SetPropertyThreadSafe(() => Enabled, state);    
-
-            // repeat group toggles
-            NumericUpDown_RepeatAmount.SetPropertyThreadSafe(() => Enabled, state);
-            button_AddRepeatGroup.SetPropertyThreadSafe(() => Enabled, state);
-            button_RemoveRepeatGroup.SetPropertyThreadSafe(() => Enabled, state);
-        }
-
-        /// <summary>
-        /// clears the contents of the main form listbox and updates it with the items in the event list
-        /// </summary>
-        public void UpdateListBox()
-        {
-            // clear the listbox
-            ListBox_Events.Invoke(new Action(() =>
-            {
-                ListBox_Events.Items.Clear();
-            }));
-
-            // add all events in the event list to the listbox
-            foreach (var scriptEvent in ScriptState.AllEvents)
-            {
-                ListBox_Events.Invoke(new Action(() =>
-                {
-                    ListBox_Events.Items.Add(scriptEvent.GetEventListBoxString());
-                }));
-            }
+            _formManager.SetControlsEnabled(toggleableControls, true);
         }
 
         private void UpdateStatusLabels()
@@ -223,7 +194,7 @@ namespace DolphinScript.Forms
         /// <returns></returns>
         private void FormLoop()
         {
-            Thread.Sleep(250);
+            Thread.Sleep(1);
 
             // stop updating if the form is being disposed
             while (!IsDisposed && !Disposing)
@@ -259,33 +230,6 @@ namespace DolphinScript.Forms
             }
         }
 
-        /// <summary>
-        /// updates the selected index in the events listbox and provides a way of breaking the main
-        /// loop if the script should no longer be running
-        /// </summary>
-        /// <param name="ev"></param>
-        /// <returns></returns>
-        private bool UpdateListboxCurrentEventIndex(ScriptEvent ev)
-        {
-            if (!ScriptState.IsRunning)
-            {
-                ListBox_Events.Invoke(new Action(() =>
-                {
-                    ListBox_Events.ClearSelected();
-                })); 
-                return true;
-            }
-
-            ListBox_Events.Invoke(new Action(() =>
-            {
-                ListBox_Events.ClearSelected();
-            }));
-
-            ListBox_Events.SetPropertyThreadSafe(() => ListBox_Events.SelectedIndex, ScriptState.AllEvents.IndexOf(ev));
-
-            return false;
-        }
-
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Process.GetCurrentProcess().Kill();
@@ -314,7 +258,7 @@ namespace DolphinScript.Forms
                 button_StartScript.Text = Constants.ScriptRunning;
 
                 // disable controls while script is running
-                ToggleControls(false);
+                _formManager.SetControlsEnabled(toggleableControls, false);
 
                 // run the main loop
                 Task.Run(MainLoop);
@@ -363,7 +307,6 @@ namespace DolphinScript.Forms
                 {
                     // get the size of the group we need to shift
                     var groupSize = selected.EventsInGroup.Count;
-
                     // shift the events one by one until the non-group event is below the group
                     _listService.ShiftItem(ScriptState.AllEvents, aboveIndex, groupSize);
                 }
@@ -373,10 +316,8 @@ namespace DolphinScript.Forms
                     // get the indices of the events in their group-event lists so we can swap them
                     var selectedGroupIndex = selected.GroupEventIndex;
                     var aboveGroupIndex = above.GroupEventIndex;
-
                     // swap the events in the main event list
                     _listService.Swap(ScriptState.AllEvents, selectedIndex, aboveIndex);
-
                     // swap the events within the group list
                     _listService.Swap(ScriptState.AllGroups[ScriptState.AllEvents[selectedIndex].GroupId - 1], selectedGroupIndex, aboveGroupIndex);
                 }
@@ -385,7 +326,6 @@ namespace DolphinScript.Forms
                 {
                     var aboveGroupSize = above.EventsInGroup.Count;
                     var selectedGroupSize = selected.EventsInGroup.Count;
-
                     _listService.ShiftRange(ScriptState.AllEvents, aboveIndex - aboveGroupSize + 1, aboveGroupSize, selectedGroupSize);
                 }
                 // some error occurred
@@ -394,7 +334,7 @@ namespace DolphinScript.Forms
                     MessageBox.Show(Constants.ErrorMovingEvent);
                 }
 
-                UpdateListBox();
+                _formManager.UpdateListBox(ListBox_Events);
 
                 // select the item again after it's moved so the user can move it again if needed
                 if (selected.IsPartOfGroup)
@@ -484,7 +424,7 @@ namespace DolphinScript.Forms
                     MessageBox.Show(Constants.ErrorMovingEvent);
                 }
 
-                UpdateListBox();
+                _formManager.UpdateListBox(ListBox_Events);
 
                 // select the item again after it's moved so the user can move it again if needed
                 if (selectedIndex + 1 <= ListBox_Events.Items.Count)
@@ -511,7 +451,7 @@ namespace DolphinScript.Forms
                 ScriptState.AllEvents.RemoveAt(temp);
 
                 // update the listbox to show the changes
-                UpdateListBox();
+                _formManager.UpdateListBox(ListBox_Events);
 
                 // select the item next to the one we removed so the user quickly delete multiple events if needed
                 if (temp >= ListBox_Events.Items.Count)
@@ -586,7 +526,7 @@ namespace DolphinScript.Forms
 
                 // update the listbox to show any changes
                 //
-                UpdateListBox();
+                _formManager.UpdateListBox(ListBox_Events);
             }
             else
             {
@@ -646,7 +586,7 @@ namespace DolphinScript.Forms
 
                     // update the main event list box
                     //
-                    UpdateListBox();
+                    _formManager.UpdateListBox(ListBox_Events);
                 }
             }
         }
@@ -662,9 +602,9 @@ namespace DolphinScript.Forms
         /// <param name="e"></param>
         private void RefreshFormToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToggleControls(true);
             ScriptState.IsRunning = false;
             ScriptState.IsRegistering = false;
+            _formManager.SetControlsEnabled(toggleableControls, true);
         }
 
         /// <summary>
@@ -702,7 +642,7 @@ namespace DolphinScript.Forms
             }
 
             // show the changes in the listbox
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         /// <summary>
@@ -813,7 +753,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<FixedPause>();
             ev.DelayDuration = (double) fixedDelayNumberBox.Value;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_AddRandomPause_Click(object sender, EventArgs e)
@@ -822,7 +762,7 @@ namespace DolphinScript.Forms
             ev.DelayMinimum = (double)lowerRandomDelayNumberBox.Value;
             ev.DelayMaximum = (double)upperRandomDelayNumberBox.Value;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertPauseWhileColourExistsInArea_Click(object sender, EventArgs e)
@@ -864,7 +804,7 @@ namespace DolphinScript.Forms
 
             // update the event list box with the new event
             //
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         #endregion
@@ -919,7 +859,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LeftClick;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertMiddleMouseClickEvent_Click(object sender, EventArgs e)
@@ -927,7 +867,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MiddleClick;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertRightClickEvent_Click(object sender, EventArgs e)
@@ -935,7 +875,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RightClick;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertLMBDown_Click(object sender, EventArgs e)
@@ -943,7 +883,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LmbDown;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertMMBDown_Click(object sender, EventArgs e)
@@ -951,7 +891,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MmbDown;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertRMBDown_Click(object sender, EventArgs e)
@@ -959,7 +899,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RmbDown;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertLMBUp_Click(object sender, EventArgs e)
@@ -967,7 +907,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LmbUp;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertMMBUp_Click(object sender, EventArgs e)
@@ -975,7 +915,7 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MmbUp;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
 
         private void Button_InsertRMBUp_Click(object sender, EventArgs e)
@@ -983,10 +923,9 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RmbUp;
             ScriptState.AllEvents.Add(ev);
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
         }
-
-
+        
         #endregion Mouse Click Button Events
 
         #region Pause Event Register Loops
@@ -1052,7 +991,7 @@ namespace DolphinScript.Forms
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
 
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
 
             Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
         }
@@ -1117,7 +1056,7 @@ namespace DolphinScript.Forms
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
 
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
 
             Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
         }
@@ -1185,7 +1124,7 @@ namespace DolphinScript.Forms
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
 
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
 
             Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
         }
@@ -1253,7 +1192,7 @@ namespace DolphinScript.Forms
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
 
-            UpdateListBox();
+            _formManager.UpdateListBox(ListBox_Events);
 
             Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
         }
@@ -1283,7 +1222,7 @@ namespace DolphinScript.Forms
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
 
-                    UpdateListBox();
+                    _formManager.UpdateListBox(ListBox_Events);
 
                     Thread.Sleep(1);
                 }
@@ -1323,7 +1262,7 @@ namespace DolphinScript.Forms
                     ev.ClickArea = new CommonTypes.Rect(p1, p2);
                     ScriptState.AllEvents.Add(ev);
 
-                    UpdateListBox();
+                    _formManager.UpdateListBox(ListBox_Events);
 
                     Thread.Sleep(1);
                 }
@@ -1362,7 +1301,7 @@ namespace DolphinScript.Forms
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
 
-                    UpdateListBox();
+                    _formManager.UpdateListBox(ListBox_Events);
 
                     Thread.Sleep(100);
                 }
@@ -1404,7 +1343,7 @@ namespace DolphinScript.Forms
 
                     ScriptState.AllEvents.Add(ev);
 
-                    UpdateListBox();
+                    _formManager.UpdateListBox(ListBox_Events);
 
                     Thread.Sleep(1);
                 }
@@ -1462,7 +1401,7 @@ namespace DolphinScript.Forms
                             ev.SearchColour = searchColour.ToArgb();
                             ScriptState.AllEvents.Add(ev);
 
-                            UpdateListBox();
+                            _formManager.UpdateListBox(ListBox_Events);
 
                             Thread.Sleep(1);
                         }
@@ -1532,7 +1471,7 @@ namespace DolphinScript.Forms
 
                             ScriptState.AllEvents.Add(ev);
 
-                            UpdateListBox();
+                            _formManager.UpdateListBox(ListBox_Events);
 
                             Thread.Sleep(1);
                         }
@@ -1659,7 +1598,7 @@ namespace DolphinScript.Forms
                             ScriptState.AllEvents.Add(ev);
 
                             // update the event listbox to show the new event
-                            UpdateListBox();
+                            _formManager.UpdateListBox(ListBox_Events);
 
                             // set the button text back to normal
                             Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);

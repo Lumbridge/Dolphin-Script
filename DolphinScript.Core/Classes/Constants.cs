@@ -6,8 +6,8 @@ namespace DolphinScript.Core.Classes
 {
     public class Constants
     {
-        public static int DefaultMinimumMouseSpeed = 70;
-        public static int DefaultMaximumMouseSpeed = 100;
+        public static int DefaultMinimumMouseSpeed = 40;
+        public static int DefaultMaximumMouseSpeed = 60;
 
         public static string SelectingPointToClick => $"Selecting point to click... ({DefaultStopCancelButton} to finish).";
         public static string SelectingPointsToClick => $"Selecting points to click... ({DefaultStopCancelButton} to finish).";

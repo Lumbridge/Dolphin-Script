@@ -1,15 +1,13 @@
 ﻿using DolphinScript.Core.WindowsApi;
 using System.Drawing;
+using static DolphinScript.Core.Concrete.MouseMovementService;
 
 namespace DolphinScript.Core.Interfaces
 {
     public interface IMouseMovementService
     {
-        void MoveMouseToPoint(Point end);
+        void MoveMouseToPoint(Point target, MouseMovementMode mode = MouseMovementMode.Realistic);
 
         void MoveMouseToColour(CommonTypes.Rect searchArea, int searchColour);
-
-        void MouseMoveCoreLoop(Point start, Point end, double gravity, 
-            double pushForce, double minWait, double maxWait, double maxStep, double targetArea);
     }
 }

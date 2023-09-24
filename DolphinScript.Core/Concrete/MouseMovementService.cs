@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using DolphinScript.Core.Classes;
+using System.Threading;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -14,6 +15,13 @@ namespace DolphinScript.Core.Concrete
         private readonly IMouseMathService _mouseMathService;
         private readonly IColourService _colourService;
 
+        public enum MouseMovementMode
+        {
+            Realistic,
+            Linear,
+            Teleport
+        }
+
         public MouseMovementService(IRandomService randomService, IPointService pointService, IMouseMathService mouseMathService, IColourService colourService)
         {
             _randomService = randomService;
@@ -23,39 +31,50 @@ namespace DolphinScript.Core.Concrete
         }
 
         // mouse movement variables
-        //
-        private double Gravity => _randomService.GetRandomDouble(8.0, 10.0);
-        private double PushForce => _randomService.GetRandomDouble(2.0, 4.0);
-        private double MinWait => _randomService.GetRandomDouble(9.0, 11.0);
-        private double MaxWait => _randomService.GetRandomDouble(14.0, 16.0);
-        private double MaxStep => _randomService.GetRandomDouble(9.0, 11.0);
-        private double TargetArea => _randomService.GetRandomDouble(14.0, 16.0);
+        private double Gravity => _randomService.GetRandomDouble(8.0, 10.0); // default 9.0
+        private double PushForce => _randomService.GetRandomDouble(2.0, 4.0); // default 3.0
+        private double MinWait => _randomService.GetRandomDouble(9.0, 11.0); // default 8.0
+        private double MaxWait => _randomService.GetRandomDouble(14.0, 16.0); // default 15.0
+        private double MaxStep => _randomService.GetRandomDouble(9.0, 11.0); // default 10.0
+        private double TargetArea => _randomService.GetRandomDouble(13.0, 15.0); // default 10.0
 
         /// <summary>
-        /// moves the mouse from it's current location to the end point passed in
+        /// moves the mouse from it's current location to the target point passed in
         /// </summary>
-        /// <param name="end"></param>
-        public void MoveMouseToPoint(Point end)
+        /// <param name="target"></param>
+        /// <param name="mode">mouse movement mode to use</param>
+        public void MoveMouseToPoint(Point target, MouseMovementMode mode = MouseMovementMode.Realistic)
         {
             // store the current mouse position to pass into the core mouse move loop
-            //
             var start = _pointService.GetCursorPosition();
 
             // generate a random mouse speed close to the one set on the form
-            //
             var randomSpeed = Math.Max((_randomService.GetRandomNumber(0, ScriptState.MinimumMouseSpeed) / 2.0 + ScriptState.MaximumMouseSpeed) / 10.0, 0.1);
 
             // call the main mouse move loop and pass in the global params
-            //
-            MouseMoveCoreLoop(
-                start,
-                end,
-                Gravity,
-                PushForce,
-                MinWait / randomSpeed,
-                MaxWait / randomSpeed,
-                MaxStep * randomSpeed,
-                TargetArea * randomSpeed);
+            switch (mode)
+            {
+                case MouseMovementMode.Realistic:
+                    WindMouse(
+                        start,
+                        target,
+                        Gravity,
+                        PushForce,
+                        MinWait / randomSpeed,
+                        MaxWait / randomSpeed,
+                        MaxStep * randomSpeed,
+                        TargetArea * randomSpeed);
+                    break;
+                case MouseMovementMode.Linear:
+                    LinearSmoothMove(target, 200);
+                    break;
+                case MouseMovementMode.Teleport:
+                    TeleportMouse(target);
+                    break;
+                default:    
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+            
         }
 
         /// <summary>
@@ -82,7 +101,9 @@ namespace DolphinScript.Core.Concrete
                     PInvokeReferences.GetCursorPos(out pos);
                 }
                 else
+                {
                     break;
+                }
             }
         }
 
@@ -90,36 +111,35 @@ namespace DolphinScript.Core.Concrete
         /// this function is the core mouse moving method, needs to be cleaned up...
         /// </summary>
         /// <param name="start"></param>
-        /// <param name="end"></param>
+        /// <param name="target"></param>
         /// <param name="gravity"></param>
         /// <param name="pushForce"></param>
         /// <param name="minWait"></param>
         /// <param name="maxWait"></param>
         /// <param name="maxStep"></param>
         /// <param name="targetArea"></param>
-        public void MouseMoveCoreLoop(
+        private void WindMouse(
             Point start,
-            Point end,
+            Point target,
             double gravity,
             double pushForce,
             double minWait, double maxWait,
             double maxStep, double targetArea)
         {
-            double xs = start.X, ys = start.Y;
-            double xe = end.X, ye = end.Y;
+            double xStart = start.X, yStart = start.Y;
+            double xEnd = target.X, yEnd = target.Y;
 
             double windX = 0, windY = 0, veloX = 0, veloY = 0;
-            double veloMag, step;
-            int oldY, newX = (int)Math.Round(xs), newY = (int)Math.Round(ys);
+            int newX = (int)Math.Round(xStart), newY = (int)Math.Round(yStart);
 
             var waitDiff = maxWait - minWait;
             var sqrt2 = Math.Sqrt(2.0);
             var sqrt3 = Math.Sqrt(3.0);
             var sqrt5 = Math.Sqrt(5.0);
 
-            var distanceFromTargetPixel = _mouseMathService.CalculateHypotenuse(xe - xs, ye - ys);
+            var distanceFromTargetPixel = _mouseMathService.CalculateHypotenuse(start, target);
 
-            while (distanceFromTargetPixel > 1.0)
+            while (distanceFromTargetPixel > 1.0 && ScriptState.IsRunning)
             {
                 pushForce = Math.Min(pushForce, distanceFromTargetPixel);
 
@@ -134,49 +154,88 @@ namespace DolphinScript.Core.Concrete
                     windX /= sqrt2;
                     windY /= sqrt2;
                     if (maxStep < 3)
+                    {
                         maxStep = _randomService.GetRandomNumber(0, 3) + 3.0;
+                    }
                     else
+                    {
                         maxStep /= sqrt5;
+                    }
                 }
 
                 veloX += windX;
                 veloY += windY;
-                veloX += gravity * (xe - xs) / distanceFromTargetPixel;
-                veloY += gravity * (ye - ys) / distanceFromTargetPixel;
+                veloX += gravity * (xEnd - xStart) / distanceFromTargetPixel;
+                veloY += gravity * (yEnd - yStart) / distanceFromTargetPixel;
 
                 if (_mouseMathService.CalculateHypotenuse(veloX, veloY) > maxStep)
                 {
                     var randomDist = maxStep / 2.0 + _randomService.GetRandomNumber(0, (int)Math.Round(maxStep) / 2);
-                    veloMag = _mouseMathService.CalculateHypotenuse(veloX, veloY);
+                    var veloMag = _mouseMathService.CalculateHypotenuse(veloX, veloY);
                     veloX = (veloX / veloMag) * randomDist;
                     veloY = (veloY / veloMag) * randomDist;
                 }
 
-                var oldX = (int)Math.Round(xs);
-                oldY = (int)Math.Round(ys);
-                xs += veloX;
-                ys += veloY;
-                distanceFromTargetPixel = _mouseMathService.CalculateHypotenuse(xe - xs, ye - ys);
-                newX = (int)Math.Round(xs);
-                newY = (int)Math.Round(ys);
+                var oldX = (int)Math.Round(xStart);
+                var oldY = (int)Math.Round(yStart);
+                xStart += veloX;
+                yStart += veloY;
+                distanceFromTargetPixel = _mouseMathService.CalculateHypotenuse(xEnd - xStart, yEnd - yStart);
+                newX = (int)Math.Round(xStart);
+                newY = (int)Math.Round(yStart);
 
                 if (oldX != newX || oldY != newY)
+                {
                     PInvokeReferences.SetCursorPos(newX, newY);
+                }
 
-                step = _mouseMathService.CalculateHypotenuse(xs - oldX, ys - oldY);
+                var step = _mouseMathService.CalculateHypotenuse(xStart - oldX, yStart - oldY);
                 var wait = (int)Math.Round(waitDiff * (step / maxStep) + minWait);
 
                 Task.WaitAll(Task.Delay(wait));
             }
 
-            var endX = (int)Math.Round(xe);
-            var endY = (int)Math.Round(ye);
-
-            if (!ScriptState.IsRunning)
-                return;
+            var endX = (int)Math.Round(xEnd);
+            var endY = (int)Math.Round(yEnd);
 
             if (endX != newX || endY != newY)
+            {
                 PInvokeReferences.SetCursorPos(endX, endY);
+            }
+        }
+
+        private void LinearSmoothMove(Point newPosition, int steps)
+        {
+            Point start = _pointService.GetCursorPosition();
+            PointF currentPoint = start;
+
+            // Find the slope of the line segment defined by start and newPosition
+            PointF slope = new PointF(newPosition.X - start.X, newPosition.Y - start.Y);
+
+            // Divide by the number of steps
+            slope.X /= steps;
+            slope.Y /= steps;
+
+            // Move the mouse to each iterative point.
+            for (var i = 0; i < steps; i++)
+            {
+                if (!ScriptState.IsRunning)
+                {
+                    return;
+                }
+
+                currentPoint = new PointF(currentPoint.X + slope.X, currentPoint.Y + slope.Y);
+                PInvokeReferences.SetCursorPos(Point.Round(currentPoint));
+                Thread.Sleep(1);
+            }
+
+            // Move the mouse to the final destination.
+            PInvokeReferences.SetCursorPos(newPosition);
+        }
+
+        private void TeleportMouse(Point target)
+        {
+            PInvokeReferences.SetCursorPos(target);
         }
     }
 }

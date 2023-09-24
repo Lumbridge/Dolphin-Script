@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace DolphinScript.Core.WindowsApi
 {
@@ -228,15 +229,16 @@ namespace DolphinScript.Core.WindowsApi
         /// struct used to store a rect area, offers extra functionality
         /// </summary>
         [Serializable]
+        [StructLayout(LayoutKind.Sequential)]
         public struct Rect
         {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
+            public int left;
+            public int top;
+            public int right;
+            public int bottom;
 
-            public int Height { get { return Bottom - Top; } }
-            public int Width { get { return Right - Left; } }
+            public int Height { get { return bottom - top; } }
+            public int Width { get { return right - left; } }
 
             /// <summary>
             /// RECT constructor which takes two points (TopLeft & BottomRight points)
@@ -245,10 +247,10 @@ namespace DolphinScript.Core.WindowsApi
             /// <param name="bottomRight"></param>
             public Rect(Point topLeft, Point bottomRight)
             {
-                Top = topLeft.Y;
-                Left = topLeft.X;
-                Bottom = bottomRight.Y;
-                Right = bottomRight.X;
+                top = topLeft.Y;
+                left = topLeft.X;
+                bottom = bottomRight.Y;
+                right = bottomRight.X;
             }
 
             /// <summary>
@@ -260,10 +262,10 @@ namespace DolphinScript.Core.WindowsApi
             /// <param name="right"></param>
             public Rect(int top, int left, int bottom, int right)
             {
-                this.Top = top;
-                this.Left = left;
-                this.Bottom = bottom;
-                this.Right = right;
+                this.top = top;
+                this.left = left;
+                this.bottom = bottom;
+                this.right = right;
             }
 
             /// <summary>
@@ -272,43 +274,10 @@ namespace DolphinScript.Core.WindowsApi
             /// <returns></returns>
             public string PrintArea()
             {
-                return "Top-Left XY: " + Left + ", " + Top + " Bottom-Right XY: " + Right + ", " + Bottom;
+                return "Top-Left XY: " + left + ", " + top + " Bottom-Right XY: " + right + ", " + bottom;
             }
         }
 
-        /// <summary>
-        /// this struct is used to store a point, also offers extra functionality
-        /// </summary>
-        //[Serializable]
-        //public struct Point
-        //{
-        //    public int X;
-        //    public int Y;
 
-        //    /// <summary>
-        //    /// POINT constructor takes two ints which are the x and y position of the coordinate
-        //    /// </summary>
-        //    /// <param name="x"></param>
-        //    /// <param name="y"></param>
-        //    public Point(int x, int y)
-        //    {
-        //        this.X = x;
-        //        this.Y = y;
-        //    }
-
-        //    public override string ToString()
-        //    {
-        //        return $"X: {X} Y: {Y}";
-        //    }
-
-        //    /// <summary>
-        //    /// converts the normal C# point to our POINT structure
-        //    /// </summary>
-        //    /// <param name="point"></param>
-        //    public static implicit operator System.Drawing.Point(Point point)
-        //    {
-        //        return new System.Drawing.Point(point.X, point.Y);
-        //    }
-        //}
     }
 }

@@ -49,7 +49,7 @@ namespace DolphinScript.Core.WindowsApi
         /// <returns></returns>
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowRect(IntPtr hWnd, ref CommonTypes.Rect lpRect);
+        public static extern bool GetWindowRect(IntPtr hWnd, ref Rect lpRect);
 
         /// <summary>
         /// imported method which allows you to get the title of a window
@@ -96,5 +96,12 @@ namespace DolphinScript.Core.WindowsApi
         /// <returns></returns>
         [DllImport("User32.Dll")]
         public static extern long SetCursorPos(int x, int y);
+
+        /// <summary>
+        /// Imported method which allows us to set the position of the mouse cursor.
+        /// </summary>
+        /// <returns></returns>
+        [DllImport("User32.Dll")]
+        public static extern long SetCursorPos(Point point);
     }
 }

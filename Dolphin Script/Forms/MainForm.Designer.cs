@@ -41,7 +41,7 @@
             this.MenuStrip_MainForm = new System.Windows.Forms.MenuStrip();
             this.ToolStripMenuItem_File = new System.Windows.Forms.ToolStripMenuItem();
             this.saveScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadScriptToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wikiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -297,7 +297,7 @@
             // 
             this.ToolStripMenuItem_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveScriptToolStripMenuItem,
-            this.loadScriptToolStripMenuItem1});
+            this.loadScriptToolStripMenuItem});
             this.ToolStripMenuItem_File.Name = "ToolStripMenuItem_File";
             this.ToolStripMenuItem_File.Size = new System.Drawing.Size(37, 20);
             this.ToolStripMenuItem_File.Text = "File";
@@ -309,12 +309,12 @@
             this.saveScriptToolStripMenuItem.Text = "Save Script";
             this.saveScriptToolStripMenuItem.Click += new System.EventHandler(this.SaveScriptToolStripMenuItem_Click);
             // 
-            // loadScriptToolStripMenuItem1
+            // loadScriptToolStripMenuItem
             // 
-            this.loadScriptToolStripMenuItem1.Name = "loadScriptToolStripMenuItem1";
-            this.loadScriptToolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
-            this.loadScriptToolStripMenuItem1.Text = "Load Script";
-            this.loadScriptToolStripMenuItem1.Click += new System.EventHandler(this.LoadScriptToolStripMenuItem1_Click);
+            this.loadScriptToolStripMenuItem.Name = "loadScriptToolStripMenuItem";
+            this.loadScriptToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.loadScriptToolStripMenuItem.Text = "Load Script";
+            this.loadScriptToolStripMenuItem.Click += new System.EventHandler(this.LoadScriptToolStripMenuItem1_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -1431,7 +1431,7 @@
         private System.Windows.Forms.MenuStrip MenuStrip_MainForm;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_File;
         private System.Windows.Forms.ToolStripMenuItem saveScriptToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadScriptToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem loadScriptToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl_ScriptEvents;
         private System.Windows.Forms.TabPage tabPage_PauseEvent;
         private System.Windows.Forms.TabPage tabPage2_KeyboardEvent;
