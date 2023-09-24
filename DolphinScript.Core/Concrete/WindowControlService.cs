@@ -109,15 +109,12 @@ namespace DolphinScript.Core.Concrete
             var handle = PInvokeReferences.FindWindow(windowClass, windowName);
 
             // we check if the window exists first then if it does
-            //
             if (WindowExists(windowClass, windowName))
             {
                 // un-minimises window
-                //
-                PInvokeReferences.ShowWindowAsync(handle, Constants.SwShowNormal);
+                PInvokeReferences.ShowWindowAsync(handle, Constants.SW_RESTORE);
 
                 // then we set it as the foreground window
-                //
                 PInvokeReferences.SetForegroundWindow(handle);
             }
         }
@@ -133,7 +130,7 @@ namespace DolphinScript.Core.Concrete
                 return;
 
             // un-minimise window
-            PInvokeReferences.ShowWindowAsync(handle, Constants.SwShowNormal);
+            PInvokeReferences.ShowWindowAsync(handle, Constants.SW_RESTORE);
 
             // sets window to front
             PInvokeReferences.SetForegroundWindow(handle);

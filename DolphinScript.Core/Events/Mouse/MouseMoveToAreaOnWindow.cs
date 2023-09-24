@@ -27,7 +27,7 @@ namespace DolphinScript.Core.Events.Mouse
             var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
 
             // update the status label on the main form
-            ScriptState.Status = $"Mouse move to area: {ClickArea.PrintArea()} on window: {WindowToClickTitle}.";
+            ScriptState.Status = $"Mouse move to area: {ClickArea.PrintArea()} on window: {WindowTitle}.";
 
             // bring the window associated with this event to the front
             WindowControlService.BringWindowToFront(windowHandle);
@@ -47,8 +47,8 @@ namespace DolphinScript.Core.Events.Mouse
         public override string GetEventListBoxString()
         {
             if (!IsPartOfGroup)
-                return "Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+                return "Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
         }
     }
 }

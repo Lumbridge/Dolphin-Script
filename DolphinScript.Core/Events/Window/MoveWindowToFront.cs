@@ -17,7 +17,7 @@ namespace DolphinScript.Core.Events.Window
         {
             // update the status label on the main form
             //
-            ScriptState.Status = $"Bring window to front: {WindowToClickTitle}.";
+            ScriptState.Status = $"Bring window to front: {WindowTitle}.";
 
             _windowControlService.SetWindowTopMostIfExists(WindowClass, WindowTitle);
         }

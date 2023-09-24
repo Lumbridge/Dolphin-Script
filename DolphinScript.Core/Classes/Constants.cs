@@ -35,9 +35,11 @@ namespace DolphinScript.Core.Classes
         public static CommonTypes.VirtualKeyStates StartScriptShortcut = CommonTypes.VirtualKeyStates.Insert;
 
         // normal/minimise/maximise window flags
-        public static int SwShowNormal = 1;
-        public static int SwShowMinimized = 2;
-        public static int SwShowMaximized = 3;
+        public static int SW_SHOWNORMAL = 1;
+        public static int SW_SHOWMINIMIZED = 2;
+        public static int SW_SHOWMAXIMIZED = 3;
+        public static int SW_SHOW = 5;
+        public static int SW_RESTORE = 9;
 
         // key pressed state
         public const int KeyPressed = 0x8000;

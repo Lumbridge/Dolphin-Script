@@ -1118,7 +1118,7 @@ namespace DolphinScript.Forms
             }
 
             var ev = _eventFactory.CreateEvent<PauseWhileColourExistsInAreaOnWindow>();
-            ev.WindowToClickTitle = _windowControlService.GetActiveWindowTitle();
+            ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.ClickArea = new CommonTypes.Rect(p1, p2);
             ev.SearchColour = searchColour.ToArgb();
@@ -1186,7 +1186,7 @@ namespace DolphinScript.Forms
             }
 
             var ev = _eventFactory.CreateEvent<PauseWhileColourDoesntExistInAreaOnWindow>();
-            ev.WindowToClickTitle = _windowControlService.GetActiveWindowTitle();
+            ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.ClickArea = new CommonTypes.Rect(p1, p2);
             ev.SearchColour = searchColour.ToArgb();
@@ -1297,7 +1297,7 @@ namespace DolphinScript.Forms
                     var p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
                     var ev = _eventFactory.CreateEvent<MouseMoveToPointOnWindow>();
-                    ev.WindowToClickTitle = _windowControlService.GetActiveWindowTitle();
+                    ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
 
@@ -1338,7 +1338,7 @@ namespace DolphinScript.Forms
                     var p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
                     var ev = _eventFactory.CreateEvent<MouseMoveToAreaOnWindow>();
-                    ev.WindowToClickTitle = _windowControlService.GetActiveWindowTitle();
+                    ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                     ev.ClickArea = new CommonTypes.Rect(p1, p2);
 
                     ScriptState.AllEvents.Add(ev);
@@ -1464,7 +1464,7 @@ namespace DolphinScript.Forms
                             var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
 
                             var ev = _eventFactory.CreateEvent<MouseMoveToColourOnWindow>();
-                            ev.WindowToClickTitle = _windowControlService.GetActiveWindowTitle();
+                            ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
                             ev.ClickArea = new CommonTypes.Rect(p1, p2);
                             ev.SearchColour = searchColour.ToArgb();
@@ -1589,7 +1589,7 @@ namespace DolphinScript.Forms
                             }
 
                             var ev = _eventFactory.CreateEvent<MouseMoveToMultiColourOnWindow>();
-                            ev.WindowToClickTitle = _windowControlService.GetActiveWindowTitle();
+                            ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
                             ev.ClickArea = new CommonTypes.Rect(p1, p2);
                             ev.SearchColours = new List<int>(searchColours);

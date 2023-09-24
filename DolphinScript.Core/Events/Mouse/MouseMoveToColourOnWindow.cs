@@ -13,10 +13,10 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Invoke()
         {
-            var windowHandle = WindowControlService.GetWindowHandle(WindowToClickTitle);
+            var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
 
             // update the status label on the main form
-            ScriptState.Status = $"Mouse move to colour: {SearchColour} on window: {WindowToClickTitle}.";
+            ScriptState.Status = $"Mouse move to colour: {SearchColour} on window: {WindowTitle}.";
 
             // bring the window associated with this event to the front
             WindowControlService.BringWindowToFront(windowHandle);
@@ -34,8 +34,8 @@ namespace DolphinScript.Core.Events.Mouse
         public override string GetEventListBoxString()
         {
             if (!IsPartOfGroup)
-                return "Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowToClickTitle + " window.";
+                return "Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
+            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
         }
 
         public MouseMoveToColourOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)

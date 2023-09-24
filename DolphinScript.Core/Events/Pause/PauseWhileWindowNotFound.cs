@@ -26,7 +26,7 @@ namespace DolphinScript.Core.Events.Pause
             {
                 // update the status label on the main form
                 //
-                ScriptState.Status = $"Pause while window: {WindowToClickTitle} not found, waiting {ScriptState.SearchPause} seconds before searching again.";
+                ScriptState.Status = $"Pause while window: {WindowTitle} not found, waiting {ScriptState.SearchPause} seconds before searching again.";
 
                 // wait before continuing
                 //

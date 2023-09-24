@@ -74,9 +74,6 @@ namespace DolphinScript.Core.Events.BaseEvents
         // window specific properties
         public string WindowClass { get; set; }
         public string WindowTitle { get; set; }
-        public string WindowToClickTitle { get; set; }
-
-        public CommonTypes.Rect WindowToClickLocation { get; set; }
 
         // mouse move specific properties
         public Point CoordsToMoveTo { get; set; }

@@ -20,13 +20,13 @@ namespace DolphinScript.Core.Events.Pause
         /// </summary>
         public override void Invoke()
         {
-            var windowHandle = WindowControlService.GetWindowHandle(WindowToClickTitle);
+            var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
 
             // don't override original click area or it will cause the mouse position to increment every time this method is called
             var newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
 
             // update the status label on the main form
-            ScriptState.Status = $"Pause while colour: {SearchColour} not found in area: {newSearchArea.PrintArea()} on window: {WindowToClickTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
+            ScriptState.Status = $"Pause while colour: {SearchColour} not found in area: {newSearchArea.PrintArea()} on window: {WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
 
             ExecuteWhileLoop(() =>
             {
