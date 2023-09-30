@@ -21,7 +21,7 @@ namespace DolphinScript.Core.Events.BaseEvents
             WindowControlService = windowControlService;
         }
 
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             double delay;
 

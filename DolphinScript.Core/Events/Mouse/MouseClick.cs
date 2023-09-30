@@ -25,16 +25,11 @@ namespace DolphinScript.Core.Events.Mouse
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
-            // update the status label on the main form
-            //
             ScriptState.Status = $"Mouse Click: {MouseButton}";
-
             switch (MouseButton)
             {
-                // check which virtual mouse state is associated with the event and perform that type of mouse event
-                //
                 case CommonTypes.VirtualMouseStates.LeftClick:
                     LeftClick();
                     break;
@@ -71,9 +66,18 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Mouse Click: " + MouseButton + ".";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Mouse Click:  " + MouseButton + ".";
+            return "Mouse Click: " + MouseButton + ".";
+        }
+
+        /// <summary>
+        /// this method will simulate a simple left click
+        /// </summary>
+        public void LeftClick()
+        {
+            PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.LmbDown, 0, 0, 0, 0);
+            Task.WaitAll(Task.Delay(_randomService.GetRandomNumber(20, 60)));
+            PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.LmbUp, 0, 0, 0, 0);
+            Task.WaitAll(Task.Delay(_randomService.GetRandomNumber(20, 60)));
         }
 
         /// <summary>
@@ -82,9 +86,20 @@ namespace DolphinScript.Core.Events.Mouse
         public void RightClick()
         {
             RightDown();
-            Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(_randomService.GetRandomDouble(0.03, 0.07))));
+            Task.WaitAll(Task.Delay(_randomService.GetRandomNumber(20, 60)));
             RightUp();
-            Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(_randomService.GetRandomDouble(0.03, 0.07))));
+            Task.WaitAll(Task.Delay(_randomService.GetRandomNumber(20, 60)));
+        }
+
+        /// <summary>
+        /// this method will simulate a simple middle click
+        /// </summary>
+        public void MiddleClick()
+        {
+            PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.MmbDown, 0, 0, 0, 0);
+            Task.WaitAll(Task.Delay(_randomService.GetRandomNumber(20, 60)));
+            PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.MmbUp, 0, 0, 0, 0);
+            Task.WaitAll(Task.Delay(_randomService.GetRandomNumber(20, 60)));
         }
 
         /// <summary>
@@ -104,17 +119,6 @@ namespace DolphinScript.Core.Events.Mouse
         }
 
         /// <summary>
-        /// this method will simulate a simple left click
-        /// </summary>
-        public void LeftClick()
-        {
-            PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.LmbDown, 0, 0, 0, 0);
-            Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(_randomService.GetRandomDouble(0.03, 0.07))));
-            PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.LmbUp, 0, 0, 0, 0);
-            Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(_randomService.GetRandomDouble(0.03, 0.07))));
-        }
-
-        /// <summary>
         /// this method will simulate the left mouse button being held down
         /// </summary>
         public void LeftDown()
@@ -129,18 +133,7 @@ namespace DolphinScript.Core.Events.Mouse
         {
             PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.LmbUp, 0, 0, 0, 0);
         }
-
-        /// <summary>
-        /// this method will simulate a simple middle click
-        /// </summary>
-        public void MiddleClick()
-        {
-            PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.MmbDown, 0, 0, 0, 0);
-            Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(_randomService.GetRandomDouble(0.1, 0.3))));
-            PInvokeReferences.mouse_event((uint)CommonTypes.VirtualMouseStates.MmbUp, 0, 0, 0, 0);
-            Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(_randomService.GetRandomDouble(0.1, 0.3))));
-        }
-
+        
         /// <summary>
         /// this method will simulate the middle mouse button being held down
         /// </summary>

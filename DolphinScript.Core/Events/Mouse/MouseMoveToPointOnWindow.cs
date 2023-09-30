@@ -9,14 +9,19 @@ namespace DolphinScript.Core.Events.Mouse
     [Serializable]
     public class MouseMoveToPointOnWindow : MouseMoveEvent
     {
+        public MouseMoveToPointOnWindow() { }
+
+        public MouseMoveToPointOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        {
+        }
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
 
-            // update the status label on the main form
             ScriptState.Status = $"Move mouse to {CoordsToMoveTo} on window: {WindowTitle}.";
 
             // bring the window associated with this event to the front
@@ -35,15 +40,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + " on " + WindowTitle + " window.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
+            return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + " on " + WindowTitle + " window.";
         }
-
-        public MouseMoveToPointOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
-        {
-        }
-
-        public MouseMoveToPointOnWindow() { }
     }
 }

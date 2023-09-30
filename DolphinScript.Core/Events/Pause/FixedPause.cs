@@ -22,13 +22,10 @@ namespace DolphinScript.Core.Events.Pause
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
-            // update the status label on the main form
-            //
             ScriptState.Status = $"Fixed pause for {DelayDuration} seconds.";
-
-            base.Invoke();
+            base.InvokeScriptEvent();
         }
 
         /// <summary>
@@ -37,14 +34,7 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            //
-            // check if the event is part of a group to add a group tag to the list box string
-            //
-
-            if (!IsPartOfGroup)
-                return "Fixed Pause for " + DelayDuration + " seconds.";
-            
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Fixed Pause for " + DelayDuration + " seconds.";
+            return "Fixed Pause for " + DelayDuration + " seconds.";
         }
     }
 }

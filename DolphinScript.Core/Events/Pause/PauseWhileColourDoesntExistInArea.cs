@@ -20,16 +20,12 @@ namespace DolphinScript.Core.Events.Pause
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             ExecuteWhileLoop(() =>
             {
-                // update the status label on the main form
-                //
                 ScriptState.Status = $"Pause while colour: {SearchColour} not found in area: {ColourSearchArea.PrintArea()}, waiting {ScriptState.SearchPause} seconds before re-searching.";
-
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
-
             }, () => !ColourService.ColourExistsInArea(ColourSearchArea, SearchColour));
         }
 
@@ -39,9 +35,7 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
+            return "Pause while colour " + SearchColour + " doesn't exist in area " + ColourSearchArea.PrintArea() + ".";
         }
     }
 }

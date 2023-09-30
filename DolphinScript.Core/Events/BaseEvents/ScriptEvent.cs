@@ -34,10 +34,16 @@ namespace DolphinScript.Core.Events.BaseEvents
     public abstract class ScriptEvent
     {
         // mandatory override methods
-        public abstract void Invoke();
-        public abstract string GetEventListBoxString();
+        public abstract void InvokeScriptEvent();
+
+        public virtual string GetEventListBoxString()
+        {
+            if (!IsPartOfGroup)
+                return GroupEventListBoxString;
+            return GroupEventListBoxString + GetEventListBoxString();
+        }
         
-        public string GroupEventBoxString => "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] ";
+        public string GroupEventListBoxString => "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] ";
 
         public void ExecuteWhileLoop(Action whileLoopBody, Func<bool> runCondition)
         {

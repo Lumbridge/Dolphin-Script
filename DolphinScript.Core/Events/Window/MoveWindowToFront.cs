@@ -22,7 +22,7 @@ namespace DolphinScript.Core.Events.Window
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             // update the status label on the main form
             ScriptState.Status = $"Bring window to front: {WindowTitle}.";
@@ -35,9 +35,7 @@ namespace DolphinScript.Core.Events.Window
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Move " + WindowTitle + " window to front.";
-            return GroupEventBoxString + "Move " + WindowTitle + " window to front.";
+            return "Move " + WindowTitle + " window to front.";
         }
     }
 }

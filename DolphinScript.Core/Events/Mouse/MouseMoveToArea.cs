@@ -21,12 +21,11 @@ namespace DolphinScript.Core.Events.Mouse
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
-            // update the status label on the main form
             ScriptState.Status = $"Mouse move to random point in area: {ClickArea.PrintArea()}.";
             CoordsToMoveTo = PointService.GetRandomPointInArea(ClickArea);
-            base.Invoke();
+            base.InvokeScriptEvent();
         }
 
         /// <summary>
@@ -35,9 +34,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Move mouse to random point in area " + ClickArea.PrintArea() + ".";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random point in area " + ClickArea.PrintArea() + ".";
+            return "Move mouse to random point in area " + ClickArea.PrintArea() + ".";
         }
     }
 }

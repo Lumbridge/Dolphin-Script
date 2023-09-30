@@ -18,14 +18,13 @@ namespace DolphinScript.Core.Events.Pause
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
 
             // don't override original click area or it will cause the mouse position to increment every time this method is called
             var newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
 
-            // update the status label on the main form
             ScriptState.Status = $"Pause while colour: {SearchColour} not found in area: {newSearchArea.PrintArea()} on window: {WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
 
             ExecuteWhileLoop(() =>
@@ -46,14 +45,7 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            var str = $"Pause while colour {SearchColour} doesn't exist in area {ColourSearchArea.PrintArea()} on {WindowTitle} window.";
-
-            if (IsPartOfGroup)
-            {
-                str = GroupEventBoxString + str;
-            }
-                
-            return str;
+            return $"Pause while colour {SearchColour} doesn't exist in area {ColourSearchArea.PrintArea()} on {WindowTitle} window.";
         }
     }
 }

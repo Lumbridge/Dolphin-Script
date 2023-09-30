@@ -17,12 +17,11 @@ namespace DolphinScript.Core.Events.Pause
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             // update the status label on the main form
             ScriptState.Status = $"Random pause Between {DelayMinimum} and {DelayMaximum} seconds.";
-
-            base.Invoke();
+            base.InvokeScriptEvent();
         }
 
         /// <summary>
@@ -31,9 +30,7 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
+            return "Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
         }
     }
 }

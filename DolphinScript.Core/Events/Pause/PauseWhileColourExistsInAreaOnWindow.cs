@@ -18,24 +18,19 @@ namespace DolphinScript.Core.Events.Pause
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
 
             // don't override original click area or it will cause the mouse position to increment every time this method is called
             var newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
 
-            // update the status label on the main form
-            ScriptState.Status = $"Pause while colour: {SearchColour} is found in area: {newSearchArea.PrintArea()} on window: {WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
-
             ExecuteWhileLoop(() =>
             {
-                // bring the window associated with this event to the front
+                ScriptState.Status = $"Pause while colour: {SearchColour} is found in area: {newSearchArea.PrintArea()} on window: {WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
                 WindowControlService.BringWindowToFront(windowHandle);
-
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
-
-                // update the search area incase the window has moved
+                // update the search area in case the window has moved
                 newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
             }, () => ColourService.ColourExistsInArea(newSearchArea, SearchColour));
         }
@@ -46,10 +41,7 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
-
+            return "Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window.";
         }
     }
 }

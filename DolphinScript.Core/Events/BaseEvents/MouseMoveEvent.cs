@@ -19,14 +19,14 @@ namespace DolphinScript.Core.Events.BaseEvents
             RandomService = randomService;
         }
 
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             MouseMovementService.MoveMouseToPoint(CoordsToMoveTo);
         }
 
         public override string GetEventListBoxString()
         {
-            return $"Moving mouse to X: {CoordsToMoveTo.X} Y: {CoordsToMoveTo.Y}.";
+            return $"Move mouse to X: {CoordsToMoveTo.X} Y: {CoordsToMoveTo.Y}.";
         }
     }
 }

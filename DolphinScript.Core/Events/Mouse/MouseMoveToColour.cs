@@ -17,12 +17,9 @@ namespace DolphinScript.Core.Events.Mouse
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
-            // update the status label on the main form
             ScriptState.Status = $"Mouse move to colour: {SearchColour} in area: {ColourSearchArea.PrintArea()}.";
-
-            // perform the mouse move method
             MouseMovementService.MoveMouseToColour(ColourSearchArea, SearchColour);
         }
 
@@ -32,9 +29,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
+            return "Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
         }
     }
 }

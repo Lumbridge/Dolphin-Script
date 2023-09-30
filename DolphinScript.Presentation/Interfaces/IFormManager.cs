@@ -11,6 +11,6 @@ namespace DolphinScript.Interfaces
         void UpdateFormControl<T>(Control control, Expression<Func<T>> property, T value);
         bool UpdateListboxCurrentEventIndex(ScriptEvent ev);
         void SetControlsEnabled(List<Control> controls, bool state);
-        void UpdateListBox(ListBox listBox);
+        void UpdateListBox(DataGridView control);
     }
 }

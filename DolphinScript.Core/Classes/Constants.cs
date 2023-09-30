@@ -9,6 +9,9 @@ namespace DolphinScript.Core.Classes
         public static int DefaultMinimumMouseSpeed = 40;
         public static int DefaultMaximumMouseSpeed = 60;
 
+        // the amount of time to pause after adding an event (to avoid adding the same event multiple times)
+        public static int EventRegisterWaitMs = 300;
+
         public static string SelectingPointToClick => $"Selecting point to click... ({DefaultStopCancelButton} to finish).";
         public static string SelectingPointsToClick => $"Selecting points to click... ({DefaultStopCancelButton} to finish).";
         public static string SelectingAreaToClick => $"Selecting area to click... ({DefaultStopCancelButton} to finish).";

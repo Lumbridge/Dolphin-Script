@@ -8,14 +8,19 @@ namespace DolphinScript.Core.Events.Mouse
     [Serializable]
     public class MouseMoveToMultiColourOnWindow : MouseMoveEvent
     {
+        public MouseMoveToMultiColourOnWindow() { }
+
+        public MouseMoveToMultiColourOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        {
+        }
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void Invoke()
+        public override void InvokeScriptEvent()
         {
             var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
 
-            // update the status label on the main form
             ScriptState.Status = $"Mouse move to any colour in list of selected colours on window: {WindowTitle}.";
 
             // bring the window associated with this event to the front
@@ -34,15 +39,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string GetEventListBoxString()
         {
-            if (!IsPartOfGroup)
-                return "Move mouse to random pixel matching colour " + SearchColours + " in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
-            return "[Group " + GroupId + " Repeat x" + NumberOfCycles + "] Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
+            return "Move mouse to random pixel matching colour " + SearchColours + " in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
         }
-
-        public MouseMoveToMultiColourOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
-        {
-        }
-
-        public MouseMoveToMultiColourOnWindow() { }
     }
 }
