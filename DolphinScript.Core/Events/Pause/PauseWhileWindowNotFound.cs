@@ -20,11 +20,12 @@ namespace DolphinScript.Core.Events.Pause
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void InvokeScriptEvent()
+        public override void Execute()
         {
             ExecuteWhileLoop(() =>
             {
-                ScriptState.Status = $"Pause while window: {WindowTitle} not found, waiting {ScriptState.SearchPause} seconds before searching again.";
+                ScriptState.CurrentAction = $"Pause while window: {WindowTitle} not found, waiting {ScriptState.SearchPause} seconds before searching again";
+                ScriptState.AllEvents.ResetBindings();
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
             }, () => !WindowControlService.WindowExists(WindowClass, WindowTitle));
         }
@@ -33,9 +34,9 @@ namespace DolphinScript.Core.Events.Pause
         /// returns a string which is added to the listbox to give information about the event which was added to the event list
         /// </summary>
         /// <returns></returns>
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
-            return "Pause while window " + WindowTitle + " can't be found.";
+            return "Pause while window " + WindowTitle + " can't be found";
         }
     }
 }

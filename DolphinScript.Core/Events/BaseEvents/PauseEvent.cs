@@ -1,6 +1,7 @@
-﻿using System;
-using System.Threading;
+﻿using DolphinScript.Core.Classes;
 using DolphinScript.Core.Interfaces;
+using System;
+using System.Threading;
 
 namespace DolphinScript.Core.Events.BaseEvents
 {
@@ -21,7 +22,7 @@ namespace DolphinScript.Core.Events.BaseEvents
             WindowControlService = windowControlService;
         }
 
-        public override void InvokeScriptEvent()
+        public override void Setup()
         {
             double delay;
 
@@ -34,14 +35,15 @@ namespace DolphinScript.Core.Events.BaseEvents
                 delay = DelayDuration;
             }
 
-            var pauseEnd = DateTime.Now.AddSeconds(delay);
+            DelayDuration = delay;
 
-            ExecuteWhileLoop(() => { Thread.Sleep(1); }, () => DateTime.Now < pauseEnd);
+            ScriptState.CurrentAction = $"Pause for {DelayDuration} seconds";
         }
 
-        public override string GetEventListBoxString()
+        public override void Execute()
         {
-            throw new NotImplementedException();
+            var pauseEnd = DateTime.Now.AddSeconds(DelayDuration);
+            ExecuteWhileLoop(() => { Thread.Sleep(1); }, () => DateTime.Now < pauseEnd);
         }
     }
 }

@@ -7,13 +7,17 @@ namespace DolphinScript.Core.Events.Keyboard
     [Serializable]
     public class KeyboardHoldKey : ScriptEvent
     {
-        public override void InvokeScriptEvent()
+        public override void Setup()
         {
-            ScriptState.Status = "";
+            ScriptState.CurrentAction = "";
+        }
+
+        public override void Execute()
+        {
             throw new NotImplementedException();
         }
 
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
             throw new NotImplementedException();
         }

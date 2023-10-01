@@ -9,8 +9,6 @@ namespace DolphinScript.Core.Classes
     public static class ScriptState
     {
         public static bool IsRunning { get; set; }
-        public static string LastAction { get; set; }
-        public static string Status { get; set; }
         public static bool IsRegistering { get; set; }
         public static int MinimumMouseSpeed { get; set; } = Constants.DefaultMinimumMouseSpeed;
         public static int MaximumMouseSpeed { get; set; } = Constants.DefaultMaximumMouseSpeed;
@@ -20,5 +18,6 @@ namespace DolphinScript.Core.Classes
         public static List<List<ScriptEvent>> AllGroups { get; set; } = new List<List<ScriptEvent>>();
         public static MouseMovementService.MouseMovementMode MouseMovementMode { get; set; } = MouseMovementService.MouseMovementMode.Realistic;
         public static bool FreeMouse { get; set; } = true;
+        public static string CurrentAction { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DolphinScript.Core.Interfaces;
+﻿using DolphinScript.Core.Classes;
+using DolphinScript.Core.Interfaces;
 
 namespace DolphinScript.Core.Events.BaseEvents
 {
@@ -19,14 +20,14 @@ namespace DolphinScript.Core.Events.BaseEvents
             RandomService = randomService;
         }
 
-        public override void InvokeScriptEvent()
+        public override void Setup()
         {
-            MouseMovementService.MoveMouseToPoint(CoordsToMoveTo);
+            ScriptState.CurrentAction = $"Move mouse to {CoordsToMoveTo.X}, {CoordsToMoveTo.Y}";
         }
 
-        public override string GetEventListBoxString()
+        public override void Execute()
         {
-            return $"Move mouse to X: {CoordsToMoveTo.X} Y: {CoordsToMoveTo.Y}.";
+            MouseMovementService.MoveMouseToPoint(CoordsToMoveTo);
         }
     }
 }

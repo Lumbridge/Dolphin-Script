@@ -14,6 +14,14 @@ namespace DolphinScript.Core.Extensions
             Expression<Func<TResult>> property,
             TResult value);
 
+        public static void ClearColumn(this DataGridView grid, string columnName)
+        {
+            foreach (DataGridViewRow row in grid.Rows)
+            {
+                row.Cells[columnName].Value = string.Empty;
+            }
+        }
+
         public static List<int> GetSelectedIndices(this DataGridView grid)
         {
             if (grid.SelectedRows.Count == 0)
@@ -21,7 +29,11 @@ namespace DolphinScript.Core.Extensions
                 return new List<int>();
             }
 
-            return grid.SelectedRows.Cast<DataGridViewRow>().Where(x => x.Selected).Select(x => x.Index).ToList();
+            return grid.SelectedRows.Cast<DataGridViewRow>()
+                .Where(x => x.Selected)
+                .Select(x => x.Index)
+                .OrderBy(x => x)
+                .ToList();
         }
 
         public static void SetSelectedIndices(this DataGridView grid, IList<int> indices)

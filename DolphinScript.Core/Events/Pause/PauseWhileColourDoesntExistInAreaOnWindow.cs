@@ -18,22 +18,19 @@ namespace DolphinScript.Core.Events.Pause
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void InvokeScriptEvent()
+        public override void Execute()
         {
             var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
 
             // don't override original click area or it will cause the mouse position to increment every time this method is called
             var newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
 
-            ScriptState.Status = $"Pause while colour: {SearchColour} not found in area: {newSearchArea.PrintArea()} on window: {WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
-
             ExecuteWhileLoop(() =>
             {
-                // bring the window associated with this event to the front
                 WindowControlService.BringWindowToFront(windowHandle);
-
+                ScriptState.CurrentAction = $"Pause while colour: {SearchColour} not found in area: {newSearchArea.PrintArea()} on window: {WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching.";
+                ScriptState.AllEvents.ResetBindings();
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
-
                 // update the search area in case the window has moved
                 newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
             }, () => !ColourService.ColourExistsInArea(newSearchArea, SearchColour));
@@ -43,9 +40,9 @@ namespace DolphinScript.Core.Events.Pause
         /// returns a string which is added to the listbox to give information about the event which was added to the event list
         /// </summary>
         /// <returns></returns>
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
-            return $"Pause while colour {SearchColour} doesn't exist in area {ColourSearchArea.PrintArea()} on {WindowTitle} window.";
+            return $"Pause while colour {SearchColour} doesn't exist in area {ColourSearchArea.PrintArea()} on {WindowTitle} window";
         }
     }
 }

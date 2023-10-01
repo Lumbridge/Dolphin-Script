@@ -22,12 +22,16 @@ namespace DolphinScript.Core.Events.Mouse
             _randomService = randomService;
         }
 
+        public override void Setup()
+        {
+            ScriptState.CurrentAction = $"Mouse Click: {MouseButton}";
+        }
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void InvokeScriptEvent()
+        public override void Execute()
         {
-            ScriptState.Status = $"Mouse Click: {MouseButton}";
             switch (MouseButton)
             {
                 case CommonTypes.VirtualMouseStates.LeftClick:
@@ -64,7 +68,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// returns a string which is added to the listbox to give information about the event which was added to the event list
         /// </summary>
         /// <returns></returns>
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
             return "Mouse Click: " + MouseButton + ".";
         }

@@ -69,7 +69,7 @@
             this.Button_AddKeypressEvent = new System.Windows.Forms.Button();
             this.tabPage_MouseMoveEvent = new System.Windows.Forms.TabPage();
             this.groupBox_mouseMovementMode = new System.Windows.Forms.GroupBox();
-            this.comboBox_mouseMovementMode = new System.Windows.Forms.ComboBox();
+            this.ComboBox_MouseMovementMode = new System.Windows.Forms.ComboBox();
             this.groupBox20 = new System.Windows.Forms.GroupBox();
             this.Button_ColourPreview2 = new System.Windows.Forms.Button();
             this.groupBox_RelativeToScreen = new System.Windows.Forms.GroupBox();
@@ -135,13 +135,13 @@
             this.Button_InsertRightClickEvent = new System.Windows.Forms.Button();
             this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
             this.button_RemoveRepeatGroup = new System.Windows.Forms.Button();
-            this.mainDataGrid = new System.Windows.Forms.DataGridView();
+            this.MainDataGrid = new System.Windows.Forms.DataGridView();
             this.Index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ScriptEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GroupId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RepeatCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LastAction = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CurrentAction = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).BeginInit();
             this.MenuStrip_MainForm.SuspendLayout();
             this.tabControl_ScriptEvents.SuspendLayout();
@@ -183,14 +183,14 @@
             this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mainDataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MainDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // button_StartScript
             // 
-            this.button_StartScript.Location = new System.Drawing.Point(871, 145);
+            this.button_StartScript.Location = new System.Drawing.Point(1002, 172);
             this.button_StartScript.Name = "button_StartScript";
-            this.button_StartScript.Size = new System.Drawing.Size(37, 51);
+            this.button_StartScript.Size = new System.Drawing.Size(101, 35);
             this.button_StartScript.TabIndex = 0;
             this.button_StartScript.Text = "Start";
             this.button_StartScript.UseVisualStyleBackColor = true;
@@ -199,7 +199,7 @@
             // button_MoveEventUp
             // 
             this.button_MoveEventUp.Enabled = false;
-            this.button_MoveEventUp.Location = new System.Drawing.Point(871, 31);
+            this.button_MoveEventUp.Location = new System.Drawing.Point(1002, 58);
             this.button_MoveEventUp.Name = "button_MoveEventUp";
             this.button_MoveEventUp.Size = new System.Drawing.Size(37, 36);
             this.button_MoveEventUp.TabIndex = 3;
@@ -210,7 +210,7 @@
             // button_MoveEventDown
             // 
             this.button_MoveEventDown.Enabled = false;
-            this.button_MoveEventDown.Location = new System.Drawing.Point(871, 103);
+            this.button_MoveEventDown.Location = new System.Drawing.Point(1002, 130);
             this.button_MoveEventDown.Name = "button_MoveEventDown";
             this.button_MoveEventDown.Size = new System.Drawing.Size(37, 36);
             this.button_MoveEventDown.TabIndex = 4;
@@ -221,7 +221,7 @@
             // button_RemoveEvent
             // 
             this.button_RemoveEvent.Enabled = false;
-            this.button_RemoveEvent.Location = new System.Drawing.Point(871, 73);
+            this.button_RemoveEvent.Location = new System.Drawing.Point(1002, 100);
             this.button_RemoveEvent.Name = "button_RemoveEvent";
             this.button_RemoveEvent.Size = new System.Drawing.Size(37, 24);
             this.button_RemoveEvent.TabIndex = 16;
@@ -231,7 +231,7 @@
             // 
             // button_AddRepeatGroup
             // 
-            this.button_AddRepeatGroup.Location = new System.Drawing.Point(914, 85);
+            this.button_AddRepeatGroup.Location = new System.Drawing.Point(1045, 53);
             this.button_AddRepeatGroup.Name = "button_AddRepeatGroup";
             this.button_AddRepeatGroup.Size = new System.Drawing.Size(58, 56);
             this.button_AddRepeatGroup.TabIndex = 8;
@@ -241,7 +241,7 @@
             // 
             // NumericUpDown_RepeatAmount
             // 
-            this.NumericUpDown_RepeatAmount.Location = new System.Drawing.Point(914, 59);
+            this.NumericUpDown_RepeatAmount.Location = new System.Drawing.Point(1045, 27);
             this.NumericUpDown_RepeatAmount.Maximum = new decimal(new int[] {
             99999999,
             0,
@@ -268,7 +268,7 @@
             this.helpToolStripMenuItem});
             this.MenuStrip_MainForm.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip_MainForm.Name = "MenuStrip_MainForm";
-            this.MenuStrip_MainForm.Size = new System.Drawing.Size(984, 24);
+            this.MenuStrip_MainForm.Size = new System.Drawing.Size(1115, 24);
             this.MenuStrip_MainForm.TabIndex = 46;
             this.MenuStrip_MainForm.Text = "File";
             // 
@@ -636,7 +636,7 @@
             // 
             // groupBox_mouseMovementMode
             // 
-            this.groupBox_mouseMovementMode.Controls.Add(this.comboBox_mouseMovementMode);
+            this.groupBox_mouseMovementMode.Controls.Add(this.ComboBox_MouseMovementMode);
             this.groupBox_mouseMovementMode.Location = new System.Drawing.Point(185, 297);
             this.groupBox_mouseMovementMode.Name = "groupBox_mouseMovementMode";
             this.groupBox_mouseMovementMode.Size = new System.Drawing.Size(227, 65);
@@ -644,15 +644,15 @@
             this.groupBox_mouseMovementMode.TabStop = false;
             this.groupBox_mouseMovementMode.Text = "Mouse Movement Mode";
             // 
-            // comboBox_mouseMovementMode
+            // ComboBox_MouseMovementMode
             // 
-            this.comboBox_mouseMovementMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_mouseMovementMode.FormattingEnabled = true;
-            this.comboBox_mouseMovementMode.Location = new System.Drawing.Point(14, 24);
-            this.comboBox_mouseMovementMode.Name = "comboBox_mouseMovementMode";
-            this.comboBox_mouseMovementMode.Size = new System.Drawing.Size(195, 21);
-            this.comboBox_mouseMovementMode.TabIndex = 0;
-            this.comboBox_mouseMovementMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_mouseMovementMode_SelectedIndexChanged);
+            this.ComboBox_MouseMovementMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_MouseMovementMode.FormattingEnabled = true;
+            this.ComboBox_MouseMovementMode.Location = new System.Drawing.Point(14, 24);
+            this.ComboBox_MouseMovementMode.Name = "ComboBox_MouseMovementMode";
+            this.ComboBox_MouseMovementMode.Size = new System.Drawing.Size(195, 21);
+            this.ComboBox_MouseMovementMode.TabIndex = 0;
+            this.ComboBox_MouseMovementMode.SelectedIndexChanged += new System.EventHandler(this.ComboBox_MouseMovementMode_SelectedIndexChanged);
             // 
             // groupBox20
             // 
@@ -1332,7 +1332,7 @@
             // 
             // button_RemoveRepeatGroup
             // 
-            this.button_RemoveRepeatGroup.Location = new System.Drawing.Point(914, 147);
+            this.button_RemoveRepeatGroup.Location = new System.Drawing.Point(1045, 115);
             this.button_RemoveRepeatGroup.Name = "button_RemoveRepeatGroup";
             this.button_RemoveRepeatGroup.Size = new System.Drawing.Size(58, 49);
             this.button_RemoveRepeatGroup.TabIndex = 48;
@@ -1340,29 +1340,29 @@
             this.button_RemoveRepeatGroup.UseVisualStyleBackColor = true;
             this.button_RemoveRepeatGroup.Click += new System.EventHandler(this.Button_RemoveRepeatGroup_Click);
             // 
-            // mainDataGrid
+            // MainDataGrid
             // 
-            this.mainDataGrid.AllowUserToAddRows = false;
-            this.mainDataGrid.AllowUserToDeleteRows = false;
-            this.mainDataGrid.AllowUserToResizeRows = false;
-            this.mainDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.mainDataGrid.BackgroundColor = System.Drawing.SystemColors.ActiveBorder;
-            this.mainDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.mainDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.MainDataGrid.AllowUserToAddRows = false;
+            this.MainDataGrid.AllowUserToDeleteRows = false;
+            this.MainDataGrid.AllowUserToResizeRows = false;
+            this.MainDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.MainDataGrid.BackgroundColor = System.Drawing.SystemColors.ActiveBorder;
+            this.MainDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.MainDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Index,
             this.ScriptEvent,
             this.Description,
             this.GroupId,
             this.RepeatCount,
-            this.LastAction});
-            this.mainDataGrid.Location = new System.Drawing.Point(12, 27);
-            this.mainDataGrid.Name = "mainDataGrid";
-            this.mainDataGrid.ReadOnly = true;
-            this.mainDataGrid.RowHeadersVisible = false;
-            this.mainDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.mainDataGrid.Size = new System.Drawing.Size(853, 212);
-            this.mainDataGrid.TabIndex = 49;
-            this.mainDataGrid.SelectionChanged += new System.EventHandler(this.mainDataGrid_SelectedIndexChanged);
+            this.CurrentAction});
+            this.MainDataGrid.Location = new System.Drawing.Point(12, 27);
+            this.MainDataGrid.Name = "MainDataGrid";
+            this.MainDataGrid.ReadOnly = true;
+            this.MainDataGrid.RowHeadersVisible = false;
+            this.MainDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.MainDataGrid.Size = new System.Drawing.Size(984, 212);
+            this.MainDataGrid.TabIndex = 49;
+            this.MainDataGrid.SelectionChanged += new System.EventHandler(this.MainDataGrid_SelectedIndexChanged);
             // 
             // Index
             // 
@@ -1399,19 +1399,19 @@
             this.RepeatCount.ReadOnly = true;
             this.RepeatCount.Width = 98;
             // 
-            // LastAction
+            // CurrentAction
             // 
-            this.LastAction.HeaderText = "Last Action";
-            this.LastAction.Name = "LastAction";
-            this.LastAction.ReadOnly = true;
-            this.LastAction.Width = 85;
+            this.CurrentAction.HeaderText = "Current Action";
+            this.CurrentAction.Name = "CurrentAction";
+            this.CurrentAction.ReadOnly = true;
+            this.CurrentAction.Width = 99;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 677);
-            this.Controls.Add(this.mainDataGrid);
+            this.ClientSize = new System.Drawing.Size(1115, 677);
+            this.Controls.Add(this.MainDataGrid);
             this.Controls.Add(this.button_RemoveRepeatGroup);
             this.Controls.Add(this.tabControl_ScriptEvents);
             this.Controls.Add(this.MenuStrip_MainForm);
@@ -1477,7 +1477,7 @@
             this.groupBox10.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mainDataGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MainDataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1591,14 +1591,14 @@
         private System.Windows.Forms.Label label_MinMouseSpeed;
         private System.Windows.Forms.NumericUpDown NumericUpDown_MaxMouseSpeed;
         private System.Windows.Forms.GroupBox groupBox_mouseMovementMode;
-        private System.Windows.Forms.ComboBox comboBox_mouseMovementMode;
-        public System.Windows.Forms.DataGridView mainDataGrid;
+        private System.Windows.Forms.ComboBox ComboBox_MouseMovementMode;
+        public System.Windows.Forms.DataGridView MainDataGrid;
         private System.Windows.Forms.DataGridViewTextBoxColumn Index;
         private System.Windows.Forms.DataGridViewTextBoxColumn ScriptEvent;
         private System.Windows.Forms.DataGridViewTextBoxColumn Description;
         private System.Windows.Forms.DataGridViewTextBoxColumn GroupId;
         private System.Windows.Forms.DataGridViewTextBoxColumn RepeatCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LastAction;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CurrentAction;
     }
 }
 

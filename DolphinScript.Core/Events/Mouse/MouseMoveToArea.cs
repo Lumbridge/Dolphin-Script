@@ -21,18 +21,18 @@ namespace DolphinScript.Core.Events.Mouse
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void InvokeScriptEvent()
+        public override void Execute()
         {
-            ScriptState.Status = $"Mouse move to random point in area: {ClickArea.PrintArea()}.";
+            ScriptState.CurrentAction = $"Mouse move to random point in area: {ClickArea.PrintArea()}.";
             CoordsToMoveTo = PointService.GetRandomPointInArea(ClickArea);
-            base.InvokeScriptEvent();
+            base.Execute();
         }
 
         /// <summary>
         /// returns a string which is added to the listbox to give information about the event which was added to the event list
         /// </summary>
         /// <returns></returns>
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
             return "Move mouse to random point in area " + ClickArea.PrintArea() + ".";
         }

@@ -13,7 +13,7 @@ namespace DolphinScript.Concrete
 {
     public class FormManager : IFormManager
     {
-        private MainForm _form => (MainForm)Application.OpenForms["MainForm"];
+        private static MainForm Form => (MainForm)Application.OpenForms["MainForm"];
 
         private delegate void UpdateFormControlDelegate<T>(
             Control control,
@@ -57,9 +57,9 @@ namespace DolphinScript.Concrete
         {
             if (!ScriptState.IsRunning)
             {
-                _form.mainDataGrid.Invoke(new Action(() =>
+                Form.MainDataGrid.Invoke(new Action(() =>
                 {
-                    foreach (DataGridViewRow row in _form.mainDataGrid.Rows)
+                    foreach (DataGridViewRow row in Form.MainDataGrid.Rows)
                     {
                         row.Selected = false;
                     }
@@ -68,10 +68,18 @@ namespace DolphinScript.Concrete
                 return true;
             }
 
-            _form.mainDataGrid.Invoke(new Action(() =>
+            Form.MainDataGrid.Invoke(new Action(() =>
             {
-                foreach (DataGridViewRow row in _form.mainDataGrid.Rows)
-                { 
+                foreach (DataGridViewRow row in Form.MainDataGrid.Rows)
+                {
+                    if (ScriptState.AllEvents.IndexOf(ev) == row.Index)
+                    {
+                        Form.MainDataGrid.Rows[row.Index].Cells["CurrentAction"].Value = ScriptState.CurrentAction;
+                    }
+                    else
+                    {
+                        row.Cells["CurrentAction"].Value = string.Empty;
+                    }
                     row.Selected = ScriptState.AllEvents.IndexOf(ev) == row.Index;
                 }
             }));
@@ -108,12 +116,12 @@ namespace DolphinScript.Concrete
             // add all events in the event list to the listbox
             foreach (var scriptEvent in ScriptState.AllEvents)
             {
-                _form.mainDataGrid.Invoke(new Action(() =>
+                Form.MainDataGrid.Invoke(new Action(() =>
                 {
-                    _form.mainDataGrid.Rows.Add(
+                    Form.MainDataGrid.Rows.Add(
                         ScriptState.AllEvents.IndexOf(scriptEvent),
                         scriptEvent.GetType().Name,
-                        scriptEvent.GetEventListBoxString(),
+                        scriptEvent.EventDescription(),
                         scriptEvent.GroupId,
                         scriptEvent.NumberOfCycles,
                         string.Empty

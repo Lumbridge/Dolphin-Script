@@ -22,9 +22,7 @@ namespace DolphinScript.Core.Classes
 
         public const string AboutString = "Created by Ryan Sainty @ https://github.com/Lumbridge";
 
-        public const string IdleStatus = "Status: idle";
-        public const string NoLastAction = "Last action: None";
-        public const string StartScript = "Start script";
+        public const string StartScript = "Start";
 
         public const string ErrorMovingEvent = "Error moving event.";
         public const string NoEventsAdded = "No events have been added.";

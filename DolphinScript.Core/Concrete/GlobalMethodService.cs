@@ -16,6 +16,7 @@ namespace DolphinScript.Core.Concrete
             {
                 // set is running flag to false
                 ScriptState.IsRunning = false;
+                ScriptState.CurrentAction = string.Empty;
             }
         }
     }

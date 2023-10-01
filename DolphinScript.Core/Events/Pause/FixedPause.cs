@@ -18,23 +18,14 @@ namespace DolphinScript.Core.Events.Pause
             : base(randomService, colourService, pointService, windowControlService)
         {
         }
-
-        /// <summary>
-        /// main overriden method used to perform this script event
-        /// </summary>
-        public override void InvokeScriptEvent()
-        {
-            ScriptState.Status = $"Fixed pause for {DelayDuration} seconds.";
-            base.InvokeScriptEvent();
-        }
-
+        
         /// <summary>
         /// returns a string which is added to the listbox to give information about the event which was added to the event list
         /// </summary>
         /// <returns></returns>
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
-            return "Fixed Pause for " + DelayDuration + " seconds.";
+            return "Fixed Pause for " + DelayDuration + " seconds";
         }
     }
 }

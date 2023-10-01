@@ -20,9 +20,9 @@ namespace DolphinScript.Core.Events.Mouse
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void InvokeScriptEvent()
+        public override void Execute()
         {
-            ScriptState.Status = $"Mouse move: {CoordsToMoveTo}.";
+            ScriptState.CurrentAction = $"Mouse move: {CoordsToMoveTo}.";
             MouseMovementService.MoveMouseToPoint(CoordsToMoveTo);
         }
 
@@ -30,7 +30,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// returns a string which is added to the listbox to give information about the event which was added to the event list
         /// </summary>
         /// <returns></returns>
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
             return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + ".";
         }

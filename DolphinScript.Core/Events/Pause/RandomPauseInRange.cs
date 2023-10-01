@@ -1,7 +1,6 @@
-﻿using System;
-using DolphinScript.Core.Classes;
-using DolphinScript.Core.Events.BaseEvents;
+﻿using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
+using System;
 
 namespace DolphinScript.Core.Events.Pause
 {
@@ -15,22 +14,12 @@ namespace DolphinScript.Core.Events.Pause
         }
 
         /// <summary>
-        /// main overriden method used to perform this script event
-        /// </summary>
-        public override void InvokeScriptEvent()
-        {
-            // update the status label on the main form
-            ScriptState.Status = $"Random pause Between {DelayMinimum} and {DelayMaximum} seconds.";
-            base.InvokeScriptEvent();
-        }
-
-        /// <summary>
         /// returns a string which is added to the listbox to give information about the event which was added to the event list
         /// </summary>
         /// <returns></returns>
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
-            return "Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds.";
+            return "Random pause between " + DelayMinimum + " and " + DelayMaximum + " seconds";
         }
     }
 }

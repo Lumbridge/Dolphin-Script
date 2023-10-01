@@ -19,13 +19,16 @@ namespace DolphinScript.Core.Events.Window
             _windowControlService = windowControlService;
         }
 
+        public override void Setup()
+        {
+            ScriptState.CurrentAction = $"Bring window to front: {WindowTitle}.";
+        }
+
         /// <summary>
         /// main overriden method used to perform this script event
         /// </summary>
-        public override void InvokeScriptEvent()
+        public override void Execute()
         {
-            // update the status label on the main form
-            ScriptState.Status = $"Bring window to front: {WindowTitle}.";
             _windowControlService.SetWindowTopMostIfExists(WindowClass, WindowTitle);
         }
 
@@ -33,7 +36,7 @@ namespace DolphinScript.Core.Events.Window
         /// returns a string which is added to the listbox to give information about the event which was added to the event list
         /// </summary>
         /// <returns></returns>
-        public override string GetEventListBoxString()
+        public override string EventDescription()
         {
             return "Move " + WindowTitle + " window to front.";
         }
