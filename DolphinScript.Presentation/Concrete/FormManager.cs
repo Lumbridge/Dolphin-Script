@@ -1,12 +1,13 @@
-﻿using DolphinScript.Forms;
+﻿using DolphinScript.Core.Classes;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Extensions;
+using DolphinScript.Forms;
+using DolphinScript.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Windows.Forms;
-using DolphinScript.Interfaces;
 using System.Reflection;
-using DolphinScript.Core.Events.BaseEvents;
-using DolphinScript.Core.Classes;
+using System.Windows.Forms;
 
 namespace DolphinScript.Concrete
 {
@@ -96,6 +97,8 @@ namespace DolphinScript.Concrete
         /// </summary>
         public void UpdateListBox(DataGridView control)
         {
+            var selected = control.GetSelectedIndices();
+
             // clear the listbox
             control.Invoke(new Action(() =>
             {
@@ -108,7 +111,7 @@ namespace DolphinScript.Concrete
                 _form.mainDataGrid.Invoke(new Action(() =>
                 {
                     _form.mainDataGrid.Rows.Add(
-                        ScriptState.AllEvents.IndexOf(scriptEvent), 
+                        ScriptState.AllEvents.IndexOf(scriptEvent),
                         scriptEvent.GetType().Name,
                         scriptEvent.GetEventListBoxString(),
                         scriptEvent.GroupId,
@@ -117,6 +120,8 @@ namespace DolphinScript.Concrete
                     );
                 }));
             }
+
+            control.SetSelectedIndices(selected);
         }
     }
 }

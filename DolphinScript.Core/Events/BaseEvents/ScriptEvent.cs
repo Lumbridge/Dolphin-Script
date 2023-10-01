@@ -68,7 +68,7 @@ namespace DolphinScript.Core.Events.BaseEvents
 
         public int GroupId { get; set; }
 
-        public List<ScriptEvent> EventsInGroup { get; set; }
+        public List<ScriptEvent> EventsInGroup { get; set; } = new List<ScriptEvent>();
         
         public bool IsPartOfGroup { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Concrete;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Events.Keyboard;
 using DolphinScript.Core.Events.Mouse;
@@ -8,15 +9,15 @@ using DolphinScript.Core.Extensions;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.Models;
 using DolphinScript.Core.WindowsApi;
+using DolphinScript.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DolphinScript.Core.Concrete;
-using DolphinScript.Interfaces;
 
 namespace DolphinScript.Forms
 {
@@ -101,6 +102,12 @@ namespace DolphinScript.Forms
 
             comboBox_mouseMovementMode.Items.AddRange(Enum.GetNames(typeof(MouseMovementService.MouseMovementMode)));
             comboBox_mouseMovementMode.SelectedIndex = 0;
+
+            ScriptState.AllEventsSource = new BindingSource(ScriptState.AllEvents, null);
+            ScriptState.AllEventsSource.ListChanged += delegate
+            {
+                _formManager.UpdateListBox(mainDataGrid);
+            };
         }
 
         #region Main Form Methods
@@ -293,15 +300,16 @@ namespace DolphinScript.Forms
              * non-group selected, non-group above
             */
 
-            if (mainDataGrid.CurrentCell.RowIndex > 0)
-            {
-                // first get the selected and above events
-                var selected = ScriptState.AllEvents[mainDataGrid.CurrentCell.RowIndex];
-                var above = ScriptState.AllEvents[mainDataGrid.CurrentCell.RowIndex - 1];
+            var selectedIndex = mainDataGrid.GetSelectedIndices().FirstOrDefault();
 
+            if (selectedIndex > 0)
+            {
                 // get the indices of the events we're using
-                var selectedIndex = mainDataGrid.CurrentCell.RowIndex;
-                var aboveIndex = mainDataGrid.CurrentCell.RowIndex - 1;
+                var aboveIndex = selectedIndex - 1;
+
+                // first get the selected and above events
+                var selected = ScriptState.AllEvents[selectedIndex];
+                var above = ScriptState.AllEvents[aboveIndex];
 
                 // non-group selected, non-group above (normal swap - selected moves above, above event moves below)
                 if (!selected.IsPartOfGroup && !above.IsPartOfGroup)
@@ -340,21 +348,19 @@ namespace DolphinScript.Forms
                     MessageBox.Show(Constants.ErrorMovingEvent);
                 }
 
-                _formManager.UpdateListBox(mainDataGrid);
-
                 // select the item again after it's moved so the user can move it again if needed
                 if (selected.IsPartOfGroup)
                 {
                     // if we move a group past another group then set the selected index to the top of the group
-                    mainDataGrid.Rows[selected.EventsInGroup.Count - selectedIndex].Selected = true;
+                    mainDataGrid.SetSelectedIndex(selected.EventsInGroup.Count - selectedIndex);
                 }
                 else
                 {
                     // select the event we just moved so we can move it again quickly if we want to
                     if (selectedIndex - 1 >= 0)
-                        mainDataGrid.Rows[selectedIndex - 1].Selected = true;
+                        mainDataGrid.SetSelectedIndex(selectedIndex - 1);
                     else
-                        mainDataGrid.Rows[selectedIndex].Selected = true;
+                        mainDataGrid.SetSelectedIndex(selectedIndex);
                 }
             }
         }
@@ -375,15 +381,16 @@ namespace DolphinScript.Forms
              * non-group selected, non-group below
             */
 
-            if (mainDataGrid.CurrentCell.RowIndex < mainDataGrid.Rows.Count)
+            var selectedIndex = mainDataGrid.GetSelectedIndices().FirstOrDefault();
+            
+            if (selectedIndex < mainDataGrid.Rows.Count)
             {
-                // first get the selected and above events
-                var selected = ScriptState.AllEvents[mainDataGrid.CurrentCell.RowIndex];
-                var below = ScriptState.AllEvents[mainDataGrid.CurrentCell.RowIndex + 1];
-
                 // get the indices of the events we're using
-                var selectedIndex = mainDataGrid.CurrentCell.RowIndex;
-                var belowIndex = mainDataGrid.CurrentCell.RowIndex + 1;
+                var belowIndex = selectedIndex + 1;
+
+                // first get the selected and above events
+                var selected = ScriptState.AllEvents[selectedIndex];
+                var below = ScriptState.AllEvents[belowIndex];
 
                 // non-group selected, non-group below (normal swap - selected moves below, below event moves above)
                 if (!selected.IsPartOfGroup && !below.IsPartOfGroup)
@@ -430,13 +437,11 @@ namespace DolphinScript.Forms
                     MessageBox.Show(Constants.ErrorMovingEvent);
                 }
 
-                _formManager.UpdateListBox(mainDataGrid);
-
                 // select the item again after it's moved so the user can move it again if needed
                 if (selectedIndex + 1 <= mainDataGrid.Rows.Count)
-                    mainDataGrid.Rows[selectedIndex + 1].Selected = true;
+                    mainDataGrid.SetSelectedIndex(selectedIndex + 1);
                 else
-                    mainDataGrid.Rows[selectedIndex].Selected = true;
+                    mainDataGrid.SetSelectedIndex(selectedIndex);
             }
         }
 
@@ -447,25 +452,21 @@ namespace DolphinScript.Forms
         /// <param name="e"></param>
         private void RemoveEventButton_Click(object sender, EventArgs e)
         {
+            var selectedIndex = mainDataGrid.GetSelectedIndices().FirstOrDefault();
+
             // check that the selected item is between the bounds of the listbox
-            if (mainDataGrid.CurrentCell.RowIndex >= 0 && mainDataGrid.CurrentCell.RowIndex <= mainDataGrid.Rows.Count)
+            if (selectedIndex >= 0 && selectedIndex <= mainDataGrid.Rows.Count)
             {
-                // create a temp variable of the selected index so it's easier to type
-                var temp = mainDataGrid.CurrentCell.RowIndex;
-
                 // remove the script event from the all events list
-                ScriptState.AllEvents.RemoveAt(temp);
-
-                // update the listbox to show the changes
-                _formManager.UpdateListBox(mainDataGrid);
+                ScriptState.AllEvents.RemoveAt(selectedIndex);
 
                 // select the item next to the one we removed so the user quickly delete multiple events if needed
-                if (temp >= mainDataGrid.Rows.Count)
-                    mainDataGrid.Rows[temp - 1].Selected = true;
-                else if (temp < 0)
-                    mainDataGrid.Rows[temp + 1].Selected = true;
+                if (selectedIndex >= mainDataGrid.Rows.Count)
+                    mainDataGrid.SetSelectedIndex(selectedIndex - 1);
+                else if (selectedIndex < 0)
+                    mainDataGrid.SetSelectedIndex(selectedIndex + 1);
                 else
-                    mainDataGrid.Rows[temp].Selected = true;
+                    mainDataGrid.SetSelectedIndex(selectedIndex);
             }
             else
             {
@@ -529,10 +530,6 @@ namespace DolphinScript.Forms
                     //
                     ScriptState.AllEvents[i].EventsInGroup = ScriptState.AllGroups[ScriptState.AllGroups.Count - 1];
                 }
-
-                // update the listbox to show any changes
-                //
-                _formManager.UpdateListBox(mainDataGrid);
             }
             else
             {
@@ -550,31 +547,25 @@ namespace DolphinScript.Forms
         private void Button_RemoveRepeatGroup_Click(object sender, EventArgs e)
         {
             // check that we only have one event selected
-            //
             if (mainDataGrid.SelectedRows.Count > 1)
             {
                 // we have more than one event selected
-                //
                 MessageBox.Show("Select only one event from the group and try again.");
             }
             else
             {
                 // check that the item we have selected is part of a group
-                //
                 if (!ScriptState.AllEvents[mainDataGrid.CurrentCell.RowIndex].IsPartOfGroup)
                 {
                     // event isn't part of a group
-                    //
                     MessageBox.Show("Error: Event not part of group.");
                 }
                 else
                 {
                     // create a local variable of the group we're removing
-                    //
                     var removeGroupId = ScriptState.AllEvents[mainDataGrid.CurrentCell.RowIndex].GroupId;
 
                     // remove the group flags from the allevents events
-                    //
                     foreach (var ev in ScriptState.AllEvents)
                     {
                         if (ev.GroupId == removeGroupId)
@@ -587,12 +578,7 @@ namespace DolphinScript.Forms
                     }
 
                     // remove the group from the all groups collection
-                    //
                     ScriptState.AllGroups[removeGroupId - 1].Clear();
-
-                    // update the main event list box
-                    //
-                    _formManager.UpdateListBox(mainDataGrid);
                 }
             }
         }
@@ -651,9 +637,6 @@ namespace DolphinScript.Forms
                 _mapper.Map(loadedEvent, ev);
                 ScriptState.AllEvents.Add(ev);
             }
-
-            // show the changes in the listbox
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         /// <summary>
@@ -743,14 +726,16 @@ namespace DolphinScript.Forms
                 return;
             }
 
+            var selectedIndex = mainDataGrid.GetSelectedIndices().FirstOrDefault();
+
             // disable the move item up button if it's already at the top
-            button_MoveEventUp.SetPropertyThreadSafe(() => Enabled, mainDataGrid.CurrentCell.RowIndex > 0);
+            button_MoveEventUp.SetPropertyThreadSafe(() => Enabled, selectedIndex > 0);
 
             // disable the move item down button if it's already at the bottom
-            button_MoveEventDown.SetPropertyThreadSafe(() => Enabled, mainDataGrid.CurrentCell.RowIndex < mainDataGrid.Rows.Count - 1);
+            button_MoveEventDown.SetPropertyThreadSafe(() => Enabled, selectedIndex < mainDataGrid.Rows.Count - 1);
 
             // if the listbox has no item selected then disable the remove item button
-            button_RemoveEvent.SetPropertyThreadSafe(() => Enabled, mainDataGrid.CurrentCell.RowIndex <= mainDataGrid.Rows.Count - 1 && mainDataGrid.CurrentCell.RowIndex >= 0);
+            button_RemoveEvent.SetPropertyThreadSafe(() => Enabled, selectedIndex <= mainDataGrid.Rows.Count - 1 && selectedIndex >= 0);
         }
 
         #endregion
@@ -764,7 +749,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<FixedPause>();
             ev.DelayDuration = (double) fixedDelayNumberBox.Value;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_AddRandomPause_Click(object sender, EventArgs e)
@@ -773,7 +757,6 @@ namespace DolphinScript.Forms
             ev.DelayMinimum = (double)lowerRandomDelayNumberBox.Value;
             ev.DelayMaximum = (double)upperRandomDelayNumberBox.Value;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertPauseWhileColourExistsInArea_Click(object sender, EventArgs e)
@@ -803,19 +786,13 @@ namespace DolphinScript.Forms
         private void Button_AddSpecialButton_Click(object sender, EventArgs e)
         {
             // add the selected special key to the keyboard event text box
-            //
             RichTextBox_KeyboardEvent.AppendText(ComboBox_SpecialKeys.SelectedItem.ToString());
         }
 
         private void Button_AddKeypressEvent_Click(object sender, EventArgs e)
         {
             // add the keyboard event to the event list
-            //
             ScriptState.AllEvents.Add(new KeyboardKeyPress { KeyboardKeys = RichTextBox_KeyboardEvent.Text });
-
-            // update the event list box with the new event
-            //
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         #endregion
@@ -870,7 +847,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LeftClick;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertMiddleMouseClickEvent_Click(object sender, EventArgs e)
@@ -878,7 +854,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MiddleClick;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertRightClickEvent_Click(object sender, EventArgs e)
@@ -886,7 +861,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RightClick;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertLMBDown_Click(object sender, EventArgs e)
@@ -894,7 +868,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LmbDown;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertMMBDown_Click(object sender, EventArgs e)
@@ -902,7 +875,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MmbDown;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertRMBDown_Click(object sender, EventArgs e)
@@ -910,7 +882,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RmbDown;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertLMBUp_Click(object sender, EventArgs e)
@@ -918,7 +889,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LmbUp;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertMMBUp_Click(object sender, EventArgs e)
@@ -926,7 +896,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MmbUp;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
 
         private void Button_InsertRMBUp_Click(object sender, EventArgs e)
@@ -934,7 +903,6 @@ namespace DolphinScript.Forms
             var ev = _eventFactory.CreateEvent<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RmbUp;
             ScriptState.AllEvents.Add(ev);
-            _formManager.UpdateListBox(mainDataGrid);
         }
         
         #endregion Mouse Click Button Events
@@ -1002,8 +970,6 @@ namespace DolphinScript.Forms
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
 
-            _formManager.UpdateListBox(mainDataGrid);
-
             Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
         }
 
@@ -1066,8 +1032,6 @@ namespace DolphinScript.Forms
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
-
-            _formManager.UpdateListBox(mainDataGrid);
 
             Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
         }
@@ -1135,8 +1099,6 @@ namespace DolphinScript.Forms
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
 
-            _formManager.UpdateListBox(mainDataGrid);
-
             Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
         }
 
@@ -1203,8 +1165,6 @@ namespace DolphinScript.Forms
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
 
-            _formManager.UpdateListBox(mainDataGrid);
-
             Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
         }
 
@@ -1232,8 +1192,6 @@ namespace DolphinScript.Forms
                     var ev = _eventFactory.CreateEvent<MouseMove>();
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
-
-                    _formManager.UpdateListBox(mainDataGrid);
 
                     Thread.Sleep(Constants.EventRegisterWaitMs);
                 }
@@ -1273,8 +1231,6 @@ namespace DolphinScript.Forms
                     ev.ClickArea = new CommonTypes.Rect(p1, p2);
                     ScriptState.AllEvents.Add(ev);
 
-                    _formManager.UpdateListBox(mainDataGrid);
-
                     Thread.Sleep(Constants.EventRegisterWaitMs);
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
@@ -1311,8 +1267,6 @@ namespace DolphinScript.Forms
                     ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
-
-                    _formManager.UpdateListBox(mainDataGrid);
 
                     Thread.Sleep(Constants.EventRegisterWaitMs);
                 }
@@ -1353,8 +1307,6 @@ namespace DolphinScript.Forms
                     ev.ClickArea = new CommonTypes.Rect(p1, p2);
 
                     ScriptState.AllEvents.Add(ev);
-
-                    _formManager.UpdateListBox(mainDataGrid);
 
                     Thread.Sleep(Constants.EventRegisterWaitMs);
                 }
@@ -1411,8 +1363,6 @@ namespace DolphinScript.Forms
                             ev.ClickArea = new CommonTypes.Rect(p1, p2);
                             ev.SearchColour = searchColour.ToArgb();
                             ScriptState.AllEvents.Add(ev);
-
-                            _formManager.UpdateListBox(mainDataGrid);
 
                             Thread.Sleep(Constants.EventRegisterWaitMs);
                         }
@@ -1481,8 +1431,6 @@ namespace DolphinScript.Forms
                             ev.SearchColour = searchColour.ToArgb();
 
                             ScriptState.AllEvents.Add(ev);
-
-                            _formManager.UpdateListBox(mainDataGrid);
 
                             Thread.Sleep(Constants.EventRegisterWaitMs);
                         }
@@ -1607,9 +1555,6 @@ namespace DolphinScript.Forms
 
                             // add the event to the event list
                             ScriptState.AllEvents.Add(ev);
-
-                            // update the event listbox to show the new event
-                            _formManager.UpdateListBox(mainDataGrid);
 
                             // set the button text back to normal
                             Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);

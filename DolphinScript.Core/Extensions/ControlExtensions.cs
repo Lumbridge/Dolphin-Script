@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Forms;
@@ -11,6 +13,29 @@ namespace DolphinScript.Core.Extensions
             Control @this,
             Expression<Func<TResult>> property,
             TResult value);
+
+        public static List<int> GetSelectedIndices(this DataGridView grid)
+        {
+            if (grid.SelectedRows.Count == 0)
+            {
+                return new List<int>();
+            }
+
+            return grid.SelectedRows.Cast<DataGridViewRow>().Where(x => x.Selected).Select(x => x.Index).ToList();
+        }
+
+        public static void SetSelectedIndices(this DataGridView grid, IList<int> indices)
+        {
+            foreach (DataGridViewRow row in grid.Rows)
+            {
+                row.Selected = indices.Contains(row.Index);
+            }
+        }
+
+        public static void SetSelectedIndex(this DataGridView grid, int index)
+        {
+            grid.SetSelectedIndices(new List<int>(1){ index });
+        }
 
         public static void SetPropertyThreadSafe<TResult>(
             this Control @this,

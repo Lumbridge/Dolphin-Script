@@ -1343,6 +1343,7 @@
             // mainDataGrid
             // 
             this.mainDataGrid.AllowUserToAddRows = false;
+            this.mainDataGrid.AllowUserToDeleteRows = false;
             this.mainDataGrid.AllowUserToResizeRows = false;
             this.mainDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.mainDataGrid.BackgroundColor = System.Drawing.SystemColors.ActiveBorder;
@@ -1357,6 +1358,7 @@
             this.mainDataGrid.Location = new System.Drawing.Point(12, 27);
             this.mainDataGrid.Name = "mainDataGrid";
             this.mainDataGrid.ReadOnly = true;
+            this.mainDataGrid.RowHeadersVisible = false;
             this.mainDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.mainDataGrid.Size = new System.Drawing.Size(853, 212);
             this.mainDataGrid.TabIndex = 49;
