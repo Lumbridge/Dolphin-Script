@@ -1,25 +1,24 @@
-﻿using System;
-using DolphinScript.Core.Events.BaseEvents;
-using DolphinScript.Core.Interfaces;
+﻿using DolphinScript.Core.Interfaces;
+using System;
 using Unity;
 
 namespace DolphinScript.Core.Concrete
 {
-    public class EventFactory : IEventFactory
+    public class ObjectFactory : IObjectFactory
     {
         private readonly IUnityContainer _container;
 
-        public EventFactory(IUnityContainer container)
+        public ObjectFactory(IUnityContainer container)
         {
             _container = container;
         }
 
-        public T CreateEvent<T>() where T : ScriptEvent
+        public T CreateObject<T>() where T : class
         {
             return _container.Resolve<T>();
         }
 
-        public object CreateEvent(Type type)
+        public object CreateObject(Type type)
         {
             return _container.Resolve(type);
         }

@@ -20,6 +20,7 @@ namespace DolphinScript.Core.Events.Mouse
         public MouseClick(IRandomService randomService)
         {
             _randomService = randomService;
+            EventType = Constants.EventType.MouseClick;
         }
 
         public override void Setup()

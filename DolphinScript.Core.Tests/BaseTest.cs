@@ -28,7 +28,7 @@ namespace DolphinScript.Core.Tests
             UnityContainer = new UnityContainer();
 
             UnityContainer.RegisterInstance(mapper, InstanceLifetime.Singleton);
-            UnityContainer.RegisterType<IEventFactory, EventFactory>();
+            UnityContainer.RegisterType<IObjectFactory, ObjectFactory>();
             UnityContainer.RegisterType<IXmlSerializerService, XmlSerializerService>();
             UnityContainer.RegisterType<IUserInterfaceService, UserInterfaceService>();
             UnityContainer.RegisterType<IGlobalMethodService, GlobalMethodService>();

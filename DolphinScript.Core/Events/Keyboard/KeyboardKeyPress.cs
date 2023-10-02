@@ -8,6 +8,11 @@ namespace DolphinScript.Core.Events.Keyboard
     [Serializable]
     public class KeyboardKeyPress : ScriptEvent
     {
+        public KeyboardKeyPress()
+        {
+            EventType = Constants.EventType.KeyboardKeyPress;
+        }
+
         public override void Setup()
         {
             ScriptState.CurrentAction = $"Pressing key(s): {KeyboardKeys}";

@@ -7,6 +7,11 @@ namespace DolphinScript.Core.Events.Keyboard
     [Serializable]
     public class KeyboardReleaseKey : ScriptEvent
     {
+        public KeyboardReleaseKey()
+        {
+            EventType = Constants.EventType.KeyboardReleaseKey;
+        }
+
         public override void Setup()
         {
             ScriptState.CurrentAction = "";

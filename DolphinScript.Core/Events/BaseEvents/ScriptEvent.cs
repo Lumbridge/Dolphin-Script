@@ -90,5 +90,7 @@ namespace DolphinScript.Core.Events.BaseEvents
         public int SearchColour { get; set; }
         // list of search colours for multi-colour search events
         public List<int> SearchColours { get; set; }
+
+        public Constants.EventType EventType { get; set; }
     }
 }

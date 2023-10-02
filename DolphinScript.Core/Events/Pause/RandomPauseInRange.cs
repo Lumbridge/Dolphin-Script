@@ -1,6 +1,7 @@
 ﻿using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 using System;
+using DolphinScript.Core.Classes;
 
 namespace DolphinScript.Core.Events.Pause
 {
@@ -11,6 +12,7 @@ namespace DolphinScript.Core.Events.Pause
 
         public RandomPauseInRange(IRandomService randomService, IColourService colourService, IPointService pointService, IWindowControlService windowControlService) : base(randomService, colourService, pointService, windowControlService)
         {
+            EventType = Constants.EventType.RandomPauseInRange;
         }
 
         /// <summary>

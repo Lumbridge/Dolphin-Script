@@ -17,6 +17,7 @@ namespace DolphinScript.Core.Events.Window
         public MoveWindowToFront(IWindowControlService windowControlService)
         {
             _windowControlService = windowControlService;
+            EventType = Constants.EventType.MoveWindowToFront;
         }
 
         public override void Setup()

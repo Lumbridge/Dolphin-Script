@@ -46,7 +46,6 @@ namespace DolphinScript.Core.Classes
         public const int KeyPressed = 0x8000;
 
         // list of special send key codes
-        //
         public static List<string> SpecialKeys = new List<string>
         {
             "+",
@@ -92,5 +91,28 @@ namespace DolphinScript.Core.Classes
             "{MULTIPLY}",
             "{DIVIDE}"
         };
+
+        public enum EventType
+        {
+            FixedPause,
+            PauseWhileColourDoesntExistInArea,
+            PauseWhileColourDoesntExistInAreaOnWindow,
+            PauseWhileColourExistsInArea,
+            PauseWhileColourExistsInAreaOnWindow,
+            PauseWhileWindowNotFound,
+            RandomPauseInRange,
+            MoveWindowToFront,
+            MouseClick,
+            MouseMove,
+            MouseMoveToArea,
+            MouseMoveToAreaOnWindow,
+            MouseMoveToColour,
+            MouseMoveToColourOnWindow,
+            MouseMoveToMultiColourOnWindow,
+            MouseMoveToPointOnWindow,
+            KeyboardHoldKey,
+            KeyboardKeyPress,
+            KeyboardReleaseKey
+        }
     }
 }

@@ -55,7 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Concrete\EventFactory.cs" />
+    <Compile Include="Concrete\ObjectFactory.cs" />
     <Compile Include="Concrete\GlobalMethodService.cs" />
     <Compile Include="Concrete\ColourService.cs" />
     <Compile Include="Concrete\ListService.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Events\Window\MoveWindowToFront.cs" />
     <Compile Include="Extensions\ControlExtensions.cs" />
     <Compile Include="Interfaces\IColourService.cs" />
-    <Compile Include="Interfaces\IEventFactory.cs" />
+    <Compile Include="Interfaces\IObjectFactory.cs" />
     <Compile Include="Interfaces\IGlobalMethodService.cs" />
     <Compile Include="Interfaces\IListService.cs" />
     <Compile Include="Interfaces\IMouseMathService.cs" />

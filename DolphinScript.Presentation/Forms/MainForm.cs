@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DolphinScript.Forms.UtilityForms;
 
 namespace DolphinScript.Forms
 {
@@ -29,10 +30,11 @@ namespace DolphinScript.Forms
         private readonly IGlobalMethodService _globalMethodService;
         private readonly IListService _listService;
         private readonly IScreenCaptureService _screenCaptureService;
-        private readonly IEventFactory _eventFactory;
+        private readonly IObjectFactory _objectFactory;
         private readonly IUserInterfaceService _userInterfaceService;
         private readonly IMapper _mapper;
         private readonly IFormManager _formManager;
+        private readonly IFormFactory _formFactory;
 
         private readonly List<Control> _toggleableControls = new List<Control>();
 
@@ -41,8 +43,8 @@ namespace DolphinScript.Forms
         /// </summary>
         public MainForm(IColourService colourService, IPointService pointService, 
             IWindowControlService windowControlService, IGlobalMethodService globalMethodService, 
-            IListService listService, IScreenCaptureService screenCaptureService, IEventFactory eventFactory, 
-            IUserInterfaceService userInterfaceService, IMapper mapper, IFormManager formManager)
+            IListService listService, IScreenCaptureService screenCaptureService, IObjectFactory objectFactory, 
+            IUserInterfaceService userInterfaceService, IMapper mapper, IFormManager formManager, IFormFactory formFactory)
         {
             InitializeComponent();
 
@@ -52,10 +54,11 @@ namespace DolphinScript.Forms
             _globalMethodService = globalMethodService;
             _listService = listService;
             _screenCaptureService = screenCaptureService;
-            _eventFactory = eventFactory;
+            _objectFactory = objectFactory;
             _userInterfaceService = userInterfaceService;
             _mapper = mapper;
             _formManager = formManager;
+            _formFactory = formFactory;
 
             SetFormDefaults();
 
@@ -228,7 +231,7 @@ namespace DolphinScript.Forms
                 }
 
                 // add a delay to minimise CPU usage
-                Thread.Sleep(500);
+                Thread.Sleep(100);
             }
         }
 
@@ -633,7 +636,7 @@ namespace DolphinScript.Forms
 
             foreach (var loadedEvent in loadedEvents)
             {
-                var ev = (ScriptEvent)_eventFactory.CreateEvent(loadedEvent.GetType());
+                var ev = (ScriptEvent)_objectFactory.CreateObject(loadedEvent.GetType());
                 _mapper.Map(loadedEvent, ev);
                 ScriptState.AllEvents.Add(ev);
             }
@@ -746,14 +749,14 @@ namespace DolphinScript.Forms
 
         private void Button_AddFixedPause_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<FixedPause>();
+            var ev = _objectFactory.CreateObject<FixedPause>();
             ev.DelayDuration = (double) fixedDelayNumberBox.Value;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_AddRandomPause_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<RandomPauseInRange>();
+            var ev = _objectFactory.CreateObject<RandomPauseInRange>();
             ev.DelayMinimum = (double)lowerRandomDelayNumberBox.Value;
             ev.DelayMaximum = (double)upperRandomDelayNumberBox.Value;
             ScriptState.AllEvents.Add(ev);
@@ -844,63 +847,63 @@ namespace DolphinScript.Forms
 
         private void Button_InsertLeftClickEvent_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LeftClick;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_InsertMiddleMouseClickEvent_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MiddleClick;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_InsertRightClickEvent_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RightClick;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_InsertLMBDown_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LmbDown;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_InsertMMBDown_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MmbDown;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_InsertRMBDown_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RmbDown;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_InsertLMBUp_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.LmbUp;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_InsertMMBUp_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.MmbUp;
             ScriptState.AllEvents.Add(ev);
         }
 
         private void Button_InsertRMBUp_Click(object sender, EventArgs e)
         {
-            var ev = _eventFactory.CreateEvent<MouseClick>();
+            var ev = _objectFactory.CreateObject<MouseClick>();
             ev.MouseButton = CommonTypes.VirtualMouseStates.RmbUp;
             ScriptState.AllEvents.Add(ev);
         }
@@ -965,7 +968,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            var ev = _eventFactory.CreateEvent<PauseWhileColourExistsInArea>();
+            var ev = _objectFactory.CreateObject<PauseWhileColourExistsInArea>();
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
@@ -1028,7 +1031,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            var ev = _eventFactory.CreateEvent<PauseWhileColourDoesntExistInArea>();
+            var ev = _objectFactory.CreateObject<PauseWhileColourDoesntExistInArea>();
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.SearchColour = searchColour.ToArgb();
             ScriptState.AllEvents.Add(ev);
@@ -1092,7 +1095,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            var ev = _eventFactory.CreateEvent<PauseWhileColourExistsInAreaOnWindow>();
+            var ev = _objectFactory.CreateObject<PauseWhileColourExistsInAreaOnWindow>();
             ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.ClickArea = new CommonTypes.Rect(p1, p2);
@@ -1158,7 +1161,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            var ev = _eventFactory.CreateEvent<PauseWhileColourDoesntExistInAreaOnWindow>();
+            var ev = _objectFactory.CreateObject<PauseWhileColourDoesntExistInAreaOnWindow>();
             ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.ClickArea = new CommonTypes.Rect(p1, p2);
@@ -1189,7 +1192,7 @@ namespace DolphinScript.Forms
                 {
                     var p1 = _pointService.GetCursorPosition();
 
-                    var ev = _eventFactory.CreateEvent<MouseMove>();
+                    var ev = _objectFactory.CreateObject<MouseMove>();
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
 
@@ -1227,7 +1230,7 @@ namespace DolphinScript.Forms
 
                     var p2 = _pointService.GetCursorPosition();
 
-                    var ev = _eventFactory.CreateEvent<MouseMoveToArea>();
+                    var ev = _objectFactory.CreateObject<MouseMoveToArea>();
                     ev.ClickArea = new CommonTypes.Rect(p1, p2);
                     ScriptState.AllEvents.Add(ev);
 
@@ -1263,7 +1266,7 @@ namespace DolphinScript.Forms
                 {
                     var p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
-                    var ev = _eventFactory.CreateEvent<MouseMoveToPointOnWindow>();
+                    var ev = _objectFactory.CreateObject<MouseMoveToPointOnWindow>();
                     ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
@@ -1302,7 +1305,7 @@ namespace DolphinScript.Forms
 
                     var p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
-                    var ev = _eventFactory.CreateEvent<MouseMoveToAreaOnWindow>();
+                    var ev = _objectFactory.CreateObject<MouseMoveToAreaOnWindow>();
                     ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                     ev.ClickArea = new CommonTypes.Rect(p1, p2);
 
@@ -1358,7 +1361,7 @@ namespace DolphinScript.Forms
 
                             var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
 
-                            var ev = _eventFactory.CreateEvent<MouseMoveToColour>();
+                            var ev = _objectFactory.CreateObject<MouseMoveToColour>();
                             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
                             ev.ClickArea = new CommonTypes.Rect(p1, p2);
                             ev.SearchColour = searchColour.ToArgb();
@@ -1424,7 +1427,7 @@ namespace DolphinScript.Forms
 
                             var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
 
-                            var ev = _eventFactory.CreateEvent<MouseMoveToColourOnWindow>();
+                            var ev = _objectFactory.CreateObject<MouseMoveToColourOnWindow>();
                             ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
                             ev.ClickArea = new CommonTypes.Rect(p1, p2);
@@ -1547,7 +1550,7 @@ namespace DolphinScript.Forms
                                 }
                             }
 
-                            var ev = _eventFactory.CreateEvent<MouseMoveToMultiColourOnWindow>();
+                            var ev = _objectFactory.CreateObject<MouseMoveToMultiColourOnWindow>();
                             ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
                             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
                             ev.ClickArea = new CommonTypes.Rect(p1, p2);
@@ -1591,6 +1594,28 @@ namespace DolphinScript.Forms
         private void ComboBox_MouseMovementMode_SelectedIndexChanged(object sender, EventArgs e)
         {
             ScriptState.MouseMovementMode = (MouseMovementService.MouseMovementMode) Enum.Parse(typeof(MouseMovementService.MouseMovementMode), ComboBox_MouseMovementMode.Text);
+        }
+
+        private void MainDataGrid_DoubleClick(object sender, EventArgs e)
+        {
+            var selected = MainDataGrid.GetSelectedIndices();
+
+            if (!selected.Any() || selected.Count > 1)
+            {
+                return;
+            }
+
+            var clickedEvent = ScriptState.AllEvents[selected.FirstOrDefault()];
+
+            var form = _formFactory.GetForm(clickedEvent);
+
+            form?.Show();
+        }
+
+        private void Button_SelectArea_Click(object sender, EventArgs e)
+        {
+            var form = _objectFactory.CreateObject<AreaSelectionForm>();
+            form?.Show();
         }
     }
 }

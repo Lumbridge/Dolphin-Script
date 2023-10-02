@@ -13,6 +13,7 @@ namespace DolphinScript.Core.Events.Mouse
 
         public MouseMoveToPointOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
         {
+            EventType = Constants.EventType.MouseMoveToPointOnWindow;
         }
 
         /// <summary>

@@ -13,6 +13,7 @@ namespace DolphinScript.Core.Events.Pause
 
         public PauseWhileColourExistsInArea(IRandomService randomService, IColourService colourService, IPointService pointService, IWindowControlService windowControlService) : base(randomService, colourService, pointService, windowControlService)
         {
+            EventType = Constants.EventType.PauseWhileColourExistsInArea;
         }
 
         /// <summary>

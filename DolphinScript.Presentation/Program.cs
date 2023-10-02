@@ -34,7 +34,7 @@ namespace DolphinScript
             _container = new UnityContainer();
 
             _container.RegisterInstance(mapper, InstanceLifetime.Singleton);
-            _container.RegisterType<IEventFactory, EventFactory>();
+            _container.RegisterType<IObjectFactory, ObjectFactory>();
             _container.RegisterType<IXmlSerializerService, XmlSerializerService>();
             _container.RegisterType<IUserInterfaceService, UserInterfaceService>();
             _container.RegisterType<IGlobalMethodService, GlobalMethodService>();
@@ -47,6 +47,7 @@ namespace DolphinScript
             _container.RegisterType<IColourService, ColourService>();
             _container.RegisterType<IWindowControlService, WindowControlService>();
             _container.RegisterType<IFormManager, FormManager>();
+            _container.RegisterType<IFormFactory, FormFactory>();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

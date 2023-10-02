@@ -20,9 +20,9 @@ namespace DolphinScript.Core.Concrete
             var g = Graphics.FromImage(bmpScreenshot);
 
             // copy from screen into the bitmap we created
-            g.CopyFromScreen(area.left, area.top, 0, 0, new Size(area.Width * 2, area.Height * 2));
+            g.CopyFromScreen(area.left, area.top, 0, 0, new Size(area.Width, area.Height));
 
-            // return the screenshot
+            // return the screen shot
             return bmpScreenshot;
         }
 

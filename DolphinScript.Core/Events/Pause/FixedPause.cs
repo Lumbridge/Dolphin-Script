@@ -17,6 +17,7 @@ namespace DolphinScript.Core.Events.Pause
             IColourService colourService, IPointService pointService, IWindowControlService windowControlService)
             : base(randomService, colourService, pointService, windowControlService)
         {
+            EventType = Constants.EventType.FixedPause;
         }
         
         /// <summary>

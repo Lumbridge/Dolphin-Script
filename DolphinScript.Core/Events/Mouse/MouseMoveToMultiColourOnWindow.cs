@@ -12,6 +12,7 @@ namespace DolphinScript.Core.Events.Mouse
 
         public MouseMoveToMultiColourOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
         {
+            EventType = Constants.EventType.MouseMoveToMultiColourOnWindow;
         }
 
         /// <summary>

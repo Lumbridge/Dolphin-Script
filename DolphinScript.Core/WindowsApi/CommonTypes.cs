@@ -237,8 +237,8 @@ namespace DolphinScript.Core.WindowsApi
             public int right;
             public int bottom;
 
-            public int Height { get { return bottom - top; } }
-            public int Width { get { return right - left; } }
+            public int Height => bottom;
+            public int Width => right;
 
             /// <summary>
             /// RECT constructor which takes two points (TopLeft & BottomRight points)
