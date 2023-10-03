@@ -24,7 +24,9 @@ namespace DolphinScript
         {
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<ScriptEvent, ScriptEvent>().ReverseMap();
+                cfg.CreateMap<ScriptEvent, ScriptEvent>().ReverseMap()
+                    .ForMember(x => x.GroupSize, y => y.Ignore())
+                    .ForMember(x => x.GroupSiblings, y => y.Ignore());
                 cfg.CreateMap<SaveFileDialog, FileDialogModel>().ReverseMap();
                 cfg.CreateMap<OpenFileDialog, FileDialogModel>().ReverseMap();
             });

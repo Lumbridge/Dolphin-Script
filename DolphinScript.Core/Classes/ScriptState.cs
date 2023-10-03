@@ -16,7 +16,6 @@ namespace DolphinScript.Core.Classes
         public static double SearchPause { get; set; } = 0.5;
         public static BindingSource AllEventsSource { get; set; }
         public static BindingList<ScriptEvent> AllEvents { get; set; } = new BindingList<ScriptEvent>();
-        public static List<List<ScriptEvent>> AllGroups { get; set; } = new List<List<ScriptEvent>>();
         public static MouseMovementService.MouseMovementMode MouseMovementMode { get; set; } = MouseMovementService.MouseMovementMode.Realistic;
         public static bool FreeMouse { get; set; } = false;
         public static string CurrentAction { get; set; }

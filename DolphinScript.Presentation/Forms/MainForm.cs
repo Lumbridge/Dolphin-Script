@@ -46,9 +46,9 @@ namespace DolphinScript.Forms
         /// <summary>
         /// main form constructor
         /// </summary>
-        public MainForm(IColourService colourService, IPointService pointService, 
-            IWindowControlService windowControlService, IGlobalMethodService globalMethodService, 
-            IListService listService, IScreenCaptureService screenCaptureService, IObjectFactory objectFactory, 
+        public MainForm(IColourService colourService, IPointService pointService,
+            IWindowControlService windowControlService, IGlobalMethodService globalMethodService,
+            IListService listService, IScreenCaptureService screenCaptureService, IObjectFactory objectFactory,
             IUserInterfaceService userInterfaceService, IMapper mapper, IFormManager formManager, IFormFactory formFactory)
         {
             InitializeComponent();
@@ -144,14 +144,14 @@ namespace DolphinScript.Forms
                 foreach (var ev in ScriptState.AllEvents)
                 {
                     // check if the event if part of a repeat group
-                    if (ev.IsPartOfGroup && ev.EventsInGroup.IndexOf(ev) == 0)
+                    if (ev.IsPartOfGroup && ev.GroupEventIndex == 0)
                     {
                         for (var i = 0; i < ev.NumberOfCycles; i++)
                         {
                             // do each sub-event in the group list
-                            foreach (var subEvent in ev.EventsInGroup)
+                            foreach (var subEvent in ev.GroupSiblings)
                             {
-                                ev.Setup();
+                                subEvent.Setup();
                                 if (_formManager.UpdateListboxCurrentEventIndex(subEvent))
                                 {
                                     break;
@@ -348,26 +348,21 @@ namespace DolphinScript.Forms
                 else if (selected.IsPartOfGroup && !above.IsPartOfGroup)
                 {
                     // get the size of the group we need to shift
-                    var groupSize = selected.EventsInGroup.Count;
+                    var groupSize = selected.GroupSize;
                     // shift the events one by one until the non-group event is below the group
                     _listService.ShiftItem(ScriptState.AllEvents, aboveIndex, groupSize);
                 }
                 // group selected, same group above (move the group event up within the group)
                 else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupId == above.GroupId)
                 {
-                    // get the indices of the events in their group-event lists so we can swap them
-                    var selectedGroupIndex = selected.GroupEventIndex;
-                    var aboveGroupIndex = above.GroupEventIndex;
                     // swap the events in the main event list
                     _listService.Swap(ScriptState.AllEvents, selectedIndex, aboveIndex);
-                    // swap the events within the group list
-                    _listService.Swap(ScriptState.AllGroups[ScriptState.AllEvents[selectedIndex].GroupId - 1], selectedGroupIndex, aboveGroupIndex);
                 }
                 // group selected, different group above (swap the position of both groups)
                 else if (selected.IsPartOfGroup && above.IsPartOfGroup && selected.GroupId != above.GroupId)
                 {
-                    var aboveGroupSize = above.EventsInGroup.Count;
-                    var selectedGroupSize = selected.EventsInGroup.Count;
+                    var aboveGroupSize = above.GroupSize;
+                    var selectedGroupSize = selected.GroupSize;
                     _listService.ShiftRange(ScriptState.AllEvents, aboveIndex - aboveGroupSize + 1, aboveGroupSize, selectedGroupSize);
                 }
                 // some error occurred
@@ -380,7 +375,7 @@ namespace DolphinScript.Forms
                 if (selected.IsPartOfGroup)
                 {
                     // if we move a group past another group then set the selected index to the top of the group
-                    MainDataGrid.SetSelectedIndex(selected.EventsInGroup.Count - selectedIndex);
+                    MainDataGrid.SetSelectedIndex(selected.GroupSize - selectedIndex);
                 }
                 else
                 {
@@ -410,7 +405,7 @@ namespace DolphinScript.Forms
             */
 
             var selectedIndex = MainDataGrid.GetSelectedIndices().FirstOrDefault();
-            
+
             if (selectedIndex < MainDataGrid.Rows.Count)
             {
                 // get the indices of the events we're using
@@ -429,7 +424,7 @@ namespace DolphinScript.Forms
                 else if (selected.IsPartOfGroup && !below.IsPartOfGroup)
                 {
                     // get the size of the group we're shifting
-                    var selectedGroupSize = selected.EventsInGroup.Count;
+                    var selectedGroupSize = selected.GroupSize;
 
                     // move the whole group under the event below us
                     _listService.ShiftRange(ScriptState.AllEvents, selectedIndex - selectedGroupSize + 1, selectedGroupSize, 1);
@@ -437,24 +432,17 @@ namespace DolphinScript.Forms
                 // group selected, same group below (move the group event down within the group)
                 else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupId == below.GroupId)
                 {
-                    // get the indices of the events in their group-event lists so we can swap them
-                    var selectedGroupIndex = selected.GroupEventIndex;
-                    var belowGroupIndex = below.GroupEventIndex;
-
                     // swap the events in the main event list
                     _listService.Swap(ScriptState.AllEvents, selectedIndex, belowIndex);
-
-                    // swap the events within the group list
-                    _listService.Swap(ScriptState.AllGroups[ScriptState.AllEvents[selectedIndex].GroupId - 1], selectedGroupIndex, belowGroupIndex);
                 }
                 // group selected, different group below (swap the position of both groups)
                 else if (selected.IsPartOfGroup && below.IsPartOfGroup && selected.GroupId != below.GroupId)
                 {
                     // get the size of the group below us
-                    var belowGroupSize = below.EventsInGroup.Count;
+                    var belowGroupSize = below.GroupSize;
 
                     // get the size of the group we're shifting
-                    var selectedGroupSize = selected.EventsInGroup.Count;
+                    var selectedGroupSize = selected.GroupSize;
 
                     // move the whole selected group under the group below us
                     _listService.ShiftRange(ScriptState.AllEvents, selectedIndex - selectedGroupSize + 1, selectedGroupSize, belowGroupSize);
@@ -513,51 +501,46 @@ namespace DolphinScript.Forms
             var selectedIndex = MainDataGrid.GetSelectedIndices().FirstOrDefault();
 
             // check that we have more than one event selected in the listbox
-            if (MainDataGrid.SelectedRows.Count > 1)
-            {
-                // check that none of the selected events are part of a group already
-                for (var i = selectedIndex; i < MainDataGrid.SelectedRows.Count; i++)
-                {
-                    if (ScriptState.AllEvents[i].IsPartOfGroup)
-                    {
-                        MessageBox.Show(MainFormConstants.OneGroupMaxError);
-                        return;
-                    }
-                }
-
-                // add a new list of script events to the all groups list
-                ScriptState.AllGroups.Add(new List<ScriptEvent>());
-
-                // loop through all the selected events in the listbox
-                for (var i = selectedIndex; i < MainDataGrid.SelectedRows.Count + selectedIndex; i++)
-                {
-                    // set the event as part of a group
-                    ScriptState.AllEvents[i].IsPartOfGroup = true;
-
-                    // set the group ID of the selected event
-                    ScriptState.AllEvents[i].GroupId = ScriptState.AllGroups.Count;
-
-                    // set the number of times the group is going to repeat
-                    ScriptState.AllEvents[i].NumberOfCycles = (int)NumericUpDown_RepeatAmount.Value;
-
-                    // add the event to the all groups sub-list
-                    ScriptState.AllGroups[ScriptState.AllGroups.Count - 1].Add(ScriptState.AllEvents[i]);
-                }
-
-                // loop through all the selected events again
-                for (var i = selectedIndex; i < MainDataGrid.SelectedRows.Count + selectedIndex; i++)
-                {
-                    // update their events in group list
-                    ScriptState.AllEvents[i].EventsInGroup = ScriptState.AllGroups[ScriptState.AllGroups.Count - 1];
-                }
-
-                ScriptState.AllEvents.ResetBindings();
-            }
-            else
+            if (MainDataGrid.SelectedRows.Count <= 1)
             {
                 // if the user doesn't have multiple events selected then they can't make a group
                 MessageBox.Show(MainFormConstants.SelectMoreThanOneItemToMakeAGroup);
+                return;
             }
+
+            // check that none of the selected events are part of a group already
+            for (var i = selectedIndex; i < MainDataGrid.SelectedRows.Count; i++)
+            {
+                if (ScriptState.AllEvents[i].IsPartOfGroup)
+                {
+                    MessageBox.Show(MainFormConstants.OneGroupMaxError);
+                    return;
+                }
+            }
+
+            var newGroupId = ScriptState.AllEvents.Max(x => x.GroupId) + 1;
+
+            var groupEventIndexCounter = 0;
+
+            // loop through all the selected events in the listbox
+            for (var i = selectedIndex; i < MainDataGrid.SelectedRows.Count + selectedIndex; i++)
+            {
+                // set the event's order within it's group
+                ScriptState.AllEvents[i].GroupEventIndex = groupEventIndexCounter;
+
+                // set the event as part of a group
+                ScriptState.AllEvents[i].IsPartOfGroup = true;
+
+                // set the group ID of the selected event
+                ScriptState.AllEvents[i].GroupId = newGroupId;
+
+                // set the number of times the group is going to repeat
+                ScriptState.AllEvents[i].NumberOfCycles = (int)NumericUpDown_RepeatAmount.Value;
+
+                groupEventIndexCounter++;
+            }
+
+            ScriptState.AllEvents.ResetBindings();
         }
 
         /// <summary>
@@ -596,12 +579,8 @@ namespace DolphinScript.Forms
                             ev.GroupId = default;
                             ev.IsPartOfGroup = false;
                             ev.NumberOfCycles = default;
-                            ev.EventsInGroup.Clear();
                         }
                     }
-
-                    // remove the group from the all groups collection
-                    ScriptState.AllGroups[removeGroupId - 1].Clear();
 
                     ScriptState.AllEvents.ResetBindings();
                 }
@@ -772,7 +751,7 @@ namespace DolphinScript.Forms
         private void Button_AddFixedPause_Click(object sender, EventArgs e)
         {
             var ev = _objectFactory.CreateObject<FixedPause>();
-            ev.DelayDuration = (double) fixedDelayNumberBox.Value;
+            ev.DelayDuration = (double)fixedDelayNumberBox.Value;
             ScriptState.AllEvents.Add(ev);
         }
 
@@ -930,7 +909,7 @@ namespace DolphinScript.Forms
             ev.MouseButton = CommonTypes.VirtualMouseStates.RmbUp;
             ScriptState.AllEvents.Add(ev);
         }
-        
+
         #endregion Mouse Click Button Events
 
         #region Pause Event Register Loops
@@ -1588,7 +1567,7 @@ namespace DolphinScript.Forms
 
         private void ComboBox_MouseMovementMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ScriptState.MouseMovementMode = (MouseMovementService.MouseMovementMode) Enum.Parse(typeof(MouseMovementService.MouseMovementMode), ComboBox_MouseMovementMode.Text);
+            ScriptState.MouseMovementMode = (MouseMovementService.MouseMovementMode)Enum.Parse(typeof(MouseMovementService.MouseMovementMode), ComboBox_MouseMovementMode.Text);
         }
 
         private void MainDataGrid_DoubleClick(object sender, EventArgs e)

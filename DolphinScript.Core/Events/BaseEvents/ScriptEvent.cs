@@ -9,6 +9,7 @@ using DolphinScript.Core.WindowsApi;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace DolphinScript.Core.Events.BaseEvents
@@ -63,12 +64,18 @@ namespace DolphinScript.Core.Events.BaseEvents
         public string KeyboardKeys { get; set; }
 
         // gives us the index of the event inside it's event group
-        public int GroupEventIndex => EventsInGroup.IndexOf(this);
+        public int GroupEventIndex { get; set; }
+
+        [XmlIgnore]
+        public int GroupSize => ScriptState.AllEvents.Where(x => x.GroupId == GroupId)
+            .Max(x => x.GroupEventIndex) + 1;
+
+        [XmlIgnore]
+        public List<ScriptEvent> GroupSiblings => ScriptState.AllEvents.Where(x => x.GroupId == GroupId)
+            .OrderBy(x => x.GroupEventIndex).ToList();
 
         public int GroupId { get; set; }
 
-        public List<ScriptEvent> EventsInGroup { get; set; } = new List<ScriptEvent>();
-        
         public bool IsPartOfGroup { get; set; }
 
         // tells us how many times the repeat group is going to repeat for before continuing
