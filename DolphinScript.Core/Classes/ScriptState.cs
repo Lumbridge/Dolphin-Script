@@ -11,8 +11,8 @@ namespace DolphinScript.Core.Classes
     {
         public static bool IsRunning { get; set; }
         public static bool IsRegistering { get; set; }
-        public static int MinimumMouseSpeed { get; set; } = Constants.DefaultMinimumMouseSpeed;
-        public static int MaximumMouseSpeed { get; set; } = Constants.DefaultMaximumMouseSpeed;
+        public static int MinimumMouseSpeed { get; set; } = Constants.MainFormConstants.DefaultMinimumMouseSpeed;
+        public static int MaximumMouseSpeed { get; set; } = Constants.MainFormConstants.DefaultMaximumMouseSpeed;
         public static double SearchPause { get; set; } = 0.5;
         public static BindingSource AllEventsSource { get; set; }
         public static BindingList<ScriptEvent> AllEvents { get; set; } = new BindingList<ScriptEvent>();

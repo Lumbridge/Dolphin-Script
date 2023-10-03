@@ -1,6 +1,7 @@
 ﻿using DolphinScript.Core.Classes;
 using DolphinScript.Core.Events.BaseEvents;
 using System;
+using DolphinScript.Core.Constants;
 
 namespace DolphinScript.Core.Interfaces
 {
@@ -8,6 +9,6 @@ namespace DolphinScript.Core.Interfaces
     {
         T CreateObject<T>() where T : class;
         object CreateObject(Type type);
-        ScriptEvent CreateObject(Constants.EventType eventType);
+        ScriptEvent CreateObject(ScriptEventConstants.EventType eventType);
     }
 }

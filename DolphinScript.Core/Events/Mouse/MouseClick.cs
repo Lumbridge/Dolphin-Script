@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
@@ -20,7 +21,7 @@ namespace DolphinScript.Core.Events.Mouse
         public MouseClick(IRandomService randomService)
         {
             _randomService = randomService;
-            EventType = Constants.EventType.MouseClick;
+            EventType = ScriptEventConstants.EventType.MouseClick;
         }
 
         public override void Setup()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 
@@ -13,7 +14,7 @@ namespace DolphinScript.Core.Events.Mouse
 
         public MouseMoveToPointOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
         {
-            EventType = Constants.EventType.MouseMoveToPointOnWindow;
+            EventType = ScriptEventConstants.EventType.MouseMoveToPointOnWindow;
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 
@@ -17,7 +18,7 @@ namespace DolphinScript.Core.Events.Window
         public MoveWindowToFront(IWindowControlService windowControlService)
         {
             _windowControlService = windowControlService;
-            EventType = Constants.EventType.MoveWindowToFront;
+            EventType = ScriptEventConstants.EventType.MoveWindowToFront;
         }
 
         public override void Setup()

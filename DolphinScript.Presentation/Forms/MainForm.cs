@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Management;
+using DolphinScript.Core.Constants;
 using DolphinScript.Forms.UtilityForms;
 
 namespace DolphinScript.Forms
@@ -99,7 +100,7 @@ namespace DolphinScript.Forms
             });
 
             // add all keys to the key event combo box
-            foreach (var key in Constants.SpecialKeys)
+            foreach (var key in MainFormConstants.SpecialKeys)
             {
                 ComboBox_SpecialKeys.Items.Add(key);
             }
@@ -107,8 +108,8 @@ namespace DolphinScript.Forms
             // set the default index for the keys combo box
             ComboBox_SpecialKeys.SelectedIndex = 17;
 
-            NumericUpDown_MinMouseSpeed.Value = Constants.DefaultMinimumMouseSpeed;
-            NumericUpDown_MaxMouseSpeed.Value = Constants.DefaultMaximumMouseSpeed;
+            NumericUpDown_MinMouseSpeed.Value = MainFormConstants.DefaultMinimumMouseSpeed;
+            NumericUpDown_MaxMouseSpeed.Value = MainFormConstants.DefaultMaximumMouseSpeed;
 
             ComboBox_MouseMovementMode.Items.AddRange(Enum.GetNames(typeof(MouseMovementService.MouseMovementMode)));
             ComboBox_MouseMovementMode.SelectedIndex = 0;
@@ -172,7 +173,7 @@ namespace DolphinScript.Forms
             }
 
             // change the text back to normal while the script isn't running
-            button_StartScript.SetPropertyThreadSafe(() => button_StartScript.Text, Constants.StartScript);
+            button_StartScript.SetPropertyThreadSafe(() => button_StartScript.Text, MainFormConstants.StartScript);
 
             MainDataGrid.Invoke(new Action(() =>
             {
@@ -258,7 +259,7 @@ namespace DolphinScript.Forms
         {
             while (true)
             {
-                if (!ScriptState.IsRunning && PInvokeReferences.GetAsyncKeyState(Constants.StartScriptShortcut) < 0)
+                if (!ScriptState.IsRunning && PInvokeReferences.GetAsyncKeyState(MainFormConstants.StartScriptShortcut) < 0)
                 {
                     StartButton_Click(null, null);
                     Thread.Sleep(500);
@@ -292,7 +293,7 @@ namespace DolphinScript.Forms
                 ScriptState.IsRunning = true;
 
                 // change script button text while running
-                _formManager.UpdateFormControl(button_StartScript, () => Text, Constants.ScriptRunning);
+                _formManager.UpdateFormControl(button_StartScript, () => Text, MainFormConstants.ScriptRunning);
 
                 // disable controls while script is running
                 _formManager.SetControlsEnabled(_toggleableControls, false);
@@ -307,7 +308,7 @@ namespace DolphinScript.Forms
             {
                 // if the user clicks start when there are no events then
                 // we show them this message box
-                MessageBox.Show(Constants.NoEventsAdded);
+                MessageBox.Show(MainFormConstants.NoEventsAdded);
             }
         }
 
@@ -372,7 +373,7 @@ namespace DolphinScript.Forms
                 // some error occurred
                 else
                 {
-                    MessageBox.Show(Constants.ErrorMovingEvent);
+                    MessageBox.Show(MainFormConstants.ErrorMovingEvent);
                 }
 
                 // select the item again after it's moved so the user can move it again if needed
@@ -461,7 +462,7 @@ namespace DolphinScript.Forms
                 // some error occurred
                 else
                 {
-                    MessageBox.Show(Constants.ErrorMovingEvent);
+                    MessageBox.Show(MainFormConstants.ErrorMovingEvent);
                 }
 
                 // select the item again after it's moved so the user can move it again if needed
@@ -519,7 +520,7 @@ namespace DolphinScript.Forms
                 {
                     if (ScriptState.AllEvents[i].IsPartOfGroup)
                     {
-                        MessageBox.Show(Constants.OneGroupMaxError);
+                        MessageBox.Show(MainFormConstants.OneGroupMaxError);
                         return;
                     }
                 }
@@ -555,7 +556,7 @@ namespace DolphinScript.Forms
             else
             {
                 // if the user doesn't have multiple events selected then they can't make a group
-                MessageBox.Show(Constants.SelectMoreThanOneItemToMakeAGroup);
+                MessageBox.Show(MainFormConstants.SelectMoreThanOneItemToMakeAGroup);
             }
         }
 
@@ -592,15 +593,17 @@ namespace DolphinScript.Forms
                     {
                         if (ev.GroupId == removeGroupId)
                         {
-                            ev.GroupId = -1;
+                            ev.GroupId = default;
                             ev.IsPartOfGroup = false;
-                            ev.NumberOfCycles = -1;
+                            ev.NumberOfCycles = default;
                             ev.EventsInGroup.Clear();
                         }
                     }
 
                     // remove the group from the all groups collection
                     ScriptState.AllGroups[removeGroupId - 1].Clear();
+
+                    ScriptState.AllEvents.ResetBindings();
                 }
             }
         }
@@ -630,7 +633,7 @@ namespace DolphinScript.Forms
         {
             var model = new FileDialogModel
             {
-                FileName = Constants.DefaultFileName,
+                FileName = MainFormConstants.DefaultFileName,
                 DefaultExt = "xml",
                 FileContent = ScriptState.AllEvents
             };
@@ -668,7 +671,7 @@ namespace DolphinScript.Forms
         /// <param name="e"></param>
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Constants.AboutString);
+            MessageBox.Show(MainFormConstants.AboutString);
         }
 
         /// <summary>
@@ -829,7 +832,6 @@ namespace DolphinScript.Forms
         private void Button_InsertMouseMoveToAreaEvent_Click(object sender, EventArgs e)
         {
             var registerAreaForm = _objectFactory.CreateObject<AreaSelectionForm>();
-            registerAreaForm.EventType = Constants.EventType.MouseMoveToArea;
             registerAreaForm.Show();
         }
 
@@ -947,7 +949,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourExistsInArea.Text;
 
-            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
+            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
 
             while (xChosen == false)
             {
@@ -959,7 +961,7 @@ namespace DolphinScript.Forms
 
                     while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
                     return;
@@ -973,7 +975,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
+            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
 
             while (!colourChosen)
             {
@@ -982,7 +984,7 @@ namespace DolphinScript.Forms
                     searchColour = _colourService.GetColourAtPoint(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
                     return;
@@ -1011,7 +1013,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourDoesntExistInArea.Text;
 
-            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
+            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
 
             while (xChosen == false)
             {
@@ -1023,7 +1025,7 @@ namespace DolphinScript.Forms
 
                     while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
                     return;
@@ -1036,7 +1038,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
+            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
 
             while (!colourChosen)
             {
@@ -1045,7 +1047,7 @@ namespace DolphinScript.Forms
                     searchColour = _colourService.GetColourAtPoint(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
                     return;
@@ -1074,7 +1076,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourExistsInAreaOnWindow.Text;
 
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
 
             while (xChosen == false)
             {
@@ -1086,7 +1088,7 @@ namespace DolphinScript.Forms
 
                     while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
                     return;
@@ -1100,7 +1102,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
+            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
 
             while (!colourChosen)
             {
@@ -1109,7 +1111,7 @@ namespace DolphinScript.Forms
                     searchColour = _colourService.GetColourAtPoint(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
                     return;
@@ -1142,7 +1144,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text;
 
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
 
             while (xChosen == false)
             {
@@ -1154,7 +1156,7 @@ namespace DolphinScript.Forms
 
                     while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
                     return;
@@ -1168,7 +1170,7 @@ namespace DolphinScript.Forms
                 }
             }
 
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
+            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
 
             while (!colourChosen)
             {
@@ -1177,7 +1179,7 @@ namespace DolphinScript.Forms
                     searchColour = _colourService.GetColourAtPoint(Cursor.Position);
                     colourChosen = true;
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
                     return;
@@ -1209,7 +1211,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveEvent.Text;
 
-            Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingPointsToClick);
+            Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingPointsToClick);
 
             while (ScriptState.IsRegistering)
             {
@@ -1221,9 +1223,9 @@ namespace DolphinScript.Forms
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
 
-                    Thread.Sleep(Constants.EventRegisterWaitMs);
+                    Thread.Sleep(DelayConstants.EventRegisterWaitMs);
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, temp);
                     ScriptState.IsRegistering = false;
@@ -1243,7 +1245,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveToPointOnWindowEvent.Text;
 
-            Button_InsertMouseMoveToPointOnWindowEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingPointToClick);
+            Button_InsertMouseMoveToPointOnWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingPointToClick);
 
             while (ScriptState.IsRegistering)
             {
@@ -1258,9 +1260,9 @@ namespace DolphinScript.Forms
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
 
-                    Thread.Sleep(Constants.EventRegisterWaitMs);
+                    Thread.Sleep(DelayConstants.EventRegisterWaitMs);
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertMouseMoveToPointOnWindowEvent.SetPropertyThreadSafe(() => Text, temp);
                     ScriptState.IsRegistering = false;
@@ -1280,7 +1282,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertMouseMoveToAreaOnWindowEvent.Text;
 
-            Button_InsertMouseMoveToAreaOnWindowEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToClick);
+            Button_InsertMouseMoveToAreaOnWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToClick);
 
             while (ScriptState.IsRegistering)
             {
@@ -1300,9 +1302,9 @@ namespace DolphinScript.Forms
 
                     ScriptState.AllEvents.Add(ev);
 
-                    Thread.Sleep(Constants.EventRegisterWaitMs);
+                    Thread.Sleep(DelayConstants.EventRegisterWaitMs);
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertMouseMoveToAreaOnWindowEvent.SetPropertyThreadSafe(() => Text, temp);
 
@@ -1324,7 +1326,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertColourSearchAreaEvent.Text;
 
-            Button_InsertColourSearchAreaEvent.Text = Constants.SelectingAreaToSearch;
+            Button_InsertColourSearchAreaEvent.Text = MainFormConstants.SelectingAreaToSearch;
 
             while (ScriptState.IsRegistering)
             {
@@ -1338,7 +1340,7 @@ namespace DolphinScript.Forms
 
                     var p2 = _pointService.GetCursorPosition();
 
-                    Button_InsertColourSearchAreaEvent.Text = Constants.SelectingColourToSearchForInArea;
+                    Button_InsertColourSearchAreaEvent.Text = MainFormConstants.SelectingColourToSearchForInArea;
 
                     while (!colourPicked)
                     {
@@ -1346,7 +1348,7 @@ namespace DolphinScript.Forms
                         {
                             colourPicked = true;
 
-                            Button_InsertColourSearchAreaEvent.Text = Constants.SelectingAreaToSearch;
+                            Button_InsertColourSearchAreaEvent.Text = MainFormConstants.SelectingAreaToSearch;
 
                             var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
 
@@ -1356,9 +1358,9 @@ namespace DolphinScript.Forms
                             ev.SearchColour = searchColour.ToArgb();
                             ScriptState.AllEvents.Add(ev);
 
-                            Thread.Sleep(Constants.EventRegisterWaitMs);
+                            Thread.Sleep(DelayConstants.EventRegisterWaitMs);
                         }
-                        else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                        else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                         {
                             Button_InsertColourSearchAreaEvent.Text = temp;
 
@@ -1368,7 +1370,7 @@ namespace DolphinScript.Forms
                         }
                     }
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertColourSearchAreaEvent.Text = temp;
 
@@ -1390,7 +1392,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertColourSearchAreaWindowEvent.Text;
 
-            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
+            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
 
             while (ScriptState.IsRegistering)
             {
@@ -1404,7 +1406,7 @@ namespace DolphinScript.Forms
 
                     var p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
-                    Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingColourToSearchForInArea);
+                    Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
 
                     while (!colourPicked)
                     {
@@ -1412,7 +1414,7 @@ namespace DolphinScript.Forms
                         {
                             colourPicked = true;
 
-                            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToSearch);
+                            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
 
                             var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
 
@@ -1426,9 +1428,9 @@ namespace DolphinScript.Forms
 
                             ScriptState.AllEvents.Add(ev);
 
-                            Thread.Sleep(Constants.EventRegisterWaitMs);
+                            Thread.Sleep(DelayConstants.EventRegisterWaitMs);
                         }
-                        else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                        else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                         {
                             Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
 
@@ -1438,7 +1440,7 @@ namespace DolphinScript.Forms
                         }
                     }
                 }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
                     Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
 
@@ -1472,7 +1474,7 @@ namespace DolphinScript.Forms
             var temp = Button_InsertMultiColourSearchAreaWindowEvent.Text;
 
             // change the button text to show we're currently registering
-            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, $@"Selecting area to search... ({Constants.DefaultSecondaryStopCancelButton} to cancel).");
+            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, $@"Selecting area to search... ({MainFormConstants.DefaultSecondaryStopCancelButton} to cancel).");
 
             // register loop
             while (ScriptState.IsRegistering)
@@ -1496,7 +1498,7 @@ namespace DolphinScript.Forms
                     Picturebox_ColourSelectionArea.Image = colourSelectionScreenshot;
 
                     // change the button text to show we've moved on to selecting the search colours
-                    Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, $@"Selecting colours to search for in area... ({Constants.DefaultStopCancelButton} to continue).");
+                    Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, $@"Selecting colours to search for in area... ({MainFormConstants.DefaultStopCancelButton} to continue).");
 
                     // loop here while we're not done selecting colours to search for
                     while (true)
@@ -1514,9 +1516,9 @@ namespace DolphinScript.Forms
                             Picturebox_ColourSelectionArea.Image = colourSelectionScreenshot;
 
                             // sleep here so we don't add more than one colour when we press shift once
-                            Thread.Sleep(Constants.EventRegisterWaitMs);
+                            Thread.Sleep(DelayConstants.EventRegisterWaitMs);
                         }
-                        else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+                        else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                         {
                             // we change the button text to ask the user to choose the area on the window they'd like to search for these colours on
                             Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, "Selecting area & window to search for colour in.... (Make sure window is top-most)");
@@ -1566,7 +1568,7 @@ namespace DolphinScript.Forms
                     }
                 }
 
-                if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultSecondaryStopCancelButton) < 0)
+                if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultSecondaryStopCancelButton) < 0)
                 {
                     // set the button text back to normal
                     Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
@@ -1602,12 +1604,6 @@ namespace DolphinScript.Forms
 
             var form = _formFactory.GetForm(clickedEvent);
 
-            form?.Show();
-        }
-
-        private void Button_SelectArea_Click(object sender, EventArgs e)
-        {
-            var form = _objectFactory.CreateObject<AreaSelectionForm>();
             form?.Show();
         }
     }

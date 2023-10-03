@@ -1,4 +1,5 @@
 ﻿using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
 
@@ -12,7 +13,7 @@ namespace DolphinScript.Core.Concrete
         public void CheckForTerminationKey()
         {
             // listen for the equals key
-            if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
+            if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
             {
                 // set is running flag to false
                 ScriptState.IsRunning = false;

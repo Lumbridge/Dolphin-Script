@@ -1,4 +1,5 @@
 ﻿using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 using System;
@@ -25,9 +26,9 @@ namespace DolphinScript.Core.Concrete
             return _container.Resolve(type);
         }
 
-        public ScriptEvent CreateObject(Constants.EventType eventType)
+        public ScriptEvent CreateObject(ScriptEventConstants.EventType eventType)
         {
-            var type = Constants.EventTypeDictionary[eventType];
+            var type = ScriptEventConstants.EventTypeDictionary[eventType];
             return (ScriptEvent)CreateObject(type);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.Keyboard;
 using DolphinScript.Core.Events.Mouse;
 using DolphinScript.Core.Events.Pause;
@@ -90,6 +91,6 @@ namespace DolphinScript.Core.Events.BaseEvents
         // list of search colours for multi-colour search events
         public List<int> SearchColours { get; set; }
 
-        public Constants.EventType EventType { get; set; }
+        public ScriptEventConstants.EventType EventType { get; set; }
     }
 }

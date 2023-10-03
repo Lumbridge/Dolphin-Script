@@ -1,11 +1,9 @@
-﻿using DolphinScript.Core.Classes;
+﻿using DolphinScript.Core.Constants;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -16,13 +14,6 @@ namespace DolphinScript.Core.Concrete
     /// </summary>
     public class WindowControlService : IWindowControlService
     {
-        private readonly IRandomService _randomService;
-
-        public WindowControlService(IRandomService randomService)
-        {
-            _randomService = randomService;
-        }
-
         /// <summary>
         /// gets the title of the currently active window
         /// </summary>
@@ -30,28 +21,22 @@ namespace DolphinScript.Core.Concrete
         public string GetActiveWindowTitle()
         {
             // set the max number of characters
-            //
             const int nChars = 256;
 
-            // create a stringbuilder with max capacity
-            //
+            // create a string builder with max capacity
             var buff = new StringBuilder(nChars);
 
             // get the handle of the currently active window
-            //
             var handle = PInvokeReferences.GetForegroundWindow();
 
             // check that the window has more than 0 characters
-            //
             if (PInvokeReferences.GetWindowText(handle, buff, nChars) > 0)
             {
                 // return the window title as a string
-                //
                 return buff.ToString();
             }
 
             // if the window title has no characters null is returned
-            //
             return null;
         }
 
@@ -84,7 +69,7 @@ namespace DolphinScript.Core.Concrete
             // set the max number of characters
             const int nChars = 256;
 
-            // create a stringbuilder with max capacity
+            // create a string builder with max capacity
             var buff = new StringBuilder(nChars);
 
             // check that the window has more than 0 characters
@@ -125,7 +110,7 @@ namespace DolphinScript.Core.Concrete
 
             if (PInvokeReferences.IsIconic(handle))
             {
-                PInvokeReferences.ShowWindowAsync(handle, Constants.SW_RESTORE);
+                PInvokeReferences.ShowWindowAsync(handle, WinApiConstants.SW_RESTORE);
             }
 
             // then we set it as the foreground window
@@ -144,14 +129,14 @@ namespace DolphinScript.Core.Concrete
 
             if (PInvokeReferences.IsIconic(handle))
             {
-                PInvokeReferences.ShowWindowAsync(handle, Constants.SW_RESTORE);
+                PInvokeReferences.ShowWindowAsync(handle, WinApiConstants.SW_RESTORE);
             }
 
             // then we set it as the foreground window
             PInvokeReferences.SetForegroundWindow(handle);
 
             // delay to prevent click area errors
-            Thread.Sleep(_randomService.GetRandomNumber(300,500));
+            Thread.Sleep(DelayConstants.SwitchWindowWaitMs);
         }
 
         public IntPtr GetWindowHandle(string windowTitle)

@@ -48,6 +48,7 @@ namespace DolphinScript
             _container.RegisterType<IWindowControlService, WindowControlService>();
             _container.RegisterType<IFormManager, FormManager>();
             _container.RegisterType<IFormFactory, FormFactory>();
+            _container.RegisterType<IScreenService, ScreenService>();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

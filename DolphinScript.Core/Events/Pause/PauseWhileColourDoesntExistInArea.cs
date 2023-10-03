@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 
@@ -15,7 +16,7 @@ namespace DolphinScript.Core.Events.Pause
             IPointService pointService, IWindowControlService windowControlService) 
             : base(randomService, colourService, pointService, windowControlService)
         {
-            EventType = Constants.EventType.PauseWhileColourDoesntExistInArea;
+            EventType = ScriptEventConstants.EventType.PauseWhileColourDoesntExistInArea;
         }
 
         /// <summary>

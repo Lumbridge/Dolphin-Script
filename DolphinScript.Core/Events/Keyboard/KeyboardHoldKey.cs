@@ -1,5 +1,6 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 
 namespace DolphinScript.Core.Events.Keyboard
@@ -9,7 +10,7 @@ namespace DolphinScript.Core.Events.Keyboard
     {
         public KeyboardHoldKey()
         {
-            EventType = Constants.EventType.KeyboardHoldKey;
+            EventType = ScriptEventConstants.EventType.KeyboardHoldKey;
         }
 
         public override void Setup()

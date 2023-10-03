@@ -4,6 +4,7 @@ using DolphinScript.Forms.PauseForms;
 using DolphinScript.Interfaces;
 using System;
 using System.Windows.Forms;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Interfaces;
 
 namespace DolphinScript.Concrete
@@ -25,45 +26,45 @@ namespace DolphinScript.Concrete
 
             switch (eventType)
             {
-                case Constants.EventType.FixedPause:
+                case ScriptEventConstants.EventType.FixedPause:
                     form = _objectFactory.CreateObject<FixedPauseForm>();
                     break;
-                case Constants.EventType.PauseWhileColourDoesntExistInArea:
+                case ScriptEventConstants.EventType.PauseWhileColourDoesntExistInArea:
                     break;
-                case Constants.EventType.PauseWhileColourDoesntExistInAreaOnWindow:
+                case ScriptEventConstants.EventType.PauseWhileColourDoesntExistInAreaOnWindow:
                     break;
-                case Constants.EventType.PauseWhileColourExistsInArea:
+                case ScriptEventConstants.EventType.PauseWhileColourExistsInArea:
                     break;
-                case Constants.EventType.PauseWhileColourExistsInAreaOnWindow:
+                case ScriptEventConstants.EventType.PauseWhileColourExistsInAreaOnWindow:
                     break;
-                case Constants.EventType.PauseWhileWindowNotFound:
+                case ScriptEventConstants.EventType.PauseWhileWindowNotFound:
                     break;
-                case Constants.EventType.RandomPauseInRange:
+                case ScriptEventConstants.EventType.RandomPauseInRange:
                     form = _objectFactory.CreateObject<RandomPauseInRangeForm>();
                     break;
-                case Constants.EventType.MoveWindowToFront:
+                case ScriptEventConstants.EventType.MoveWindowToFront:
                     break;
-                case Constants.EventType.MouseClick:
+                case ScriptEventConstants.EventType.MouseClick:
                     break;
-                case Constants.EventType.MouseMove:
+                case ScriptEventConstants.EventType.MouseMove:
                     break;
-                case Constants.EventType.MouseMoveToArea:
+                case ScriptEventConstants.EventType.MouseMoveToArea:
                     break;
-                case Constants.EventType.MouseMoveToAreaOnWindow:
+                case ScriptEventConstants.EventType.MouseMoveToAreaOnWindow:
                     break;
-                case Constants.EventType.MouseMoveToColour:
+                case ScriptEventConstants.EventType.MouseMoveToColour:
                     break;
-                case Constants.EventType.MouseMoveToColourOnWindow:
+                case ScriptEventConstants.EventType.MouseMoveToColourOnWindow:
                     break;
-                case Constants.EventType.MouseMoveToMultiColourOnWindow:
+                case ScriptEventConstants.EventType.MouseMoveToMultiColourOnWindow:
                     break;
-                case Constants.EventType.MouseMoveToPointOnWindow:
+                case ScriptEventConstants.EventType.MouseMoveToPointOnWindow:
                     break;
-                case Constants.EventType.KeyboardHoldKey:
+                case ScriptEventConstants.EventType.KeyboardHoldKey:
                     break;
-                case Constants.EventType.KeyboardKeyPress:
+                case ScriptEventConstants.EventType.KeyboardKeyPress:
                     break;
-                case Constants.EventType.KeyboardReleaseKey:
+                case ScriptEventConstants.EventType.KeyboardReleaseKey:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

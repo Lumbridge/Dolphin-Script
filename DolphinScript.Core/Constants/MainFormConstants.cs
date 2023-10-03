@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Events.Keyboard;
 using DolphinScript.Core.Events.Mouse;
 using DolphinScript.Core.Events.Pause;
 using DolphinScript.Core.Events.Window;
 using DolphinScript.Core.WindowsApi;
 
-namespace DolphinScript.Core.Classes
+namespace DolphinScript.Core.Constants
 {
-    public class Constants
+    public class MainFormConstants
     {
         public static int DefaultMinimumMouseSpeed = 40;
         public static int DefaultMaximumMouseSpeed = 60;
-
-        // the amount of time to pause after adding an event (to avoid adding the same event multiple times)
-        public static int EventRegisterWaitMs = 300;
 
         public static string SelectingPointToClick => $"Selecting point to click... ({DefaultStopCancelButton} to finish).";
         public static string SelectingPointsToClick => $"Selecting points to click... ({DefaultStopCancelButton} to finish).";
@@ -39,16 +35,6 @@ namespace DolphinScript.Core.Classes
         public static CommonTypes.VirtualKeyStates DefaultStopCancelButton = CommonTypes.VirtualKeyStates.F5;
         public static CommonTypes.VirtualKeyStates DefaultSecondaryStopCancelButton = CommonTypes.VirtualKeyStates.F6;
         public static CommonTypes.VirtualKeyStates StartScriptShortcut = CommonTypes.VirtualKeyStates.Insert;
-
-        // normal/minimise/maximise window flags
-        public static int SW_SHOWNORMAL = 1;
-        public static int SW_SHOWMINIMIZED = 2;
-        public static int SW_SHOWMAXIMIZED = 3;
-        public static int SW_SHOW = 5;
-        public static int SW_RESTORE = 9;
-
-        // key pressed state
-        public const int KeyPressed = 0x8000;
 
         // list of special send key codes
         public static List<string> SpecialKeys = new List<string>
@@ -95,52 +81,6 @@ namespace DolphinScript.Core.Classes
             "{SUBTRACT}",
             "{MULTIPLY}",
             "{DIVIDE}"
-        };
-
-        public enum EventType
-        {
-            FixedPause,
-            PauseWhileColourDoesntExistInArea,
-            PauseWhileColourDoesntExistInAreaOnWindow,
-            PauseWhileColourExistsInArea,
-            PauseWhileColourExistsInAreaOnWindow,
-            PauseWhileWindowNotFound,
-            RandomPauseInRange,
-            MoveWindowToFront,
-            MouseClick,
-            MouseMove,
-            MouseMoveToArea,
-            MouseMoveToAreaOnWindow,
-            MouseMoveToColour,
-            MouseMoveToColourOnWindow,
-            MouseMoveToMultiColourOnWindow,
-            MouseMoveToPointOnWindow,
-            KeyboardHoldKey,
-            KeyboardKeyPress,
-            KeyboardReleaseKey
-        }
-
-        public static Dictionary<EventType, Type> EventTypeDictionary = new Dictionary<EventType, Type>()
-        {
-            {EventType.FixedPause, typeof(FixedPause)},
-            {EventType.PauseWhileColourDoesntExistInArea, typeof(PauseWhileColourDoesntExistInArea)},
-            {EventType.PauseWhileColourDoesntExistInAreaOnWindow, typeof(PauseWhileColourDoesntExistInAreaOnWindow)},
-            {EventType.PauseWhileColourExistsInArea, typeof(PauseWhileColourExistsInArea)},
-            {EventType.PauseWhileColourExistsInAreaOnWindow, typeof(PauseWhileColourExistsInAreaOnWindow)},
-            {EventType.PauseWhileWindowNotFound, typeof(PauseWhileWindowNotFound)},
-            {EventType.RandomPauseInRange, typeof(RandomPauseInRange)},
-            {EventType.MoveWindowToFront, typeof(MoveWindowToFront)},
-            {EventType.MouseClick, typeof(MouseClick)},
-            {EventType.MouseMove, typeof(MouseMove)},
-            {EventType.MouseMoveToArea, typeof(MouseMoveToArea)},
-            {EventType.MouseMoveToAreaOnWindow, typeof(MouseMoveToAreaOnWindow)},
-            {EventType.MouseMoveToColour, typeof(MouseMoveToColour)},
-            {EventType.MouseMoveToColourOnWindow, typeof(MouseMoveToColourOnWindow)},
-            {EventType.MouseMoveToMultiColourOnWindow, typeof(MouseMoveToMultiColourOnWindow)},
-            {EventType.MouseMoveToPointOnWindow, typeof(MouseMoveToPointOnWindow)},
-            {EventType.KeyboardHoldKey, typeof(KeyboardHoldKey)},
-            {EventType.KeyboardKeyPress, typeof(KeyboardKeyPress)},
-            {EventType.KeyboardReleaseKey, typeof(KeyboardReleaseKey)}
         };
     }
 }

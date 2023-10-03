@@ -1,5 +1,6 @@
 ﻿using System;
 using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 
@@ -17,7 +18,7 @@ namespace DolphinScript.Core.Events.Pause
             IColourService colourService, IPointService pointService, IWindowControlService windowControlService)
             : base(randomService, colourService, pointService, windowControlService)
         {
-            EventType = Constants.EventType.FixedPause;
+            EventType = ScriptEventConstants.EventType.FixedPause;
         }
         
         /// <summary>

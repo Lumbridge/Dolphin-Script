@@ -137,7 +137,6 @@
             this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
             this.button_RemoveRepeatGroup = new System.Windows.Forms.Button();
             this.MainDataGrid = new System.Windows.Forms.DataGridView();
-            this.Button_SelectArea = new System.Windows.Forms.Button();
             this.Index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ScriptEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -1384,16 +1383,6 @@
             this.MainDataGrid.SelectionChanged += new System.EventHandler(this.MainDataGrid_SelectedIndexChanged);
             this.MainDataGrid.DoubleClick += new System.EventHandler(this.MainDataGrid_DoubleClick);
             // 
-            // Button_SelectArea
-            // 
-            this.Button_SelectArea.Location = new System.Drawing.Point(1002, 216);
-            this.Button_SelectArea.Name = "Button_SelectArea";
-            this.Button_SelectArea.Size = new System.Drawing.Size(101, 34);
-            this.Button_SelectArea.TabIndex = 50;
-            this.Button_SelectArea.Text = "Select Area";
-            this.Button_SelectArea.UseVisualStyleBackColor = true;
-            this.Button_SelectArea.Click += new System.EventHandler(this.Button_SelectArea_Click);
-            // 
             // Index
             // 
             this.Index.HeaderText = "Index";
@@ -1406,7 +1395,7 @@
             this.ScriptEvent.HeaderText = "Script Event";
             this.ScriptEvent.Name = "ScriptEvent";
             this.ScriptEvent.ReadOnly = true;
-            this.ScriptEvent.Width = 90;
+            this.ScriptEvent.Width = 83;
             // 
             // Description
             // 
@@ -1420,21 +1409,21 @@
             this.GroupId.HeaderText = "Group ID";
             this.GroupId.Name = "GroupId";
             this.GroupId.ReadOnly = true;
-            this.GroupId.Width = 75;
+            this.GroupId.Width = 70;
             // 
             // RepeatCount
             // 
             this.RepeatCount.HeaderText = "Repeat Count";
             this.RepeatCount.Name = "RepeatCount";
             this.RepeatCount.ReadOnly = true;
-            this.RepeatCount.Width = 98;
+            this.RepeatCount.Width = 90;
             // 
             // WindowTitle
             // 
             this.WindowTitle.HeaderText = "Window Title";
             this.WindowTitle.Name = "WindowTitle";
             this.WindowTitle.ReadOnly = true;
-            this.WindowTitle.Width = 94;
+            this.WindowTitle.Width = 87;
             // 
             // WindowHandle
             // 
@@ -1462,7 +1451,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1115, 547);
-            this.Controls.Add(this.Button_SelectArea);
             this.Controls.Add(this.MainDataGrid);
             this.Controls.Add(this.button_RemoveRepeatGroup);
             this.Controls.Add(this.tabControl_ScriptEvents);
@@ -1647,7 +1635,6 @@
         private System.Windows.Forms.ComboBox ComboBox_MouseMovementMode;
         public System.Windows.Forms.DataGridView MainDataGrid;
         private System.Windows.Forms.GroupBox groupBox25;
-        private System.Windows.Forms.Button Button_SelectArea;
         private System.Windows.Forms.DataGridViewTextBoxColumn Index;
         private System.Windows.Forms.DataGridViewTextBoxColumn ScriptEvent;
         private System.Windows.Forms.DataGridViewTextBoxColumn Description;

@@ -128,7 +128,7 @@ namespace DolphinScript.Concrete
                     row.Cells["GroupId"].Value = scriptEvent.GroupId;
                     row.Cells["RepeatCount"].Value = scriptEvent.NumberOfCycles;
                     row.Cells["WindowTitle"].Value = scriptEvent.EventProcess.WindowTitle;
-                    row.Cells["WindowHandle"].Value = scriptEvent.EventProcess.WindowHandle;
+                    row.Cells["WindowHandle"].Value = scriptEvent.EventProcess.WindowHandle == IntPtr.Zero ? string.Empty : scriptEvent.EventProcess.WindowHandle.ToString();
                     row.Cells["ProcessName"].Value = scriptEvent.EventProcess.ProcessName;
                 }));
             }
