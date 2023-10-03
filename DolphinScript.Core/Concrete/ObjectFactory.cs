@@ -1,4 +1,6 @@
-﻿using DolphinScript.Core.Interfaces;
+﻿using DolphinScript.Core.Classes;
+using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
 using System;
 using Unity;
 
@@ -21,6 +23,12 @@ namespace DolphinScript.Core.Concrete
         public object CreateObject(Type type)
         {
             return _container.Resolve(type);
+        }
+
+        public ScriptEvent CreateObject(Constants.EventType eventType)
+        {
+            var type = Constants.EventTypeDictionary[eventType];
+            return (ScriptEvent)CreateObject(type);
         }
     }
 }

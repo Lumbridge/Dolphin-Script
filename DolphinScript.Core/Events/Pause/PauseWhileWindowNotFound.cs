@@ -25,10 +25,10 @@ namespace DolphinScript.Core.Events.Pause
         {
             ExecuteWhileLoop(() =>
             {
-                ScriptState.CurrentAction = $"Pause while window: {WindowTitle} not found, waiting {ScriptState.SearchPause} seconds before searching again";
+                ScriptState.CurrentAction = $"Pause while window: {EventProcess.WindowTitle} not found, waiting {ScriptState.SearchPause} seconds before searching again";
                 ScriptState.AllEvents.ResetBindings();
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
-            }, () => !WindowControlService.WindowExists(WindowClass, WindowTitle));
+            }, () => WindowControlService.GetWindowHandleByName(EventProcess.WindowTitle) != IntPtr.Zero);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Pause while window " + WindowTitle + " can't be found";
+            return "Pause while window " + EventProcess.WindowTitle + " can't be found";
         }
     }
 }

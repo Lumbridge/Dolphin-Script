@@ -101,6 +101,7 @@
             this.groupBox21 = new System.Windows.Forms.GroupBox();
             this.Button_ColourPreview3 = new System.Windows.Forms.Button();
             this.groupBox24 = new System.Windows.Forms.GroupBox();
+            this.Picturebox_ColourSelectionArea = new System.Windows.Forms.PictureBox();
             this.groupBox23 = new System.Windows.Forms.GroupBox();
             this.Button_InsertMultiColourSearchAreaWindowEvent = new System.Windows.Forms.Button();
             this.groupBox22 = new System.Windows.Forms.GroupBox();
@@ -136,14 +137,16 @@
             this.Buton_InsertMiddleMouseClickEvent = new System.Windows.Forms.Button();
             this.button_RemoveRepeatGroup = new System.Windows.Forms.Button();
             this.MainDataGrid = new System.Windows.Forms.DataGridView();
+            this.Button_SelectArea = new System.Windows.Forms.Button();
             this.Index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ScriptEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GroupId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RepeatCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WindowTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WindowHandle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ProcessName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CurrentAction = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Picturebox_ColourSelectionArea = new System.Windows.Forms.PictureBox();
-            this.Button_SelectArea = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDown_RepeatAmount)).BeginInit();
             this.MenuStrip_MainForm.SuspendLayout();
             this.tabControl_ScriptEvents.SuspendLayout();
@@ -174,6 +177,7 @@
             this.tabPage_MouseMoveToColour.SuspendLayout();
             this.groupBox21.SuspendLayout();
             this.groupBox24.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).BeginInit();
             this.groupBox23.SuspendLayout();
             this.groupBox22.SuspendLayout();
             this.groupBox16.SuspendLayout();
@@ -186,7 +190,6 @@
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainDataGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).BeginInit();
             this.SuspendLayout();
             // 
             // button_StartScript
@@ -352,7 +355,7 @@
             this.tabPage_PauseEvent.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage_PauseEvent.Size = new System.Drawing.Size(976, 263);
             this.tabPage_PauseEvent.TabIndex = 0;
-            this.tabPage_PauseEvent.Text = "Pause Event";
+            this.tabPage_PauseEvent.Text = "Pause";
             this.tabPage_PauseEvent.UseVisualStyleBackColor = true;
             // 
             // groupBox25
@@ -401,7 +404,7 @@
             this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Name = "Button_InsertPauseWhileColourDoesntExistInAreaOnWindow";
             this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Size = new System.Drawing.Size(102, 66);
             this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.TabIndex = 62;
-            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = "Pause While Colour Doesn\'t Exist in an Area on a Window";
+            this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text = "Pause while colour doesn\'t exist in an area on a window";
             this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.UseVisualStyleBackColor = true;
             this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Click += new System.EventHandler(this.Button_InsertPauseWhileColourDoesntExistInAreaOnWindow_Click);
             // 
@@ -411,7 +414,7 @@
             this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Name = "Button_InsertPauseWhileColourExistsInAreaOnWindow";
             this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Size = new System.Drawing.Size(102, 66);
             this.Button_InsertPauseWhileColourExistsInAreaOnWindow.TabIndex = 63;
-            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = "Pause While Colour Exists in an Area on a Window";
+            this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Text = "Pause while colour exists in an area on a window";
             this.Button_InsertPauseWhileColourExistsInAreaOnWindow.UseVisualStyleBackColor = true;
             this.Button_InsertPauseWhileColourExistsInAreaOnWindow.Click += new System.EventHandler(this.Button_InsertPauseWhileColourExistsInAreaOnWindow_Click);
             // 
@@ -432,7 +435,7 @@
             this.Button_InsertPauseWhileColourDoesntExistInArea.Name = "Button_InsertPauseWhileColourDoesntExistInArea";
             this.Button_InsertPauseWhileColourDoesntExistInArea.Size = new System.Drawing.Size(102, 66);
             this.Button_InsertPauseWhileColourDoesntExistInArea.TabIndex = 64;
-            this.Button_InsertPauseWhileColourDoesntExistInArea.Text = "Pause While Colour Doesn\'t Exist in an Area";
+            this.Button_InsertPauseWhileColourDoesntExistInArea.Text = "Pause while colour doesn\'t exist in an area";
             this.Button_InsertPauseWhileColourDoesntExistInArea.UseVisualStyleBackColor = true;
             this.Button_InsertPauseWhileColourDoesntExistInArea.Click += new System.EventHandler(this.Button_InsertPauseWhileColourDoesntExistInArea_Click);
             // 
@@ -442,7 +445,7 @@
             this.Button_InsertPauseWhileColourExistsInArea.Name = "Button_InsertPauseWhileColourExistsInArea";
             this.Button_InsertPauseWhileColourExistsInArea.Size = new System.Drawing.Size(102, 66);
             this.Button_InsertPauseWhileColourExistsInArea.TabIndex = 65;
-            this.Button_InsertPauseWhileColourExistsInArea.Text = "Pause While Colour Exists in an Area";
+            this.Button_InsertPauseWhileColourExistsInArea.Text = "Pause while colour exists in an area";
             this.Button_InsertPauseWhileColourExistsInArea.UseVisualStyleBackColor = true;
             this.Button_InsertPauseWhileColourExistsInArea.Click += new System.EventHandler(this.Button_InsertPauseWhileColourExistsInArea_Click);
             // 
@@ -474,7 +477,7 @@
             this.Button_AddFixedPause.Name = "Button_AddFixedPause";
             this.Button_AddFixedPause.Size = new System.Drawing.Size(79, 35);
             this.Button_AddFixedPause.TabIndex = 52;
-            this.Button_AddFixedPause.Text = "Add Fixed Pause";
+            this.Button_AddFixedPause.Text = "Add fixed pause";
             this.Button_AddFixedPause.UseVisualStyleBackColor = true;
             this.Button_AddFixedPause.Click += new System.EventHandler(this.Button_AddFixedPause_Click);
             // 
@@ -519,7 +522,7 @@
             this.Button_AddRandomPause.Name = "Button_AddRandomPause";
             this.Button_AddRandomPause.Size = new System.Drawing.Size(157, 39);
             this.Button_AddRandomPause.TabIndex = 56;
-            this.Button_AddRandomPause.Text = "Add Random Delay Between Min and Max";
+            this.Button_AddRandomPause.Text = "Add random pause between min and max";
             this.Button_AddRandomPause.UseVisualStyleBackColor = true;
             this.Button_AddRandomPause.Click += new System.EventHandler(this.Button_AddRandomPause_Click);
             // 
@@ -579,7 +582,7 @@
             this.tabPage2_KeyboardEvent.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2_KeyboardEvent.Size = new System.Drawing.Size(976, 263);
             this.tabPage2_KeyboardEvent.TabIndex = 1;
-            this.tabPage2_KeyboardEvent.Text = "Keyboard Event";
+            this.tabPage2_KeyboardEvent.Text = "Keyboard";
             this.tabPage2_KeyboardEvent.UseVisualStyleBackColor = true;
             // 
             // groupBox7
@@ -601,7 +604,7 @@
             this.Button_AddSpecialButton.Name = "Button_AddSpecialButton";
             this.Button_AddSpecialButton.Size = new System.Drawing.Size(282, 30);
             this.Button_AddSpecialButton.TabIndex = 32;
-            this.Button_AddSpecialButton.Text = "Add Special Button";
+            this.Button_AddSpecialButton.Text = "Add special button";
             this.Button_AddSpecialButton.UseVisualStyleBackColor = true;
             this.Button_AddSpecialButton.Click += new System.EventHandler(this.Button_AddSpecialButton_Click);
             // 
@@ -629,7 +632,7 @@
             this.Button_AddKeypressEvent.Name = "Button_AddKeypressEvent";
             this.Button_AddKeypressEvent.Size = new System.Drawing.Size(282, 48);
             this.Button_AddKeypressEvent.TabIndex = 30;
-            this.Button_AddKeypressEvent.Text = "Add Keypess Event To Event List";
+            this.Button_AddKeypressEvent.Text = "Add keypess event to event list";
             this.Button_AddKeypressEvent.UseVisualStyleBackColor = true;
             this.Button_AddKeypressEvent.Click += new System.EventHandler(this.Button_AddKeypressEvent_Click);
             // 
@@ -644,7 +647,7 @@
             this.tabPage_MouseMoveEvent.Name = "tabPage_MouseMoveEvent";
             this.tabPage_MouseMoveEvent.Size = new System.Drawing.Size(976, 263);
             this.tabPage_MouseMoveEvent.TabIndex = 2;
-            this.tabPage_MouseMoveEvent.Text = "Mouse Move Event";
+            this.tabPage_MouseMoveEvent.Text = "Mouse move";
             this.tabPage_MouseMoveEvent.UseVisualStyleBackColor = true;
             // 
             // groupBox_mouseMovementMode
@@ -655,7 +658,7 @@
             this.groupBox_mouseMovementMode.Size = new System.Drawing.Size(227, 65);
             this.groupBox_mouseMovementMode.TabIndex = 64;
             this.groupBox_mouseMovementMode.TabStop = false;
-            this.groupBox_mouseMovementMode.Text = "Mouse Movement Mode";
+            this.groupBox_mouseMovementMode.Text = "Mouse movement mode";
             // 
             // ComboBox_MouseMovementMode
             // 
@@ -675,7 +678,7 @@
             this.groupBox20.Size = new System.Drawing.Size(160, 163);
             this.groupBox20.TabIndex = 63;
             this.groupBox20.TabStop = false;
-            this.groupBox20.Text = "Pixel Colour Under Mouse";
+            this.groupBox20.Text = "Pixel colour under mouse";
             // 
             // Button_ColourPreview2
             // 
@@ -754,7 +757,7 @@
             this.Button_InsertMouseMoveToAreaEvent.Name = "Button_InsertMouseMoveToAreaEvent";
             this.Button_InsertMouseMoveToAreaEvent.Size = new System.Drawing.Size(142, 38);
             this.Button_InsertMouseMoveToAreaEvent.TabIndex = 1;
-            this.Button_InsertMouseMoveToAreaEvent.Text = "Move To a Random Point in an Area";
+            this.Button_InsertMouseMoveToAreaEvent.Text = "Move to a random point in an area";
             this.Button_InsertMouseMoveToAreaEvent.UseVisualStyleBackColor = true;
             this.Button_InsertMouseMoveToAreaEvent.Click += new System.EventHandler(this.Button_InsertMouseMoveToAreaEvent_Click);
             // 
@@ -764,7 +767,7 @@
             this.Button_InsertMouseMoveEvent.Name = "Button_InsertMouseMoveEvent";
             this.Button_InsertMouseMoveEvent.Size = new System.Drawing.Size(142, 38);
             this.Button_InsertMouseMoveEvent.TabIndex = 0;
-            this.Button_InsertMouseMoveEvent.Text = "Move To Fixed Point";
+            this.Button_InsertMouseMoveEvent.Text = "Move to fixed point";
             this.Button_InsertMouseMoveEvent.UseVisualStyleBackColor = true;
             this.Button_InsertMouseMoveEvent.Click += new System.EventHandler(this.Button_InsertMouseMoveEvent_Click);
             // 
@@ -790,7 +793,7 @@
             this.groupBox4.Size = new System.Drawing.Size(204, 60);
             this.groupBox4.TabIndex = 18;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Active Window Title";
+            this.groupBox4.Text = "Active window title";
             // 
             // label6
             // 
@@ -817,7 +820,7 @@
             this.Button_InsertMouseMoveToAreaOnWindowEvent.Name = "Button_InsertMouseMoveToAreaOnWindowEvent";
             this.Button_InsertMouseMoveToAreaOnWindowEvent.Size = new System.Drawing.Size(142, 38);
             this.Button_InsertMouseMoveToAreaOnWindowEvent.TabIndex = 5;
-            this.Button_InsertMouseMoveToAreaOnWindowEvent.Text = "Move To Random Point in Area on Window";
+            this.Button_InsertMouseMoveToAreaOnWindowEvent.Text = "Move to random point in area on window";
             this.Button_InsertMouseMoveToAreaOnWindowEvent.UseVisualStyleBackColor = true;
             this.Button_InsertMouseMoveToAreaOnWindowEvent.Click += new System.EventHandler(this.Button_InsertMouseMoveToAreaOnWindowEvent_Click);
             // 
@@ -827,7 +830,7 @@
             this.Button_InsertMouseMoveToPointOnWindowEvent.Name = "Button_InsertMouseMoveToPointOnWindowEvent";
             this.Button_InsertMouseMoveToPointOnWindowEvent.Size = new System.Drawing.Size(142, 38);
             this.Button_InsertMouseMoveToPointOnWindowEvent.TabIndex = 4;
-            this.Button_InsertMouseMoveToPointOnWindowEvent.Text = "Move To Fixed Point on Window";
+            this.Button_InsertMouseMoveToPointOnWindowEvent.Text = "Move to fixed point on window";
             this.Button_InsertMouseMoveToPointOnWindowEvent.UseVisualStyleBackColor = true;
             this.Button_InsertMouseMoveToPointOnWindowEvent.Click += new System.EventHandler(this.Button_InsertMouseMoveToPointOnWindowEvent_Click);
             // 
@@ -842,7 +845,7 @@
             this.groupBox3.Size = new System.Drawing.Size(204, 60);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Cursor Location on Active Window";
+            this.groupBox3.Text = "Cursor location on active window";
             // 
             // label3
             // 
@@ -893,7 +896,7 @@
             this.groupBox_MouseSpeed.Size = new System.Drawing.Size(176, 82);
             this.groupBox_MouseSpeed.TabIndex = 41;
             this.groupBox_MouseSpeed.TabStop = false;
-            this.groupBox_MouseSpeed.Text = "Mouse Speed";
+            this.groupBox_MouseSpeed.Text = "Mouse speed";
             // 
             // label_MaxMouseSpeed
             // 
@@ -961,7 +964,7 @@
             this.tabPage_MouseMoveToColour.Name = "tabPage_MouseMoveToColour";
             this.tabPage_MouseMoveToColour.Size = new System.Drawing.Size(976, 263);
             this.tabPage_MouseMoveToColour.TabIndex = 4;
-            this.tabPage_MouseMoveToColour.Text = "Mouse Move to Colour Event";
+            this.tabPage_MouseMoveToColour.Text = "Mouse move to colour";
             this.tabPage_MouseMoveToColour.UseVisualStyleBackColor = true;
             // 
             // groupBox21
@@ -972,7 +975,7 @@
             this.groupBox21.Size = new System.Drawing.Size(177, 172);
             this.groupBox21.TabIndex = 71;
             this.groupBox21.TabStop = false;
-            this.groupBox21.Text = "Pixel Colour Under Mouse";
+            this.groupBox21.Text = "Pixel colour under mouse";
             // 
             // Button_ColourPreview3
             // 
@@ -990,7 +993,16 @@
             this.groupBox24.Size = new System.Drawing.Size(307, 172);
             this.groupBox24.TabIndex = 72;
             this.groupBox24.TabStop = false;
-            this.groupBox24.Text = "Multi-Colour Search Area";
+            this.groupBox24.Text = "Multi-colour search area";
+            // 
+            // Picturebox_ColourSelectionArea
+            // 
+            this.Picturebox_ColourSelectionArea.Location = new System.Drawing.Point(6, 19);
+            this.Picturebox_ColourSelectionArea.Name = "Picturebox_ColourSelectionArea";
+            this.Picturebox_ColourSelectionArea.Size = new System.Drawing.Size(295, 147);
+            this.Picturebox_ColourSelectionArea.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.Picturebox_ColourSelectionArea.TabIndex = 50;
+            this.Picturebox_ColourSelectionArea.TabStop = false;
             // 
             // groupBox23
             // 
@@ -1008,7 +1020,7 @@
             this.Button_InsertMultiColourSearchAreaWindowEvent.Name = "Button_InsertMultiColourSearchAreaWindowEvent";
             this.Button_InsertMultiColourSearchAreaWindowEvent.Size = new System.Drawing.Size(242, 34);
             this.Button_InsertMultiColourSearchAreaWindowEvent.TabIndex = 68;
-            this.Button_InsertMultiColourSearchAreaWindowEvent.Text = "Multi Colour Search Area on Specific Window";
+            this.Button_InsertMultiColourSearchAreaWindowEvent.Text = "Multi colour search area on specific window";
             this.Button_InsertMultiColourSearchAreaWindowEvent.UseVisualStyleBackColor = true;
             this.Button_InsertMultiColourSearchAreaWindowEvent.Click += new System.EventHandler(this.Button_InsertMultiColourSearchAreaWindowEvent_Click);
             // 
@@ -1028,7 +1040,7 @@
             this.Button_InsertColourSearchAreaWindowEvent.Name = "Button_InsertColourSearchAreaWindowEvent";
             this.Button_InsertColourSearchAreaWindowEvent.Size = new System.Drawing.Size(242, 34);
             this.Button_InsertColourSearchAreaWindowEvent.TabIndex = 66;
-            this.Button_InsertColourSearchAreaWindowEvent.Text = "Colour Search Area on Specific Window";
+            this.Button_InsertColourSearchAreaWindowEvent.Text = "Colour search area on specific window";
             this.Button_InsertColourSearchAreaWindowEvent.UseVisualStyleBackColor = true;
             this.Button_InsertColourSearchAreaWindowEvent.Click += new System.EventHandler(this.Button_InsertColourSearchAreaWindowEvent_Click);
             // 
@@ -1042,7 +1054,7 @@
             this.groupBox16.Size = new System.Drawing.Size(212, 214);
             this.groupBox16.TabIndex = 70;
             this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "Cursor and Window Information";
+            this.groupBox16.Text = "Cursor and window information";
             // 
             // groupBox19
             // 
@@ -1055,7 +1067,7 @@
             this.groupBox19.Size = new System.Drawing.Size(201, 60);
             this.groupBox19.TabIndex = 20;
             this.groupBox19.TabStop = false;
-            this.groupBox19.Text = "Cursor Location on Active Window";
+            this.groupBox19.Text = "Cursor location on active window";
             // 
             // label9
             // 
@@ -1104,7 +1116,7 @@
             this.groupBox18.Size = new System.Drawing.Size(201, 60);
             this.groupBox18.TabIndex = 19;
             this.groupBox18.TabStop = false;
-            this.groupBox18.Text = "Active Window Title";
+            this.groupBox18.Text = "Active window title";
             // 
             // label8
             // 
@@ -1136,7 +1148,7 @@
             this.groupBox17.Size = new System.Drawing.Size(201, 56);
             this.groupBox17.TabIndex = 3;
             this.groupBox17.TabStop = false;
-            this.groupBox17.Text = "Cursor Location on Screen";
+            this.groupBox17.Text = "Cursor location on screen";
             // 
             // label5
             // 
@@ -1192,7 +1204,7 @@
             this.Button_InsertColourSearchAreaEvent.Name = "Button_InsertColourSearchAreaEvent";
             this.Button_InsertColourSearchAreaEvent.Size = new System.Drawing.Size(242, 34);
             this.Button_InsertColourSearchAreaEvent.TabIndex = 67;
-            this.Button_InsertColourSearchAreaEvent.Text = "Register a Screen Area Colour Search event";
+            this.Button_InsertColourSearchAreaEvent.Text = "Register a screen area colour search event";
             this.Button_InsertColourSearchAreaEvent.UseVisualStyleBackColor = true;
             this.Button_InsertColourSearchAreaEvent.Click += new System.EventHandler(this.Button_InsertColourSearchAreaEvent_Click);
             // 
@@ -1205,7 +1217,7 @@
             this.tabPage_MouseClick.Name = "tabPage_MouseClick";
             this.tabPage_MouseClick.Size = new System.Drawing.Size(976, 263);
             this.tabPage_MouseClick.TabIndex = 3;
-            this.tabPage_MouseClick.Text = "Mouse Click Event";
+            this.tabPage_MouseClick.Text = "Mouse click";
             this.tabPage_MouseClick.UseVisualStyleBackColor = true;
             // 
             // groupBox10
@@ -1226,7 +1238,7 @@
             this.Button_InsertRMBUp.Name = "Button_InsertRMBUp";
             this.Button_InsertRMBUp.Size = new System.Drawing.Size(75, 62);
             this.Button_InsertRMBUp.TabIndex = 73;
-            this.Button_InsertRMBUp.Text = "Release Right Mouse Button";
+            this.Button_InsertRMBUp.Text = "Release right mouse button";
             this.Button_InsertRMBUp.UseVisualStyleBackColor = true;
             this.Button_InsertRMBUp.Click += new System.EventHandler(this.Button_InsertRMBUp_Click);
             // 
@@ -1236,7 +1248,7 @@
             this.Button_InsertMMBUp.Name = "Button_InsertMMBUp";
             this.Button_InsertMMBUp.Size = new System.Drawing.Size(75, 62);
             this.Button_InsertMMBUp.TabIndex = 72;
-            this.Button_InsertMMBUp.Text = "Release Middle Mouse Button";
+            this.Button_InsertMMBUp.Text = "Release middle mouse button";
             this.Button_InsertMMBUp.UseVisualStyleBackColor = true;
             this.Button_InsertMMBUp.Click += new System.EventHandler(this.Button_InsertMMBUp_Click);
             // 
@@ -1246,7 +1258,7 @@
             this.Button_InsertLMBUp.Name = "Button_InsertLMBUp";
             this.Button_InsertLMBUp.Size = new System.Drawing.Size(75, 62);
             this.Button_InsertLMBUp.TabIndex = 71;
-            this.Button_InsertLMBUp.Text = "Release Left Mouse Button";
+            this.Button_InsertLMBUp.Text = "Release left mouse button";
             this.Button_InsertLMBUp.UseVisualStyleBackColor = true;
             this.Button_InsertLMBUp.Click += new System.EventHandler(this.Button_InsertLMBUp_Click);
             // 
@@ -1268,7 +1280,7 @@
             this.Button_InsertRMBDown.Name = "Button_InsertRMBDown";
             this.Button_InsertRMBDown.Size = new System.Drawing.Size(75, 62);
             this.Button_InsertRMBDown.TabIndex = 69;
-            this.Button_InsertRMBDown.Text = "Hold Right Mouse Button Down";
+            this.Button_InsertRMBDown.Text = "Hold right mouse button down";
             this.Button_InsertRMBDown.UseVisualStyleBackColor = true;
             this.Button_InsertRMBDown.Click += new System.EventHandler(this.Button_InsertRMBDown_Click);
             // 
@@ -1278,7 +1290,7 @@
             this.Button_InsertLMBDown.Name = "Button_InsertLMBDown";
             this.Button_InsertLMBDown.Size = new System.Drawing.Size(75, 62);
             this.Button_InsertLMBDown.TabIndex = 65;
-            this.Button_InsertLMBDown.Text = "Hold Left Mouse Button Down";
+            this.Button_InsertLMBDown.Text = "Hold left mouse button down";
             this.Button_InsertLMBDown.UseVisualStyleBackColor = true;
             this.Button_InsertLMBDown.Click += new System.EventHandler(this.Button_InsertLMBDown_Click);
             // 
@@ -1288,7 +1300,7 @@
             this.Button_InsertMMBDown.Name = "Button_InsertMMBDown";
             this.Button_InsertMMBDown.Size = new System.Drawing.Size(75, 62);
             this.Button_InsertMMBDown.TabIndex = 67;
-            this.Button_InsertMMBDown.Text = "Hold Middle Mouse Button Down";
+            this.Button_InsertMMBDown.Text = "Hold middle mouse button down";
             this.Button_InsertMMBDown.UseVisualStyleBackColor = true;
             this.Button_InsertMMBDown.Click += new System.EventHandler(this.Button_InsertMMBDown_Click);
             // 
@@ -1302,7 +1314,7 @@
             this.groupBox8.Size = new System.Drawing.Size(256, 91);
             this.groupBox8.TabIndex = 65;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Mouse Clicks";
+            this.groupBox8.Text = "Mouse clicks";
             // 
             // Button_InsertLeftClickEvent
             // 
@@ -1310,7 +1322,7 @@
             this.Button_InsertLeftClickEvent.Name = "Button_InsertLeftClickEvent";
             this.Button_InsertLeftClickEvent.Size = new System.Drawing.Size(75, 62);
             this.Button_InsertLeftClickEvent.TabIndex = 56;
-            this.Button_InsertLeftClickEvent.Text = "Left Click";
+            this.Button_InsertLeftClickEvent.Text = "Left click";
             this.Button_InsertLeftClickEvent.UseVisualStyleBackColor = true;
             this.Button_InsertLeftClickEvent.Click += new System.EventHandler(this.Button_InsertLeftClickEvent_Click);
             // 
@@ -1320,7 +1332,7 @@
             this.Button_InsertRightClickEvent.Name = "Button_InsertRightClickEvent";
             this.Button_InsertRightClickEvent.Size = new System.Drawing.Size(75, 62);
             this.Button_InsertRightClickEvent.TabIndex = 57;
-            this.Button_InsertRightClickEvent.Text = "Right Click";
+            this.Button_InsertRightClickEvent.Text = "Right click";
             this.Button_InsertRightClickEvent.UseVisualStyleBackColor = true;
             this.Button_InsertRightClickEvent.Click += new System.EventHandler(this.Button_InsertRightClickEvent_Click);
             // 
@@ -1330,7 +1342,7 @@
             this.Buton_InsertMiddleMouseClickEvent.Name = "Buton_InsertMiddleMouseClickEvent";
             this.Buton_InsertMiddleMouseClickEvent.Size = new System.Drawing.Size(75, 62);
             this.Buton_InsertMiddleMouseClickEvent.TabIndex = 58;
-            this.Buton_InsertMiddleMouseClickEvent.Text = "Middle Mouse Click";
+            this.Buton_InsertMiddleMouseClickEvent.Text = "Middle mouse click";
             this.Buton_InsertMiddleMouseClickEvent.UseVisualStyleBackColor = true;
             this.Buton_InsertMiddleMouseClickEvent.Click += new System.EventHandler(this.Button_InsertMiddleMouseClickEvent_Click);
             // 
@@ -1358,6 +1370,9 @@
             this.Description,
             this.GroupId,
             this.RepeatCount,
+            this.WindowTitle,
+            this.WindowHandle,
+            this.ProcessName,
             this.CurrentAction});
             this.MainDataGrid.Location = new System.Drawing.Point(12, 27);
             this.MainDataGrid.Name = "MainDataGrid";
@@ -1368,6 +1383,16 @@
             this.MainDataGrid.TabIndex = 49;
             this.MainDataGrid.SelectionChanged += new System.EventHandler(this.MainDataGrid_SelectedIndexChanged);
             this.MainDataGrid.DoubleClick += new System.EventHandler(this.MainDataGrid_DoubleClick);
+            // 
+            // Button_SelectArea
+            // 
+            this.Button_SelectArea.Location = new System.Drawing.Point(1002, 216);
+            this.Button_SelectArea.Name = "Button_SelectArea";
+            this.Button_SelectArea.Size = new System.Drawing.Size(101, 34);
+            this.Button_SelectArea.TabIndex = 50;
+            this.Button_SelectArea.Text = "Select Area";
+            this.Button_SelectArea.UseVisualStyleBackColor = true;
+            this.Button_SelectArea.Click += new System.EventHandler(this.Button_SelectArea_Click);
             // 
             // Index
             // 
@@ -1404,31 +1429,33 @@
             this.RepeatCount.ReadOnly = true;
             this.RepeatCount.Width = 98;
             // 
+            // WindowTitle
+            // 
+            this.WindowTitle.HeaderText = "Window Title";
+            this.WindowTitle.Name = "WindowTitle";
+            this.WindowTitle.ReadOnly = true;
+            this.WindowTitle.Width = 94;
+            // 
+            // WindowHandle
+            // 
+            this.WindowHandle.HeaderText = "Window Handle";
+            this.WindowHandle.Name = "WindowHandle";
+            this.WindowHandle.ReadOnly = true;
+            this.WindowHandle.Width = 99;
+            // 
+            // ProcessName
+            // 
+            this.ProcessName.HeaderText = "Process Name";
+            this.ProcessName.Name = "ProcessName";
+            this.ProcessName.ReadOnly = true;
+            this.ProcessName.Width = 93;
+            // 
             // CurrentAction
             // 
             this.CurrentAction.HeaderText = "Current Action";
             this.CurrentAction.Name = "CurrentAction";
             this.CurrentAction.ReadOnly = true;
-            this.CurrentAction.Width = 99;
-            // 
-            // Picturebox_ColourSelectionArea
-            // 
-            this.Picturebox_ColourSelectionArea.Location = new System.Drawing.Point(6, 19);
-            this.Picturebox_ColourSelectionArea.Name = "Picturebox_ColourSelectionArea";
-            this.Picturebox_ColourSelectionArea.Size = new System.Drawing.Size(295, 147);
-            this.Picturebox_ColourSelectionArea.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.Picturebox_ColourSelectionArea.TabIndex = 50;
-            this.Picturebox_ColourSelectionArea.TabStop = false;
-            // 
-            // Button_SelectArea
-            // 
-            this.Button_SelectArea.Location = new System.Drawing.Point(1002, 216);
-            this.Button_SelectArea.Name = "Button_SelectArea";
-            this.Button_SelectArea.Size = new System.Drawing.Size(101, 34);
-            this.Button_SelectArea.TabIndex = 50;
-            this.Button_SelectArea.Text = "Select Area";
-            this.Button_SelectArea.UseVisualStyleBackColor = true;
-            this.Button_SelectArea.Click += new System.EventHandler(this.Button_SelectArea_Click);
+            this.CurrentAction.Width = 91;
             // 
             // MainForm
             // 
@@ -1488,6 +1515,7 @@
             this.tabPage_MouseMoveToColour.ResumeLayout(false);
             this.groupBox21.ResumeLayout(false);
             this.groupBox24.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).EndInit();
             this.groupBox23.ResumeLayout(false);
             this.groupBox22.ResumeLayout(false);
             this.groupBox16.ResumeLayout(false);
@@ -1503,7 +1531,6 @@
             this.groupBox9.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.MainDataGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1619,14 +1646,17 @@
         private System.Windows.Forms.GroupBox groupBox_mouseMovementMode;
         private System.Windows.Forms.ComboBox ComboBox_MouseMovementMode;
         public System.Windows.Forms.DataGridView MainDataGrid;
+        private System.Windows.Forms.GroupBox groupBox25;
+        private System.Windows.Forms.Button Button_SelectArea;
         private System.Windows.Forms.DataGridViewTextBoxColumn Index;
         private System.Windows.Forms.DataGridViewTextBoxColumn ScriptEvent;
         private System.Windows.Forms.DataGridViewTextBoxColumn Description;
         private System.Windows.Forms.DataGridViewTextBoxColumn GroupId;
         private System.Windows.Forms.DataGridViewTextBoxColumn RepeatCount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WindowTitle;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WindowHandle;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ProcessName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CurrentAction;
-        private System.Windows.Forms.GroupBox groupBox25;
-        private System.Windows.Forms.Button Button_SelectArea;
     }
 }
 

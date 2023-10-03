@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Management;
 using DolphinScript.Forms.UtilityForms;
 
 namespace DolphinScript.Forms
@@ -37,6 +38,9 @@ namespace DolphinScript.Forms
         private readonly IFormFactory _formFactory;
 
         private readonly List<Control> _toggleableControls = new List<Control>();
+
+        private readonly ManagementEventWatcher _processStartEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStartTrace");
+        private readonly ManagementEventWatcher _processStopEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStopTrace");
 
         /// <summary>
         /// main form constructor
@@ -67,6 +71,12 @@ namespace DolphinScript.Forms
 
             // run the start script hotkey listener
             Task.Run(StartScriptHotkeyListener);
+
+            _processStartEvent.EventArrived += ProcessStartEvent_EventArrived;
+            _processStopEvent.EventArrived += ProcessStopEvent_EventArrived;
+
+            _processStartEvent.Start();
+            _processStopEvent.Start();
         }
 
         private void SetFormDefaults()
@@ -108,6 +118,24 @@ namespace DolphinScript.Forms
             {
                 _formManager.UpdateListBox(MainDataGrid);
             };
+        }
+
+        private void ProcessStartEvent_EventArrived(object sender, EventArrivedEventArgs e)
+        {
+            var processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
+            if (ScriptState.AllEvents.Any(x => x.EventProcess.ProcessName == processName))
+            {
+                ScriptState.AllEvents.ResetBindings();
+            }
+        }
+
+        private void ProcessStopEvent_EventArrived(object sender, EventArrivedEventArgs e)
+        {
+            var processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
+            if (ScriptState.AllEvents.Any(x => x.EventProcess.ProcessName == processName))
+            {
+                ScriptState.AllEvents.ResetBindings();
+            }
         }
 
         #region Main Form Methods
@@ -809,7 +837,9 @@ namespace DolphinScript.Forms
 
         private void Button_InsertMouseMoveToAreaEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(MouseMoveToAreaLoop);
+            var registerAreaForm = _objectFactory.CreateObject<AreaSelectionForm>();
+            registerAreaForm.EventType = Constants.EventType.MouseMoveToArea;
+            registerAreaForm.Show();
         }
 
         private void Button_InsertMouseMoveToPointOnWindowEvent_Click(object sender, EventArgs e)
@@ -1096,7 +1126,9 @@ namespace DolphinScript.Forms
             }
 
             var ev = _objectFactory.CreateObject<PauseWhileColourExistsInAreaOnWindow>();
-            ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
+            ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
+            ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
+            ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.ClickArea = new CommonTypes.Rect(p1, p2);
             ev.SearchColour = searchColour.ToArgb();
@@ -1162,7 +1194,9 @@ namespace DolphinScript.Forms
             }
 
             var ev = _objectFactory.CreateObject<PauseWhileColourDoesntExistInAreaOnWindow>();
-            ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
+            ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
+            ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
+            ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
             ev.ClickArea = new CommonTypes.Rect(p1, p2);
             ev.SearchColour = searchColour.ToArgb();
@@ -1210,46 +1244,6 @@ namespace DolphinScript.Forms
         }
 
         /// <summary>
-        /// this is the register loop used to register a mouse move to area on screen event
-        /// </summary>
-        void MouseMoveToAreaLoop()
-        {
-            ScriptState.IsRegistering = true;
-
-            var temp = Button_InsertMouseMoveToAreaEvent.Text;
-
-            Button_InsertMouseMoveToAreaEvent.SetPropertyThreadSafe(() => Text, Constants.SelectingAreaToClick);
-
-            while (ScriptState.IsRegistering)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    var p1 = _pointService.GetCursorPosition();
-
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-
-                    var p2 = _pointService.GetCursorPosition();
-
-                    var ev = _objectFactory.CreateObject<MouseMoveToArea>();
-                    ev.ClickArea = new CommonTypes.Rect(p1, p2);
-                    ScriptState.AllEvents.Add(ev);
-
-                    Thread.Sleep(Constants.EventRegisterWaitMs);
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(Constants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertMouseMoveToAreaEvent.SetPropertyThreadSafe(() => Text, temp);
-
-                    ScriptState.IsRegistering = false;
-
-                    return;
-                }
-            }
-
-            Button_InsertMouseMoveToAreaEvent.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        /// <summary>
         /// this is the register loop used to register a mouse move to point on window event
         /// </summary>
         void MouseMoveToPointOnWindowLoop()
@@ -1267,7 +1261,9 @@ namespace DolphinScript.Forms
                     var p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
                     var ev = _objectFactory.CreateObject<MouseMoveToPointOnWindow>();
-                    ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
+                    ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
+                    ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
+                    ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
                     ev.CoordsToMoveTo = p1;
                     ScriptState.AllEvents.Add(ev);
 
@@ -1306,7 +1302,9 @@ namespace DolphinScript.Forms
                     var p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
 
                     var ev = _objectFactory.CreateObject<MouseMoveToAreaOnWindow>();
-                    ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
+                    ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
+                    ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
+                    ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
                     ev.ClickArea = new CommonTypes.Rect(p1, p2);
 
                     ScriptState.AllEvents.Add(ev);
@@ -1428,7 +1426,9 @@ namespace DolphinScript.Forms
                             var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
 
                             var ev = _objectFactory.CreateObject<MouseMoveToColourOnWindow>();
-                            ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
+                            ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
+                            ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
+                            ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
                             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
                             ev.ClickArea = new CommonTypes.Rect(p1, p2);
                             ev.SearchColour = searchColour.ToArgb();
@@ -1551,7 +1551,9 @@ namespace DolphinScript.Forms
                             }
 
                             var ev = _objectFactory.CreateObject<MouseMoveToMultiColourOnWindow>();
-                            ev.WindowTitle = _windowControlService.GetActiveWindowTitle();
+                            ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
+                            ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
+                            ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
                             ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
                             ev.ClickArea = new CommonTypes.Rect(p1, p2);
                             ev.SearchColours = new List<int>(searchColours);

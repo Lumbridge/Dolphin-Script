@@ -106,5 +106,17 @@ namespace DolphinScript.Core.WindowsApi
 
         [DllImport("User32.dll")]
         public static extern bool IsIconic(IntPtr handle);
+
+        [DllImport("user32")]
+        private static extern uint GetWindowThreadProcessId(
+            IntPtr hWnd,
+            out int lpdwProcessId
+        );
+
+        public static int GetWindowProcessId(IntPtr handle)
+        {
+            GetWindowThreadProcessId(handle, out var pid);
+            return pid;
+        }
     }
 }

@@ -21,14 +21,12 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Execute()
         {
-            var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
-
-            ScriptState.CurrentAction = $"Move mouse to {CoordsToMoveTo} on window: {WindowTitle}.";
+            ScriptState.CurrentAction = $"Move mouse to {CoordsToMoveTo} on window: {EventProcess.WindowTitle}.";
 
             // bring the window associated with this event to the front
-            WindowControlService.BringWindowToFront(windowHandle);
+            WindowControlService.BringWindowToFront(EventProcess.WindowHandle);
 
-            var windowLocation = PointService.GetWindowPosition(windowHandle);
+            var windowLocation = PointService.GetWindowPosition(EventProcess.WindowHandle);
 
             var newClickPoint = new Point(windowLocation.left + CoordsToMoveTo.X, windowLocation.top + CoordsToMoveTo.Y);
 
@@ -41,7 +39,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + " on " + WindowTitle + " window.";
+            return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + " on " + EventProcess.WindowTitle + " window.";
         }
     }
 }

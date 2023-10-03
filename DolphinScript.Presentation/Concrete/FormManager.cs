@@ -118,14 +118,18 @@ namespace DolphinScript.Concrete
             {
                 Form.MainDataGrid.Invoke(new Action(() =>
                 {
-                    Form.MainDataGrid.Rows.Add(
-                        ScriptState.AllEvents.IndexOf(scriptEvent),
-                        scriptEvent.GetType().Name,
-                        scriptEvent.EventDescription(),
-                        scriptEvent.GroupId,
-                        scriptEvent.NumberOfCycles,
-                        string.Empty
-                    );
+                    int rowId = Form.MainDataGrid.Rows.Add();
+
+                    DataGridViewRow row = Form.MainDataGrid.Rows[rowId];
+
+                    row.Cells["Index"].Value = ScriptState.AllEvents.IndexOf(scriptEvent);
+                    row.Cells["ScriptEvent"].Value = scriptEvent.GetType().Name;
+                    row.Cells["Description"].Value = scriptEvent.EventDescription();
+                    row.Cells["GroupId"].Value = scriptEvent.GroupId;
+                    row.Cells["RepeatCount"].Value = scriptEvent.NumberOfCycles;
+                    row.Cells["WindowTitle"].Value = scriptEvent.EventProcess.WindowTitle;
+                    row.Cells["WindowHandle"].Value = scriptEvent.EventProcess.WindowHandle;
+                    row.Cells["ProcessName"].Value = scriptEvent.EventProcess.ProcessName;
                 }));
             }
 

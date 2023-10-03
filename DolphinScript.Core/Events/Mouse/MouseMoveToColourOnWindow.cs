@@ -20,15 +20,13 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Execute()
         {
-            var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
-
-            ScriptState.CurrentAction = $"Mouse move to colour: {SearchColour} on window: {WindowTitle}.";
+            ScriptState.CurrentAction = $"Mouse move to colour: {SearchColour} on window: {EventProcess.WindowTitle}.";
 
             // bring the window associated with this event to the front
-            WindowControlService.BringWindowToFront(windowHandle);
+            WindowControlService.BringWindowToFront(EventProcess.WindowHandle);
 
-            // don't override original click area or it will cause the mouse position to incrememnt every time this method is called
-            var newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
+            // don't override original click area or it will cause the mouse position to increment every time this method is called
+            var newSearchArea = PointService.GetClickAreaPositionOnWindow(EventProcess.WindowHandle, ClickArea);
 
             MouseMovementService.MoveMouseToColour(newSearchArea, SearchColour);
         }
@@ -39,7 +37,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
+            return "Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + EventProcess.WindowTitle + " window.";
         }
     }
 }

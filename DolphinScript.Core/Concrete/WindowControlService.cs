@@ -1,10 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.Text;
-using System.Threading;
-using DolphinScript.Core.Classes;
+﻿using DolphinScript.Core.Classes;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -57,6 +60,20 @@ namespace DolphinScript.Core.Concrete
             return PInvokeReferences.GetForegroundWindow();
         }
 
+        public string GetProcessName(IntPtr handle)
+        {
+            int pid = PInvokeReferences.GetWindowProcessId(handle);
+
+            if (pid == 0)
+            {
+                return string.Empty;
+            }
+
+            Process p = Process.GetProcessById(pid);
+
+            return Path.GetFileName(p.MainModule?.FileName);
+        }
+
         /// <summary>
         /// returns the title of the window handle passed in
         /// </summary>
@@ -65,38 +82,31 @@ namespace DolphinScript.Core.Concrete
         public string GetWindowTitle(IntPtr handle)
         {
             // set the max number of characters
-            //
             const int nChars = 256;
 
             // create a stringbuilder with max capacity
-            //
             var buff = new StringBuilder(nChars);
 
             // check that the window has more than 0 characters
-            //
             if (PInvokeReferences.GetWindowText(handle, buff, nChars) > 0)
             {
                 // return the window title as a string
-                //
                 return buff.ToString();
             }
 
             // if the window title has no characters null is returned
-            //
             return null;
         }
 
         /// <summary>
         /// checks if a window exists by class and window name
         /// </summary>
-        /// <param name="windowClass"></param>
         /// <param name="windowName"></param>
         /// <returns></returns>
-        public bool WindowExists(string windowClass, string windowName)
+        public IntPtr GetWindowHandleByName(string windowName)
         {
             // if the window name doesn't have a valid handle then we return false
-            //
-            return PInvokeReferences.FindWindow(windowClass, windowName) != IntPtr.Zero;
+            return PInvokeReferences.FindWindow(null, windowName);
         }
 
         /// <summary>
@@ -104,12 +114,11 @@ namespace DolphinScript.Core.Concrete
         /// </summary>
         /// <param name="windowClass"></param>
         /// <param name="windowName"></param>
-        public void SetWindowTopMostIfExists(string windowClass, string windowName)
+        public void SetWindowTopMostIfExists(string windowName)
         {
-            var handle = PInvokeReferences.FindWindow(windowClass, windowName);
+            var handle = GetWindowHandleByName(windowName);
 
-            // we check if the window exists first then if it does
-            if (!WindowExists(windowClass, windowName))
+            if (handle == IntPtr.Zero)
             {
                 return;
             }

@@ -21,19 +21,17 @@ namespace DolphinScript.Core.Events.Pause
         /// </summary>
         public override void Execute()
         {
-            var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
-
             // don't override original click area or it will cause the mouse position to increment every time this method is called
-            var newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
+            var newSearchArea = PointService.GetClickAreaPositionOnWindow(EventProcess.WindowHandle, ClickArea);
 
             ExecuteWhileLoop(() =>
             {
-                ScriptState.CurrentAction = $"Pause while colour: {SearchColour} is found in area: {newSearchArea.PrintArea()} on window: {WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching";
-                WindowControlService.BringWindowToFront(windowHandle);
+                ScriptState.CurrentAction = $"Pause while colour: {SearchColour} is found in area: {newSearchArea.PrintArea()} on window: {EventProcess.WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching";
+                WindowControlService.BringWindowToFront(EventProcess.WindowHandle);
                 ScriptState.AllEvents.ResetBindings();
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
                 // update the search area in case the window has moved
-                newSearchArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
+                newSearchArea = PointService.GetClickAreaPositionOnWindow(EventProcess.WindowHandle, ClickArea);
             }, () => ColourService.ColourExistsInArea(newSearchArea, SearchColour));
         }
 
@@ -43,7 +41,7 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + WindowTitle + " window";
+            return "Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + EventProcess.WindowTitle + " window";
         }
     }
 }

@@ -31,10 +31,10 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AreaSelectionForm));
             this.PictureBox_AreaSelection = new System.Windows.Forms.PictureBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem_CloseOverlay = new System.Windows.Forms.ToolStripMenuItem();
+            this.ContextMenuStrip_AreaOverlayRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ToolStripMenuItem_CloseOverlay = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox_AreaSelection)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
+            this.ContextMenuStrip_AreaOverlayRightClickMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // PictureBox_AreaSelection
@@ -51,19 +51,19 @@
             this.PictureBox_AreaSelection.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBox_AreaSelection_MouseMove);
             this.PictureBox_AreaSelection.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PictureBox_AreaSelection_MouseUp);
             // 
-            // contextMenuStrip1
+            // ContextMenuStrip_AreaOverlayRightClickMenu
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_CloseOverlay});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(145, 26);
+            this.ContextMenuStrip_AreaOverlayRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItem_CloseOverlay});
+            this.ContextMenuStrip_AreaOverlayRightClickMenu.Name = "contextMenuStrip1";
+            this.ContextMenuStrip_AreaOverlayRightClickMenu.Size = new System.Drawing.Size(145, 26);
             // 
-            // toolStripMenuItem_CloseOverlay
+            // ToolStripMenuItem_CloseOverlay
             // 
-            this.toolStripMenuItem_CloseOverlay.Name = "toolStripMenuItem_CloseOverlay";
-            this.toolStripMenuItem_CloseOverlay.Size = new System.Drawing.Size(144, 22);
-            this.toolStripMenuItem_CloseOverlay.Text = "Close overlay";
-            this.toolStripMenuItem_CloseOverlay.Click += new System.EventHandler(this.toolStripMenuItem_CloseOverlay_Click);
+            this.ToolStripMenuItem_CloseOverlay.Name = "ToolStripMenuItem_CloseOverlay";
+            this.ToolStripMenuItem_CloseOverlay.Size = new System.Drawing.Size(144, 22);
+            this.ToolStripMenuItem_CloseOverlay.Text = "Close overlay";
+            this.ToolStripMenuItem_CloseOverlay.Click += new System.EventHandler(this.ToolStripMenuItem_CloseOverlay_Click);
             // 
             // AreaSelectionForm
             // 
@@ -71,13 +71,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.PictureBox_AreaSelection);
+            this.Cursor = System.Windows.Forms.Cursors.Cross;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AreaSelectionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "AreaSelectionForm";
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox_AreaSelection)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.ContextMenuStrip_AreaOverlayRightClickMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -85,7 +86,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox PictureBox_AreaSelection;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_CloseOverlay;
+        private System.Windows.Forms.ContextMenuStrip ContextMenuStrip_AreaOverlayRightClickMenu;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_CloseOverlay;
     }
 }

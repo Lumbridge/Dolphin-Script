@@ -25,15 +25,13 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Execute()
         {
-            var windowHandle = WindowControlService.GetWindowHandle(WindowTitle);
-
-            ScriptState.CurrentAction = $"Mouse move to area: {ClickArea.PrintArea()} on window: {WindowTitle}.";
+            ScriptState.CurrentAction = $"Mouse move to area: {ClickArea.PrintArea()} on window: {EventProcess.WindowTitle}.";
 
             // bring the window associated with this event to the front
-            WindowControlService.BringWindowToFront(windowHandle);
+            WindowControlService.BringWindowToFront(EventProcess.WindowHandle);
 
             // don't override original click area or it will cause the mouse position to increment every time this method is called
-            var clickArea = PointService.GetClickAreaPositionOnWindow(windowHandle, ClickArea);
+            var clickArea = PointService.GetClickAreaPositionOnWindow(EventProcess.WindowHandle, ClickArea);
 
             CoordsToMoveTo = PointService.GetRandomPointInArea(clickArea);
 
@@ -46,7 +44,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Move mouse to random point in area " + ClickArea.PrintArea() + " on " + WindowTitle + " window.";
+            return "Move mouse to random point in area " + ClickArea.PrintArea() + " on " + EventProcess.WindowTitle + " window.";
         }
     }
 }

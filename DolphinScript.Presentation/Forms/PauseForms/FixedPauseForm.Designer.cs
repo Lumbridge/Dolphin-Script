@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FixedPauseForm));
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.fixedDelayNumberBox = new System.Windows.Forms.NumericUpDown();
-            this.Button_SavePauseEvent = new System.Windows.Forms.Button();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fixedDelayNumberBox)).BeginInit();
             this.SuspendLayout();
@@ -69,23 +68,12 @@
             0,
             65536});
             // 
-            // Button_SavePauseEvent
-            // 
-            this.Button_SavePauseEvent.Location = new System.Drawing.Point(62, 76);
-            this.Button_SavePauseEvent.Name = "Button_SavePauseEvent";
-            this.Button_SavePauseEvent.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.Button_SavePauseEvent.Size = new System.Drawing.Size(75, 23);
-            this.Button_SavePauseEvent.TabIndex = 68;
-            this.Button_SavePauseEvent.Text = "Save";
-            this.Button_SavePauseEvent.UseVisualStyleBackColor = true;
-            // 
             // FixedPauseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(216, 105);
+            this.ClientSize = new System.Drawing.Size(216, 80);
             this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.Button_SavePauseEvent);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FixedPauseForm";
@@ -99,6 +87,5 @@
         #endregion
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.NumericUpDown fixedDelayNumberBox;
-        private System.Windows.Forms.Button Button_SavePauseEvent;
     }
 }

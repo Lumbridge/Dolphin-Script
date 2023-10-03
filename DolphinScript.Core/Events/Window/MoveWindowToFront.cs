@@ -22,7 +22,7 @@ namespace DolphinScript.Core.Events.Window
 
         public override void Setup()
         {
-            ScriptState.CurrentAction = $"Bring window to front: {WindowTitle}.";
+            ScriptState.CurrentAction = $"Bring window to front: {EventProcess.WindowTitle}.";
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace DolphinScript.Core.Events.Window
         /// </summary>
         public override void Execute()
         {
-            _windowControlService.SetWindowTopMostIfExists(WindowClass, WindowTitle);
+            _windowControlService.SetWindowTopMostIfExists(EventProcess.WindowTitle);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace DolphinScript.Core.Events.Window
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Move " + WindowTitle + " window to front.";
+            return "Move " + EventProcess.WindowTitle + " window to front.";
         }
     }
 }

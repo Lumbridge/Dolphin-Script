@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using DolphinScript.Core.Concrete;
 using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.WindowsApi;
 
 namespace DolphinScript.Core.Classes
 {
@@ -17,7 +18,8 @@ namespace DolphinScript.Core.Classes
         public static BindingList<ScriptEvent> AllEvents { get; set; } = new BindingList<ScriptEvent>();
         public static List<List<ScriptEvent>> AllGroups { get; set; } = new List<List<ScriptEvent>>();
         public static MouseMovementService.MouseMovementMode MouseMovementMode { get; set; } = MouseMovementService.MouseMovementMode.Realistic;
-        public static bool FreeMouse { get; set; } = true;
+        public static bool FreeMouse { get; set; } = false;
         public static string CurrentAction { get; set; }
+        public static CommonTypes.Rect LastSavedArea { get; set; }
     }
 }

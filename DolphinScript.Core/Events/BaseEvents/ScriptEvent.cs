@@ -3,6 +3,7 @@ using DolphinScript.Core.Events.Keyboard;
 using DolphinScript.Core.Events.Mouse;
 using DolphinScript.Core.Events.Pause;
 using DolphinScript.Core.Events.Window;
+using DolphinScript.Core.Models;
 using DolphinScript.Core.WindowsApi;
 using System;
 using System.Collections.Generic;
@@ -77,9 +78,7 @@ namespace DolphinScript.Core.Events.BaseEvents
         public double? DelayMinimum { get; set; }
         public double? DelayMaximum { get; set; }
 
-        // window specific properties
-        public string WindowClass { get; set; }
-        public string WindowTitle { get; set; }
+        public EventProcess EventProcess { get; set; } = new EventProcess();
 
         // mouse move specific properties
         public Point CoordsToMoveTo { get; set; }
