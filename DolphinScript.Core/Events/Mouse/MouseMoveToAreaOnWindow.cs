@@ -1,9 +1,7 @@
-﻿using System;
-using DolphinScript.Core.Classes;
-using DolphinScript.Core.Concrete;
+﻿using DolphinScript.Core.Classes;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
-using DolphinScript.Core.WindowsApi;
+using System;
 
 namespace DolphinScript.Core.Events.Mouse
 {

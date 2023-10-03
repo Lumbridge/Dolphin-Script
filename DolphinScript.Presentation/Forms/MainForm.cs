@@ -72,8 +72,8 @@ namespace DolphinScript.Forms
             // run the start script hotkey listener
             Task.Run(StartScriptHotkeyListener);
 
-            _processStartEvent.EventArrived += ProcessStartEvent_EventArrived;
-            _processStopEvent.EventArrived += ProcessStopEvent_EventArrived;
+            _processStartEvent.EventArrived += ProcessEventChange_EventArrived;
+            _processStopEvent.EventArrived += ProcessEventChange_EventArrived;
 
             _processStartEvent.Start();
             _processStopEvent.Start();
@@ -120,16 +120,7 @@ namespace DolphinScript.Forms
             };
         }
 
-        private void ProcessStartEvent_EventArrived(object sender, EventArrivedEventArgs e)
-        {
-            var processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            if (ScriptState.AllEvents.Any(x => x.EventProcess.ProcessName == processName))
-            {
-                ScriptState.AllEvents.ResetBindings();
-            }
-        }
-
-        private void ProcessStopEvent_EventArrived(object sender, EventArrivedEventArgs e)
+        private void ProcessEventChange_EventArrived(object sender, EventArrivedEventArgs e)
         {
             var processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
             if (ScriptState.AllEvents.Any(x => x.EventProcess.ProcessName == processName))
