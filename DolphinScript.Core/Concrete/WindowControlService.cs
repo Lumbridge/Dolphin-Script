@@ -2,8 +2,10 @@
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -43,6 +45,11 @@ namespace DolphinScript.Core.Concrete
         public IntPtr GetActiveWindowHandle()
         {
             return PInvokeReferences.GetForegroundWindow();
+        }
+
+        public int GetProcessId(IntPtr handle)
+        {
+            return PInvokeReferences.GetWindowProcessId(handle);
         }
 
         public string GetProcessName(IntPtr handle)
@@ -150,6 +157,30 @@ namespace DolphinScript.Core.Concrete
             }
 
             return IntPtr.Zero;
+        }
+
+        public IDictionary<IntPtr, string> GetOpenWindows()
+        {
+            IntPtr shellWindow = PInvokeReferences.GetShellWindow();
+            Dictionary<IntPtr, string> windows = new Dictionary<IntPtr, string>();
+
+            PInvokeReferences.EnumWindows(delegate (IntPtr hWnd, int lParam)
+            {
+                if (hWnd == shellWindow) return true;
+                if (!PInvokeReferences.IsWindowVisible(hWnd)) return true;
+
+                int length = PInvokeReferences.GetWindowTextLength(hWnd);
+                if (length == 0) return true;
+
+                StringBuilder builder = new StringBuilder(length);
+                PInvokeReferences.GetWindowText(hWnd, builder, length + 1);
+
+                windows[hWnd] = builder.ToString();
+                return true;
+
+            }, 0);
+
+            return windows;
         }
 
         public CommonTypes.Rect GetWindowLocation(IntPtr handle)

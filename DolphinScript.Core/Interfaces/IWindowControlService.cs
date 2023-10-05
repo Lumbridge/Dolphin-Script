@@ -5,6 +5,7 @@ namespace DolphinScript.Core.Interfaces
 {
     public interface IWindowControlService
     {
+        int GetProcessId(IntPtr handle);
         string GetProcessName(IntPtr handle);
         string GetActiveWindowTitle();
         string GetWindowTitle(IntPtr handle);
@@ -13,5 +14,6 @@ namespace DolphinScript.Core.Interfaces
         void BringWindowToFront(IntPtr handle);
         IntPtr GetActiveWindowHandle();
         IntPtr GetWindowHandle(string windowTitle);
+        IDictionary<IntPtr, string> GetOpenWindows();
     }
 }

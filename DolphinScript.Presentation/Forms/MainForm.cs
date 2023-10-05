@@ -21,6 +21,7 @@ using System.Windows.Forms;
 using System.Management;
 using DolphinScript.Core.Constants;
 using DolphinScript.Forms.UtilityForms;
+using DolphinScript.Models;
 
 namespace DolphinScript.Forms
 {
@@ -805,23 +806,30 @@ namespace DolphinScript.Forms
 
         private void Button_InsertMouseMoveEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(MouseMoveToFixedPointLoop);
+            var form = _objectFactory.CreateObject<OverlayForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.MouseMove);
+            form.Show();
         }
 
         private void Button_InsertMouseMoveToAreaEvent_Click(object sender, EventArgs e)
         {
-            var registerAreaForm = _objectFactory.CreateObject<AreaSelectionForm>();
-            registerAreaForm.Show();
+            var form = _objectFactory.CreateObject<OverlayForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.MouseMoveToArea, true);
+            form.Show();
         }
 
         private void Button_InsertMouseMoveToPointOnWindowEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(MouseMoveToPointOnWindowLoop);
+            var form = _objectFactory.CreateObject<WindowSelectionForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.MouseMoveToPointOnWindow);
+            form.Show();
         }
 
         private void Button_InsertMouseMoveToAreaOnWindowEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(MouseMoveToAreaOnWindowLoop);
+            var form = _objectFactory.CreateObject<WindowSelectionForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.MouseMoveToAreaOnWindow, true);
+            form.Show();
         }
 
         #endregion
@@ -1180,77 +1188,6 @@ namespace DolphinScript.Forms
         #endregion
 
         #region Mouse Move Event Register Loops
-
-        /// <summary>
-        /// this is the register loop used to register a mouse move to a fixed point event
-        /// </summary>
-        void MouseMoveToFixedPointLoop()
-        {
-            ScriptState.IsRegistering = true;
-
-            var temp = Button_InsertMouseMoveEvent.Text;
-
-            Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingPointsToClick);
-
-            while (ScriptState.IsRegistering)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    var p1 = _pointService.GetCursorPosition();
-
-                    var ev = _objectFactory.CreateObject<MouseMove>();
-                    ev.CoordsToMoveTo = p1;
-                    ScriptState.AllEvents.Add(ev);
-
-                    Thread.Sleep(DelayConstants.EventRegisterWaitMs);
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, temp);
-                    ScriptState.IsRegistering = false;
-                    return;
-                }
-            }
-
-            Button_InsertMouseMoveEvent.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        /// <summary>
-        /// this is the register loop used to register a mouse move to point on window event
-        /// </summary>
-        void MouseMoveToPointOnWindowLoop()
-        {
-            ScriptState.IsRegistering = true;
-
-            var temp = Button_InsertMouseMoveToPointOnWindowEvent.Text;
-
-            Button_InsertMouseMoveToPointOnWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingPointToClick);
-
-            while (ScriptState.IsRegistering)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    var p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    var ev = _objectFactory.CreateObject<MouseMoveToPointOnWindow>();
-                    ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
-                    ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
-                    ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
-                    ev.CoordsToMoveTo = p1;
-                    ScriptState.AllEvents.Add(ev);
-
-                    Thread.Sleep(DelayConstants.EventRegisterWaitMs);
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertMouseMoveToPointOnWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-                    ScriptState.IsRegistering = false;
-                    return;
-                }
-            }
-
-            Button_InsertMouseMoveToPointOnWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-        }
 
         /// <summary>
         /// this is the register loop used to register a mouse move to area on window event

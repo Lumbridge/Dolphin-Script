@@ -1,8 +1,7 @@
-﻿using DolphinScript.Core.Events.BaseEvents;
+﻿using DolphinScript.Core.Constants;
+using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 using System;
-using DolphinScript.Core.Classes;
-using DolphinScript.Core.Constants;
 
 namespace DolphinScript.Core.Events.Pause
 {

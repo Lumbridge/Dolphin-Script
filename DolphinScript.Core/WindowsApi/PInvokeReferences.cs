@@ -108,10 +108,24 @@ namespace DolphinScript.Core.WindowsApi
         public static extern bool IsIconic(IntPtr handle);
 
         [DllImport("user32")]
-        private static extern uint GetWindowThreadProcessId(
+        public static extern uint GetWindowThreadProcessId(
             IntPtr hWnd,
             out int lpdwProcessId
         );
+
+        public delegate bool EnumWindowsProc(IntPtr hWnd, int lParam);
+
+        [DllImport("USER32.DLL")]
+        public static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
+        
+        [DllImport("USER32.DLL")]
+        public static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport("USER32.DLL")]
+        public static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("USER32.DLL")]
+        public static extern IntPtr GetShellWindow();
 
         public static int GetWindowProcessId(IntPtr handle)
         {

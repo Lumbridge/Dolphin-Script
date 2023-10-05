@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using DolphinScript.Core.Concrete;
 using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Models;
 using DolphinScript.Core.WindowsApi;
 
 namespace DolphinScript.Core.Classes
@@ -20,5 +21,6 @@ namespace DolphinScript.Core.Classes
         public static bool FreeMouse { get; set; } = false;
         public static string CurrentAction { get; set; }
         public static CommonTypes.Rect LastSavedArea { get; set; }
+        public static EventProcess LastSelectedProcess { get; set; }
     }
 }
