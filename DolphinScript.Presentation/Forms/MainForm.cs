@@ -1188,51 +1188,7 @@ namespace DolphinScript.Forms
         #endregion
 
         #region Mouse Move Event Register Loops
-
-        /// <summary>
-        /// this is the register loop used to register a mouse move to area on window event
-        /// </summary>
-        void MouseMoveToAreaOnWindowLoop()
-        {
-            ScriptState.IsRegistering = true;
-
-            var temp = Button_InsertMouseMoveToAreaOnWindowEvent.Text;
-
-            Button_InsertMouseMoveToAreaOnWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToClick);
-
-            while (ScriptState.IsRegistering)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    var p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-
-                    var p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    var ev = _objectFactory.CreateObject<MouseMoveToAreaOnWindow>();
-                    ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
-                    ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
-                    ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
-                    ev.ClickArea = new CommonTypes.Rect(p1, p2);
-
-                    ScriptState.AllEvents.Add(ev);
-
-                    Thread.Sleep(DelayConstants.EventRegisterWaitMs);
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertMouseMoveToAreaOnWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-
-                    ScriptState.IsRegistering = false;
-
-                    return;
-                }
-            }
-
-            Button_InsertMouseMoveToAreaOnWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-        }
-
+        
         /// <summary>
         /// this is the register loop used to register a mouse move to colour in area event
         /// </summary>
