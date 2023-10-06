@@ -1,15 +1,16 @@
-﻿using System;
+﻿using DolphinScript.Core.WindowsApi;
+using System;
 using System.Collections.Generic;
-using DolphinScript.Core.Events.Keyboard;
-using DolphinScript.Core.Events.Mouse;
-using DolphinScript.Core.Events.Pause;
-using DolphinScript.Core.Events.Window;
-using DolphinScript.Core.WindowsApi;
 
 namespace DolphinScript.Core.Constants
 {
     public class MainFormConstants
     {
+        public static int ZoomPreviewPx = 10;
+        public static int ZoomPreviewSize = 100;
+        public static int ZoomPreviewPositionCursorRelativeX = 40;
+        public static int ZoomPreviewPositionCursorRelativeY = 40;
+
         public static int DefaultMinimumMouseSpeed = 40;
         public static int DefaultMaximumMouseSpeed = 60;
 

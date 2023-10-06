@@ -237,8 +237,8 @@ namespace DolphinScript.Core.WindowsApi
             public int right;
             public int bottom;
 
-            public int Height => bottom;
-            public int Width => right;
+            public int Height => Math.Abs(bottom - top);
+            public int Width => left < 0 && right > 0 ? right : Math.Abs(right - left);
 
             /// <summary>
             /// RECT constructor which takes two points (TopLeft & BottomRight points)

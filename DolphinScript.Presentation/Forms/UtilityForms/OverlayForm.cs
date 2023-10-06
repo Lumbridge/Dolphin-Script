@@ -28,8 +28,12 @@ namespace DolphinScript.Forms.UtilityForms
 
         private ContextMenuStrip _rightClickMenu;
         private PictureBox _overlayPictureBox;
+        private PictureBox _zoomPictureBox;
 
         public NextFormModel NextFormModel { get; set; }
+
+        private Point _topLeftPoint;
+        private Size _totalDesktopSize;
 
         public OverlayForm(IScreenService screenService, IScreenCaptureService screenCaptureService, IObjectFactory objectFactory, IPointService pointService)
         {
@@ -54,6 +58,7 @@ namespace DolphinScript.Forms.UtilityForms
             _rightClickMenu.Items.Add(new ToolStripMenuItem(ContextMenuConstants.CancelMenuItemText) {Name = ContextMenuConstants.CancelMenuItemName});
 
             Controls.Add(_overlayPictureBox);
+            Controls.Add(_zoomPictureBox);
             Controls.Add(_rightClickMenu);
 
             ((ContextMenuStrip)Controls[ContextMenuConstants.RightClickMenuName]).Items[ContextMenuConstants.SaveMenuItemName].Click += RightClickMenu_Save_Click;
@@ -64,6 +69,7 @@ namespace DolphinScript.Forms.UtilityForms
 
         public void SetupForm()
         {
+            DoubleBuffered = true;
             StartPosition = FormStartPosition.Manual;
             FormBorderStyle = FormBorderStyle.None;
             Cursor = Cursors.Cross;
@@ -72,27 +78,32 @@ namespace DolphinScript.Forms.UtilityForms
         public void SetupOverlay()
         {
             _overlayPictureBox = new PictureBox();
+            _zoomPictureBox = new PictureBox();
+            _zoomPictureBox.Size = new Size(MainFormConstants.ZoomPreviewSize, MainFormConstants.ZoomPreviewSize);
+            _zoomPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
 
-            var topLeftPoint = _screenService.GetWorkspaceTopLeftPoint();
-            var totalDesktopSize = _screenService.GetTotalScreenSize();
+            _topLeftPoint = _screenService.GetWorkspaceTopLeftPoint();
+            _totalDesktopSize = _screenService.GetTotalScreenSize();
 
             // update form location and size
-            Location = new Point(topLeftPoint.X, topLeftPoint.Y);
-            Size = new Size(totalDesktopSize.Width, totalDesktopSize.Height);
+            Location = new Point(_topLeftPoint.X, _topLeftPoint.Y);
+            Size = new Size(_totalDesktopSize.Width, _totalDesktopSize.Height);
 
             // update picture box location and size (relative to form)
             _overlayPictureBox.Location = new Point(0, 0);
-            _overlayPictureBox.Size = new Size(totalDesktopSize.Width, totalDesktopSize.Height);
+            _overlayPictureBox.Size = new Size(_totalDesktopSize.Width, _totalDesktopSize.Height);
 
             var workspaceBoundary = new CommonTypes.Rect(
-                new Point(topLeftPoint.X, topLeftPoint.Y),
-                new Point(totalDesktopSize.Width, totalDesktopSize.Height));
+                new Point(_topLeftPoint.X, _topLeftPoint.Y),
+                new Point(_totalDesktopSize.Width, _totalDesktopSize.Height));
 
             var screenShot = _screenCaptureService.ScreenshotArea(workspaceBoundary);
 
-            var g = Graphics.FromImage(screenShot);
-
-            g.DrawRectangle(new Pen(_outlineBrush, 5.0f), new Rectangle(0, 0, totalDesktopSize.Width - 1, totalDesktopSize.Height - 1));
+            // draw red box around workspace bounds
+            using (var g = Graphics.FromImage(screenShot))
+            {
+                g.DrawRectangle(new Pen(_outlineBrush, 5.0f), new Rectangle(0, 0, _totalDesktopSize.Width - 1, _totalDesktopSize.Height - 1));
+            }
 
             _overlayPictureBox.Image = screenShot;
 
@@ -101,68 +112,27 @@ namespace DolphinScript.Forms.UtilityForms
 
             _overlayPictureBox.MouseDown += OverlayPictureBox_MouseDown;
             _overlayPictureBox.MouseMove += OverlayPictureBox_MouseMove;
+
+            _zoomPictureBox.Paint += ZoomPictureBoxOnPaint;
         }
 
-        // Start Rectangle
-        private void OverlayPictureBox_MouseDown(object sender, MouseEventArgs e)
+        private void ZoomPictureBoxOnPaint(object sender, PaintEventArgs e)
         {
-            _rightClickMenu.Close(ToolStripDropDownCloseReason.CloseCalled);
-
-            _relativeRectStartPoint = NextFormModel.UseWindowSelector ? 
-                _pointService.GetCursorPositionOnWindow(ScriptState.LastSelectedProcess.WindowHandle) : 
-                _pointService.GetCursorPosition();
-
-            _drawingRectStartPoint = e.Location;
-            Invalidate();
+            var rect = _zoomPictureBox.ClientRectangle;
+            var p1 = _pointService.GetCursorPosition();
+            var ss = _screenCaptureService.ScreenshotArea(
+                new CommonTypes.Rect(
+                    p1.Y - MainFormConstants.ZoomPreviewPx, 
+                    p1.X - MainFormConstants.ZoomPreviewPx, 
+                    p1.Y + MainFormConstants.ZoomPreviewPx, 
+                    p1.X + MainFormConstants.ZoomPreviewPx));
+            ss = _screenCaptureService.ResizeImage(ss, MainFormConstants.ZoomPreviewSize, MainFormConstants.ZoomPreviewSize);
+            e.Graphics.DrawImage(ss, new Point(rect.X, rect.Y));
+            e.Graphics.DrawRectangle(new Pen(_outlineBrush, 1.0f), new Rectangle(rect.X, rect.Y, rect.Width - 1, rect.Height - 1));
+            e.Graphics.DrawRectangle(new Pen(_outlineBrush, 1.0f), new Rectangle(_zoomPictureBox.Width / 2, _zoomPictureBox.Height / 2, 4, 4));
         }
 
-        private void OverlayPictureBox_MouseUp(object sender, MouseEventArgs e)
-        {
-            switch (e.Button)
-            {
-                case MouseButtons.Left:
-                    SaveEndPoint(e);
-                    break;
-                case MouseButtons.Right:
-                    _rightClickMenu.Show(new Point(e.X, e.Y));
-                    break;
-            }
-        }
-
-        // Draw Rectangle
-        private void OverlayPictureBox_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-            {
-                return;
-            }
-
-            SaveEndPoint(e);
-        }
-
-        // Draw Area
-        private void OverlayPictureBox_Paint(object sender, PaintEventArgs e)
-        {
-            if (_overlayPictureBox.Image == null)
-            {
-                return;
-            }
-
-            // draw area selection
-            if (NextFormModel.UseAreaSelection && _drawingRect.Width > 1 && _drawingRect.Height > 1)
-            {
-                e.Graphics.FillRectangle(_selectionBrush, _drawingRect);
-            }
-
-            // draw single pixel selection
-            if (_drawingRect.Width == 1 && _drawingRect.Height == 1)
-            {
-                e.Graphics.DrawRectangle(new Pen(_outlineBrush, 1.0f), new Rectangle(_drawingRect.Location.X - 2, _drawingRect.Location.Y - 2, 3, 3));
-            }
-        }
-
-
-        protected void SaveEndPoint(MouseEventArgs e)
+        public void SaveEndPoint(MouseEventArgs e)
         {
             Point relativeEndPoint = NextFormModel.UseWindowSelector ?
                 _pointService.GetCursorPositionOnWindow(ScriptState.LastSelectedProcess.WindowHandle) :
@@ -170,7 +140,7 @@ namespace DolphinScript.Forms.UtilityForms
             Point drawingEndPoint = e.Location;
 
             // area the event will use
-            
+
             _relativeRect.Location = new Point(
                 Math.Min(_relativeRectStartPoint.X, relativeEndPoint.X),
                 Math.Min(_relativeRectStartPoint.Y, relativeEndPoint.Y));
@@ -178,7 +148,7 @@ namespace DolphinScript.Forms.UtilityForms
             _relativeRect.Size = new Size(
                 Math.Abs(_relativeRectStartPoint.X - relativeEndPoint.X),
                 Math.Abs(_relativeRectStartPoint.Y - relativeEndPoint.Y));
-            
+
             // area to draw the box
 
             _drawingRect.Location = new Point(
@@ -204,6 +174,72 @@ namespace DolphinScript.Forms.UtilityForms
             ScriptState.LastSavedArea = new CommonTypes.Rect(_relativeRectStartPoint, relativeEndPoint);
 
             _overlayPictureBox.Invalidate();
+        }
+
+        // Start Rectangle
+        private void OverlayPictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            _rightClickMenu.Close(ToolStripDropDownCloseReason.CloseCalled);
+
+            _relativeRectStartPoint = NextFormModel.UseWindowSelector ? 
+                _pointService.GetCursorPositionOnWindow(ScriptState.LastSelectedProcess.WindowHandle) : 
+                _pointService.GetCursorPosition();
+
+            _drawingRectStartPoint = e.Location;
+
+            Invalidate();
+        }
+
+        // Draw Rectangle
+        private void OverlayPictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            var p1 = PointToClient(MousePosition);
+            _zoomPictureBox.Location = new Point(
+                p1.X + MainFormConstants.ZoomPreviewPositionCursorRelativeX, 
+                p1.Y + MainFormConstants.ZoomPreviewPositionCursorRelativeY);
+            _zoomPictureBox.BringToFront();
+            _zoomPictureBox.Invalidate();
+
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            SaveEndPoint(e);
+        }
+
+        // Draw Area
+        private void OverlayPictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            if (_overlayPictureBox.Image == null)
+            {
+                return;
+            }
+
+            // draw area selection
+            if (NextFormModel.UseAreaSelection && _drawingRect.Width > 1 && _drawingRect.Height > 1)
+            {
+                e.Graphics.FillRectangle(_selectionBrush, _drawingRect);
+            }
+
+            // draw single pixel selection
+            if (_drawingRect.Width == 1 && _drawingRect.Height == 1)
+            {
+                e.Graphics.DrawRectangle(new Pen(_outlineBrush, 1.0f), new Rectangle(_drawingRect.Location.X - 1, _drawingRect.Location.Y - 1, 2, 2));
+            }
+        }
+
+        private void OverlayPictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    SaveEndPoint(e);
+                    break;
+                case MouseButtons.Right:
+                    _rightClickMenu.Show(new Point(e.X, e.Y));
+                    break;
+            }
         }
 
         private void RightClickMenu_Save_Click(object sender, EventArgs e)
