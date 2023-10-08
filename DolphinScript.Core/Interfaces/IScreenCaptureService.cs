@@ -7,6 +7,5 @@ namespace DolphinScript.Core.Interfaces
     {
         Bitmap ScreenshotArea(CommonTypes.Rect area);
         Bitmap ScreenshotAreaWithTransparentOverlay(CommonTypes.Rect area);
-        Bitmap ResizeImage(Image image, int width, int height);
     }
 }

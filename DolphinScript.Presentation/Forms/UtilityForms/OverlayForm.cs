@@ -1,13 +1,13 @@
-﻿using DolphinScript.Core.Interfaces;
-using System.Drawing;
-using System.Windows.Forms;
-using DolphinScript.Core.WindowsApi;
-using DolphinScript.Core.Classes;
+﻿using DolphinScript.Core.Classes;
 using DolphinScript.Core.Constants;
-using System;
 using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
+using DolphinScript.Core.WindowsApi;
 using DolphinScript.Interfaces;
 using DolphinScript.Models;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace DolphinScript.Forms.UtilityForms
 {
@@ -21,19 +21,24 @@ namespace DolphinScript.Forms.UtilityForms
         private readonly Brush _selectionBrush = new SolidBrush(Color.FromArgb(128, 72, 145, 220));
         private readonly Brush _outlineBrush = new SolidBrush(Color.FromArgb(255, 255, 0, 0));
 
+        private readonly Pen _thickRedPen;
+        private readonly Pen _thinRedPen;
+
         private Point _drawingRectStartPoint;
         private Point _relativeRectStartPoint;
         private Rectangle _relativeRect;
         private Rectangle _drawingRect;
 
-        private ContextMenuStrip _rightClickMenu;
-        private PictureBox _overlayPictureBox;
-        private PictureBox _zoomPictureBox;
+        private readonly ContextMenuStrip _rightClickMenu = new ContextMenuStrip();
+        private readonly PictureBox _overlayPictureBox = new PictureBox();
+        private readonly PictureBox _zoomPictureBox = new PictureBox();
 
         public NextFormModel NextFormModel { get; set; }
 
         private Point _topLeftPoint;
         private Size _totalDesktopSize;
+
+        public void Bind(ScriptEvent scriptEvent) { }
 
         public OverlayForm(IScreenService screenService, IScreenCaptureService screenCaptureService, IObjectFactory objectFactory, IPointService pointService)
         {
@@ -44,43 +49,62 @@ namespace DolphinScript.Forms.UtilityForms
 
             InitializeComponent();
 
+            _thinRedPen = new Pen(_outlineBrush, 1.0f);
+            _thickRedPen = new Pen(_outlineBrush, 5.0f);
+
             SetupForm();
             SetupOverlay();
             SetupControls();
         }
 
-        public void SetupControls()
+        private void SetupControls()
         {
-            _rightClickMenu = new ContextMenuStrip();
             _rightClickMenu.Name = ContextMenuConstants.RightClickMenuName;
             _rightClickMenu.TopLevel = false;
-            _rightClickMenu.Items.Add(new ToolStripMenuItem(ContextMenuConstants.SaveMenuItemText) {Name = ContextMenuConstants.SaveMenuItemName});
-            _rightClickMenu.Items.Add(new ToolStripMenuItem(ContextMenuConstants.CancelMenuItemText) {Name = ContextMenuConstants.CancelMenuItemName});
 
+            // add the save and cancel menu items to the right click menu
+            _rightClickMenu.Items.Add(new ToolStripMenuItem(ContextMenuConstants.SaveMenuItemText)
+            {
+                Name = ContextMenuConstants.SaveMenuItemName
+            });
+
+            _rightClickMenu.Items.Add(new ToolStripMenuItem(ContextMenuConstants.QuickRegistrationItemText)
+            {
+                Name = ContextMenuConstants.QuickRegistrationItemName,
+                Checked = ScriptState.QuickRegistrationEnabled,
+                CheckOnClick = true
+            });
+
+            _rightClickMenu.Items.Add(new ToolStripMenuItem(ContextMenuConstants.CancelMenuItemText)
+            {
+                Name = ContextMenuConstants.CancelMenuItemName
+            });
+
+            // add the controls to the form
             Controls.Add(_overlayPictureBox);
             Controls.Add(_zoomPictureBox);
             Controls.Add(_rightClickMenu);
 
+            // attach save and cancel handlers to the right click menu
             ((ContextMenuStrip)Controls[ContextMenuConstants.RightClickMenuName]).Items[ContextMenuConstants.SaveMenuItemName].Click += RightClickMenu_Save_Click;
+            ((ToolStripMenuItem)((ContextMenuStrip)Controls[ContextMenuConstants.RightClickMenuName]).Items[ContextMenuConstants.QuickRegistrationItemName]).CheckedChanged += OnCheckedChanged;
             ((ContextMenuStrip)Controls[ContextMenuConstants.RightClickMenuName]).Items[ContextMenuConstants.CancelMenuItemName].Click += RightClickMenu_Cancel_Click;
             
+            // assign the right click menu as the context menu for the form
             ContextMenuStrip = _rightClickMenu;
         }
 
-        public void SetupForm()
+        private void SetupForm()
         {
-            DoubleBuffered = true;
             StartPosition = FormStartPosition.Manual;
             FormBorderStyle = FormBorderStyle.None;
             Cursor = Cursors.Cross;
         }
 
-        public void SetupOverlay()
+        private void SetupOverlay()
         {
-            _overlayPictureBox = new PictureBox();
-            _zoomPictureBox = new PictureBox();
             _zoomPictureBox.Size = new Size(MainFormConstants.ZoomPreviewSize, MainFormConstants.ZoomPreviewSize);
-            _zoomPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            _zoomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
 
             _topLeftPoint = _screenService.GetWorkspaceTopLeftPoint();
             _totalDesktopSize = _screenService.GetTotalScreenSize();
@@ -102,7 +126,7 @@ namespace DolphinScript.Forms.UtilityForms
             // draw red box around workspace bounds
             using (var g = Graphics.FromImage(screenShot))
             {
-                g.DrawRectangle(new Pen(_outlineBrush, 5.0f), new Rectangle(0, 0, _totalDesktopSize.Width - 1, _totalDesktopSize.Height - 1));
+                g.DrawRectangle(_thickRedPen, new Rectangle(0, 0, _totalDesktopSize.Width - 1, _totalDesktopSize.Height - 1));
             }
 
             _overlayPictureBox.Image = screenShot;
@@ -116,31 +140,15 @@ namespace DolphinScript.Forms.UtilityForms
             _zoomPictureBox.Paint += ZoomPictureBoxOnPaint;
         }
 
-        private void ZoomPictureBoxOnPaint(object sender, PaintEventArgs e)
-        {
-            var rect = _zoomPictureBox.ClientRectangle;
-            var p1 = _pointService.GetCursorPosition();
-            var ss = _screenCaptureService.ScreenshotArea(
-                new CommonTypes.Rect(
-                    p1.Y - MainFormConstants.ZoomPreviewPx, 
-                    p1.X - MainFormConstants.ZoomPreviewPx, 
-                    p1.Y + MainFormConstants.ZoomPreviewPx, 
-                    p1.X + MainFormConstants.ZoomPreviewPx));
-            ss = _screenCaptureService.ResizeImage(ss, MainFormConstants.ZoomPreviewSize, MainFormConstants.ZoomPreviewSize);
-            e.Graphics.DrawImage(ss, new Point(rect.X, rect.Y));
-            e.Graphics.DrawRectangle(new Pen(_outlineBrush, 1.0f), new Rectangle(rect.X, rect.Y, rect.Width - 1, rect.Height - 1));
-            e.Graphics.DrawRectangle(new Pen(_outlineBrush, 1.0f), new Rectangle(_zoomPictureBox.Width / 2, _zoomPictureBox.Height / 2, 4, 4));
-        }
-
-        public void SaveEndPoint(MouseEventArgs e)
+        private void SaveEndPoint(MouseEventArgs e)
         {
             Point relativeEndPoint = NextFormModel.UseWindowSelector ?
                 _pointService.GetCursorPositionOnWindow(ScriptState.LastSelectedProcess.WindowHandle) :
                 _pointService.GetCursorPosition();
+
             Point drawingEndPoint = e.Location;
 
             // area the event will use
-
             _relativeRect.Location = new Point(
                 Math.Min(_relativeRectStartPoint.X, relativeEndPoint.X),
                 Math.Min(_relativeRectStartPoint.Y, relativeEndPoint.Y));
@@ -150,7 +158,6 @@ namespace DolphinScript.Forms.UtilityForms
                 Math.Abs(_relativeRectStartPoint.Y - relativeEndPoint.Y));
 
             // area to draw the box
-
             _drawingRect.Location = new Point(
                 Math.Min(_drawingRectStartPoint.X, drawingEndPoint.X),
                 Math.Min(_drawingRectStartPoint.Y, drawingEndPoint.Y));
@@ -172,6 +179,11 @@ namespace DolphinScript.Forms.UtilityForms
             }
 
             ScriptState.LastSavedArea = new CommonTypes.Rect(_relativeRectStartPoint, relativeEndPoint);
+
+            if (ScriptState.QuickRegistrationEnabled)
+            {
+                SaveClickAreaToScript();
+            }
 
             _overlayPictureBox.Invalidate();
         }
@@ -225,7 +237,7 @@ namespace DolphinScript.Forms.UtilityForms
             // draw single pixel selection
             if (_drawingRect.Width == 1 && _drawingRect.Height == 1)
             {
-                e.Graphics.DrawRectangle(new Pen(_outlineBrush, 1.0f), new Rectangle(_drawingRect.Location.X - 1, _drawingRect.Location.Y - 1, 2, 2));
+                e.Graphics.FillRectangle(_outlineBrush, new Rectangle(_drawingRect.Location.X, _drawingRect.Location.Y, 1, 1));
             }
         }
 
@@ -244,6 +256,12 @@ namespace DolphinScript.Forms.UtilityForms
 
         private void RightClickMenu_Save_Click(object sender, EventArgs e)
         {
+            SaveClickAreaToScript();
+            Close();
+        }
+
+        private void SaveClickAreaToScript()
+        {
             var ev = _objectFactory.CreateObject(NextFormModel.EventType);
 
             if (NextFormModel.UseAreaSelection)
@@ -261,8 +279,6 @@ namespace DolphinScript.Forms.UtilityForms
             }
 
             ScriptState.AllEvents.Add(ev);
-
-            Close();
         }
 
         private void RightClickMenu_Cancel_Click(object sender, EventArgs e)
@@ -270,6 +286,25 @@ namespace DolphinScript.Forms.UtilityForms
             Close();
         }
 
-        public void Bind(ScriptEvent scriptEvent) { }
+        // paint the cursor area zoom preview
+        private void ZoomPictureBoxOnPaint(object sender, PaintEventArgs e)
+        {
+            var rect = _zoomPictureBox.ClientRectangle;
+            var p1 = _pointService.GetCursorPosition();
+            var zoomArea = _pointService.GetRectAroundCenterPoint(new Point(p1.X, p1.Y), MainFormConstants.ZoomPreviewPx);
+            var ss = _screenCaptureService.ScreenshotArea(zoomArea);
+            e.Graphics.DrawImage(ss, rect.X, rect.Y, rect.Width, rect.Height);
+            e.Graphics.DrawRectangle(_thinRedPen, new Rectangle(rect.X, rect.Y, rect.Width - 1, rect.Height - 1));
+            Point centerPoint = new Point(_zoomPictureBox.Width / 2, _zoomPictureBox.Height / 2);
+            e.Graphics.DrawLine(_thinRedPen, centerPoint.X, centerPoint.Y - 5, centerPoint.X, centerPoint.Y + 5);
+            e.Graphics.DrawLine(_thinRedPen, centerPoint.X - 5, centerPoint.Y, centerPoint.X + 5, centerPoint.Y);
+        }
+
+        private void OnCheckedChanged(object sender, EventArgs e)
+        {
+            var menuItem = (ToolStripMenuItem)sender;
+            ScriptState.QuickRegistrationEnabled = menuItem.Checked;
+            _rightClickMenu.Items[ContextMenuConstants.SaveMenuItemName].Enabled = !menuItem.Checked;
+        }
     }
 }

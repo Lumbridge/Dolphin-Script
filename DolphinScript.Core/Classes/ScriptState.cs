@@ -19,6 +19,7 @@ namespace DolphinScript.Core.Classes
         public static BindingList<ScriptEvent> AllEvents { get; set; } = new BindingList<ScriptEvent>();
         public static MouseMovementService.MouseMovementMode MouseMovementMode { get; set; } = MouseMovementService.MouseMovementMode.Realistic;
         public static bool FreeMouse { get; set; } = false;
+        public static bool QuickRegistrationEnabled { get; set; } = false;
         public static string CurrentAction { get; set; }
         public static CommonTypes.Rect LastSavedArea { get; set; }
         public static EventProcess LastSelectedProcess { get; set; }

@@ -193,7 +193,7 @@
             // 
             // button_StartScript
             // 
-            this.button_StartScript.Location = new System.Drawing.Point(1002, 172);
+            this.button_StartScript.Location = new System.Drawing.Point(1297, 388);
             this.button_StartScript.Name = "button_StartScript";
             this.button_StartScript.Size = new System.Drawing.Size(101, 35);
             this.button_StartScript.TabIndex = 0;
@@ -204,7 +204,7 @@
             // button_MoveEventUp
             // 
             this.button_MoveEventUp.Enabled = false;
-            this.button_MoveEventUp.Location = new System.Drawing.Point(1002, 58);
+            this.button_MoveEventUp.Location = new System.Drawing.Point(1297, 245);
             this.button_MoveEventUp.Name = "button_MoveEventUp";
             this.button_MoveEventUp.Size = new System.Drawing.Size(37, 36);
             this.button_MoveEventUp.TabIndex = 3;
@@ -215,7 +215,7 @@
             // button_MoveEventDown
             // 
             this.button_MoveEventDown.Enabled = false;
-            this.button_MoveEventDown.Location = new System.Drawing.Point(1002, 130);
+            this.button_MoveEventDown.Location = new System.Drawing.Point(1297, 317);
             this.button_MoveEventDown.Name = "button_MoveEventDown";
             this.button_MoveEventDown.Size = new System.Drawing.Size(37, 36);
             this.button_MoveEventDown.TabIndex = 4;
@@ -226,7 +226,7 @@
             // button_RemoveEvent
             // 
             this.button_RemoveEvent.Enabled = false;
-            this.button_RemoveEvent.Location = new System.Drawing.Point(1002, 100);
+            this.button_RemoveEvent.Location = new System.Drawing.Point(1297, 287);
             this.button_RemoveEvent.Name = "button_RemoveEvent";
             this.button_RemoveEvent.Size = new System.Drawing.Size(37, 24);
             this.button_RemoveEvent.TabIndex = 16;
@@ -236,17 +236,17 @@
             // 
             // button_AddRepeatGroup
             // 
-            this.button_AddRepeatGroup.Location = new System.Drawing.Point(1045, 53);
+            this.button_AddRepeatGroup.Location = new System.Drawing.Point(1340, 271);
             this.button_AddRepeatGroup.Name = "button_AddRepeatGroup";
             this.button_AddRepeatGroup.Size = new System.Drawing.Size(58, 56);
             this.button_AddRepeatGroup.TabIndex = 8;
-            this.button_AddRepeatGroup.Text = "Add Repeat Group";
+            this.button_AddRepeatGroup.Text = "Add repeat group";
             this.button_AddRepeatGroup.UseVisualStyleBackColor = true;
             this.button_AddRepeatGroup.Click += new System.EventHandler(this.RepeatGroupButton_Click);
             // 
             // NumericUpDown_RepeatAmount
             // 
-            this.NumericUpDown_RepeatAmount.Location = new System.Drawing.Point(1045, 27);
+            this.NumericUpDown_RepeatAmount.Location = new System.Drawing.Point(1340, 245);
             this.NumericUpDown_RepeatAmount.Maximum = new decimal(new int[] {
             99999999,
             0,
@@ -273,7 +273,7 @@
             this.helpToolStripMenuItem});
             this.MenuStrip_MainForm.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip_MainForm.Name = "MenuStrip_MainForm";
-            this.MenuStrip_MainForm.Size = new System.Drawing.Size(1115, 24);
+            this.MenuStrip_MainForm.Size = new System.Drawing.Size(1410, 24);
             this.MenuStrip_MainForm.TabIndex = 46;
             this.MenuStrip_MainForm.Text = "File";
             // 
@@ -338,10 +338,10 @@
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseMoveEvent);
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseMoveToColour);
             this.tabControl_ScriptEvents.Controls.Add(this.tabPage_MouseClick);
-            this.tabControl_ScriptEvents.Location = new System.Drawing.Point(12, 250);
+            this.tabControl_ScriptEvents.Location = new System.Drawing.Point(12, 245);
             this.tabControl_ScriptEvents.Name = "tabControl_ScriptEvents";
             this.tabControl_ScriptEvents.SelectedIndex = 0;
-            this.tabControl_ScriptEvents.Size = new System.Drawing.Size(984, 289);
+            this.tabControl_ScriptEvents.Size = new System.Drawing.Size(1279, 289);
             this.tabControl_ScriptEvents.TabIndex = 47;
             // 
             // tabPage_PauseEvent
@@ -365,7 +365,7 @@
             this.groupBox25.Size = new System.Drawing.Size(177, 172);
             this.groupBox25.TabIndex = 72;
             this.groupBox25.TabStop = false;
-            this.groupBox25.Text = "Pixel Colour Under Mouse";
+            this.groupBox25.Text = "Pixel colour under mouse";
             // 
             // Button_ColourPreview1
             // 
@@ -384,7 +384,7 @@
             this.groupBox12.Size = new System.Drawing.Size(304, 211);
             this.groupBox12.TabIndex = 67;
             this.groupBox12.TabStop = false;
-            this.groupBox12.Text = "Colour Pauses";
+            this.groupBox12.Text = "Colour pauses";
             // 
             // groupBox14
             // 
@@ -395,7 +395,7 @@
             this.groupBox14.Size = new System.Drawing.Size(144, 186);
             this.groupBox14.TabIndex = 1;
             this.groupBox14.TabStop = false;
-            this.groupBox14.Text = "Specific Window Check";
+            this.groupBox14.Text = "Specific window check";
             // 
             // Button_InsertPauseWhileColourDoesntExistInAreaOnWindow
             // 
@@ -426,7 +426,7 @@
             this.groupBox13.Size = new System.Drawing.Size(140, 186);
             this.groupBox13.TabIndex = 0;
             this.groupBox13.TabStop = false;
-            this.groupBox13.Text = "Entire Screen Check";
+            this.groupBox13.Text = "Entire screen check";
             // 
             // Button_InsertPauseWhileColourDoesntExistInArea
             // 
@@ -457,7 +457,7 @@
             this.groupBox11.Size = new System.Drawing.Size(296, 132);
             this.groupBox11.TabIndex = 66;
             this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "Time Pauses";
+            this.groupBox11.Text = "Time pauses";
             // 
             // groupBox5
             // 
@@ -468,7 +468,7 @@
             this.groupBox5.Size = new System.Drawing.Size(96, 96);
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Fixed Pause";
+            this.groupBox5.Text = "Fixed pause";
             // 
             // Button_AddFixedPause
             // 
@@ -513,7 +513,7 @@
             this.groupBox6.Size = new System.Drawing.Size(177, 96);
             this.groupBox6.TabIndex = 53;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Random Pause within Range";
+            this.groupBox6.Text = "Random pause within range";
             // 
             // Button_AddRandomPause
             // 
@@ -1214,7 +1214,7 @@
             this.tabPage_MouseClick.Controls.Add(this.groupBox8);
             this.tabPage_MouseClick.Location = new System.Drawing.Point(4, 22);
             this.tabPage_MouseClick.Name = "tabPage_MouseClick";
-            this.tabPage_MouseClick.Size = new System.Drawing.Size(976, 263);
+            this.tabPage_MouseClick.Size = new System.Drawing.Size(1271, 263);
             this.tabPage_MouseClick.TabIndex = 3;
             this.tabPage_MouseClick.Text = "Mouse click";
             this.tabPage_MouseClick.UseVisualStyleBackColor = true;
@@ -1229,7 +1229,7 @@
             this.groupBox10.Size = new System.Drawing.Size(251, 91);
             this.groupBox10.TabIndex = 67;
             this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Release Mouse Buttons";
+            this.groupBox10.Text = "Release mouse buttons";
             // 
             // Button_InsertRMBUp
             // 
@@ -1271,7 +1271,7 @@
             this.groupBox9.Size = new System.Drawing.Size(250, 91);
             this.groupBox9.TabIndex = 66;
             this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Hold Mouse Buttons";
+            this.groupBox9.Text = "Hold mouse buttons";
             // 
             // Button_InsertRMBDown
             // 
@@ -1347,11 +1347,11 @@
             // 
             // button_RemoveRepeatGroup
             // 
-            this.button_RemoveRepeatGroup.Location = new System.Drawing.Point(1045, 115);
+            this.button_RemoveRepeatGroup.Location = new System.Drawing.Point(1340, 333);
             this.button_RemoveRepeatGroup.Name = "button_RemoveRepeatGroup";
             this.button_RemoveRepeatGroup.Size = new System.Drawing.Size(58, 49);
             this.button_RemoveRepeatGroup.TabIndex = 48;
-            this.button_RemoveRepeatGroup.Text = "Remove Repeat Group";
+            this.button_RemoveRepeatGroup.Text = "Remove repeat group";
             this.button_RemoveRepeatGroup.UseVisualStyleBackColor = true;
             this.button_RemoveRepeatGroup.Click += new System.EventHandler(this.Button_RemoveRepeatGroup_Click);
             // 
@@ -1378,7 +1378,7 @@
             this.MainDataGrid.ReadOnly = true;
             this.MainDataGrid.RowHeadersVisible = false;
             this.MainDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.MainDataGrid.Size = new System.Drawing.Size(984, 212);
+            this.MainDataGrid.Size = new System.Drawing.Size(1386, 212);
             this.MainDataGrid.TabIndex = 49;
             this.MainDataGrid.SelectionChanged += new System.EventHandler(this.MainDataGrid_SelectedIndexChanged);
             this.MainDataGrid.DoubleClick += new System.EventHandler(this.MainDataGrid_DoubleClick);
@@ -1450,7 +1450,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1115, 547);
+            this.ClientSize = new System.Drawing.Size(1410, 547);
             this.Controls.Add(this.MainDataGrid);
             this.Controls.Add(this.button_RemoveRepeatGroup);
             this.Controls.Add(this.tabControl_ScriptEvents);

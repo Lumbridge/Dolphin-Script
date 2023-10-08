@@ -108,10 +108,7 @@ namespace DolphinScript.Core.WindowsApi
         public static extern bool IsIconic(IntPtr handle);
 
         [DllImport("user32")]
-        public static extern uint GetWindowThreadProcessId(
-            IntPtr hWnd,
-            out int lpdwProcessId
-        );
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
         public delegate bool EnumWindowsProc(IntPtr hWnd, int lParam);
 
@@ -132,5 +129,17 @@ namespace DolphinScript.Core.WindowsApi
             GetWindowThreadProcessId(handle, out var pid);
             return pid;
         }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr GetDesktopWindow();
+
+        [DllImport("gdi32.dll", SetLastError = true)]
+        public static extern uint GetPixel(IntPtr dc, int x, int y);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr GetWindowDC(IntPtr window);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int ReleaseDC(IntPtr window, IntPtr dc);
     }
 }

@@ -30,23 +30,18 @@ namespace DolphinScript.Core.Concrete
         public Color GetColourAtPoint(Point position)
         {
             // gets a handle to the screen
-            //
-            var desk = GetDesktopWindow();
+            var desk = PInvokeReferences.GetDesktopWindow();
 
             // gets a device context for the screen
-            //
-            var dc = GetWindowDC(desk);
+            var dc = PInvokeReferences.GetWindowDC(desk);
 
             // gets an unsigned int pixel at the selected position
-            //
-            var a = (int)GetPixel(dc, position.X, position.Y);
+            var a = (int) PInvokeReferences.GetPixel(dc, position.X, position.Y);
 
             // frees the device context memory
-            //
-            ReleaseDC(desk, dc);
+            PInvokeReferences.ReleaseDC(desk, dc);
 
             // returns a colour object of the colour at the pixel position
-            //
             return Color.FromArgb(255, (a >> 0) & 0xff, (a >> 8) & 0xff, (a >> 16) & 0xff);
         }
 
@@ -57,15 +52,12 @@ namespace DolphinScript.Core.Concrete
         public Color SaveSearchColour()
         {
             // continuously loop
-            //
             while (true)
             {
                 // listen for left shift key
-                //
                 if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
                 {
                     // return the pixel colour under the cursor position
-                    //
                     return GetColourAtPoint(_pointService.GetCursorPosition());
                 }
             }
@@ -80,35 +72,28 @@ namespace DolphinScript.Core.Concrete
         public bool ColourExistsInArea(CommonTypes.Rect colourSearchArea, int searchColour)
         {
             // create a bitmap of the search area
-            //
             var b = _screenCaptureService.ScreenshotArea(colourSearchArea);
 
             // lock the bitmap memory
-            //
             lock (b)
             {
                 // create a lockbitmap object
-                //
                 var lockBitmap = new LockBitmap(b);
 
                 try
                 {
                     // lock the object data
-                    //
                     lockBitmap.LockBits();
 
                     // loop through all pixels
-                    //
                     for (var y = 0; y < lockBitmap.Height; y++)
                     {
                         for (var x = 0; x < lockBitmap.Width; x++)
                         {
                             // check if the search pixel matches the current pixel we're on
-                            //
                             if (lockBitmap.GetPixel(x, y).ToArgb() == searchColour)
                             {
                                 // no need to continue searching
-                                //
                                 return true;
                             }
                         }
@@ -117,13 +102,11 @@ namespace DolphinScript.Core.Concrete
                 finally
                 {
                     // unlock the data
-                    //
                     lockBitmap.UnlockBits();
                 }
             }
             
             // we finished searching all pixels without finding a matching pixel
-            //
             return false;
         }
 
@@ -224,17 +207,5 @@ namespace DolphinScript.Core.Concrete
             // return the new bitmap with the new colour for the matching pixels
             return temp;
         }
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetDesktopWindow();
-
-        [DllImport("gdi32.dll", SetLastError = true)]
-        public static extern uint GetPixel(IntPtr dc, int x, int y);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetWindowDC(IntPtr window);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern int ReleaseDC(IntPtr window, IntPtr dc);
     }
 }

@@ -15,5 +15,6 @@ namespace DolphinScript.Core.Interfaces
         IList<Point> RegisterClickArea();
         CommonTypes.Rect GetClickAreaPositionOnWindow(IntPtr window, CommonTypes.Rect clickArea);
         CommonTypes.Rect GetWindowPosition(IntPtr window);
+        CommonTypes.Rect GetRectAroundCenterPoint(Point centerPoint, int areaSize);
     }
 }

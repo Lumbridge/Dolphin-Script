@@ -6,7 +6,7 @@ namespace DolphinScript.Core.Constants
 {
     public class MainFormConstants
     {
-        public static int ZoomPreviewPx = 10;
+        public static int ZoomPreviewPx = 6;
         public static int ZoomPreviewSize = 100;
         public static int ZoomPreviewPositionCursorRelativeX = 40;
         public static int ZoomPreviewPositionCursorRelativeY = 40;
@@ -14,9 +14,6 @@ namespace DolphinScript.Core.Constants
         public static int DefaultMinimumMouseSpeed = 40;
         public static int DefaultMaximumMouseSpeed = 60;
 
-        public static string SelectingPointToClick => $"Selecting point to click... ({DefaultStopCancelButton} to finish).";
-        public static string SelectingPointsToClick => $"Selecting points to click... ({DefaultStopCancelButton} to finish).";
-        public static string SelectingAreaToClick => $"Selecting area to click... ({DefaultStopCancelButton} to finish).";
         public static string SelectingAreaToSearch => $"Selecting area to search... ({DefaultStopCancelButton} to finish).";
         public static string SelectingColourToSearchForInArea => $"Selecting colour to search for in area... ({DefaultStopCancelButton} to finish).";
 
@@ -31,7 +28,7 @@ namespace DolphinScript.Core.Constants
         public const string OneGroupMaxError = "One or more selected events are already part of a group, events can only be part of one group.";
         public const string SelectMoreThanOneItemToMakeAGroup = "Select more than 1 item to create a group.";
 
-        public static string ScriptRunning => $"Script Running ({DefaultStopCancelButton} to stop)...";
+        public static string ScriptRunning => $"Script running ({DefaultStopCancelButton} to stop)...";
 
         public static CommonTypes.VirtualKeyStates DefaultStopCancelButton = CommonTypes.VirtualKeyStates.F5;
         public static CommonTypes.VirtualKeyStates DefaultSecondaryStopCancelButton = CommonTypes.VirtualKeyStates.F6;

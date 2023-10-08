@@ -68,6 +68,15 @@ namespace DolphinScript.Core.Concrete
             return temp;
         }
 
+        public CommonTypes.Rect GetRectAroundCenterPoint(Point centerPoint, int areaSize)
+        {
+            return new CommonTypes.Rect(
+                centerPoint.Y - areaSize,
+                centerPoint.X - areaSize,
+                centerPoint.Y + areaSize,
+                centerPoint.X + areaSize);
+        }
+
         /// <summary>
         /// returns the current position of the cursor
         /// </summary>

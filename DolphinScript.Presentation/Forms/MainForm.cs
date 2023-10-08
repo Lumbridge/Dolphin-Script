@@ -471,23 +471,19 @@ namespace DolphinScript.Forms
         {
             var selectedIndex = MainDataGrid.GetSelectedIndices().FirstOrDefault();
 
-            // check that the selected item is between the bounds of the listbox
-            if (selectedIndex >= 0 && selectedIndex <= MainDataGrid.Rows.Count)
-            {
-                // remove the script event from the all events list
-                ScriptState.AllEvents.RemoveAt(selectedIndex);
+            // remove the script event from the all events list
+            ScriptState.AllEvents.RemoveAt(selectedIndex);
 
-                // select the item next to the one we removed so the user quickly delete multiple events if needed
-                if (selectedIndex >= MainDataGrid.Rows.Count)
-                    MainDataGrid.SetSelectedIndex(selectedIndex - 1);
-                else if (selectedIndex < 0)
-                    MainDataGrid.SetSelectedIndex(selectedIndex + 1);
-                else
-                    MainDataGrid.SetSelectedIndex(selectedIndex);
-            }
+            // select the item next to the one we removed so the user quickly delete multiple events if needed
+            if (selectedIndex >= MainDataGrid.Rows.Count)
+                MainDataGrid.SetSelectedIndex(selectedIndex - 1);
+            else if (selectedIndex < 0)
+                MainDataGrid.SetSelectedIndex(selectedIndex + 1);
             else
+                MainDataGrid.SetSelectedIndex(selectedIndex);
+            
+            if (!ScriptState.AllEvents.Any())
             {
-                // disable the remove event button if there are no items left in the listbox
                 button_RemoveEvent.Enabled = false;
             }
         }
@@ -1198,7 +1194,7 @@ namespace DolphinScript.Forms
 
             var temp = Button_InsertColourSearchAreaEvent.Text;
 
-            Button_InsertColourSearchAreaEvent.Text = MainFormConstants.SelectingAreaToSearch;
+            Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
 
             while (ScriptState.IsRegistering)
             {
@@ -1212,7 +1208,7 @@ namespace DolphinScript.Forms
 
                     var p2 = _pointService.GetCursorPosition();
 
-                    Button_InsertColourSearchAreaEvent.Text = MainFormConstants.SelectingColourToSearchForInArea;
+                    Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
 
                     while (!colourPicked)
                     {
@@ -1220,7 +1216,7 @@ namespace DolphinScript.Forms
                         {
                             colourPicked = true;
 
-                            Button_InsertColourSearchAreaEvent.Text = MainFormConstants.SelectingAreaToSearch;
+                            Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
 
                             var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
 
@@ -1234,25 +1230,21 @@ namespace DolphinScript.Forms
                         }
                         else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                         {
-                            Button_InsertColourSearchAreaEvent.Text = temp;
-
+                            Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, temp);
                             ScriptState.IsRegistering = false;
-
                             return;
                         }
                     }
                 }
                 else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
                 {
-                    Button_InsertColourSearchAreaEvent.Text = temp;
-
+                    Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, temp);
                     ScriptState.IsRegistering = false;
-
                     return;
                 }
             }
 
-            Button_InsertColourSearchAreaEvent.Text = temp;
+            Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, temp);
         }
 
         /// <summary>
