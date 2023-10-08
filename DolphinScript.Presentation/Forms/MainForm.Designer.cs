@@ -352,7 +352,7 @@
             this.tabPage_PauseEvent.Location = new System.Drawing.Point(4, 22);
             this.tabPage_PauseEvent.Name = "tabPage_PauseEvent";
             this.tabPage_PauseEvent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_PauseEvent.Size = new System.Drawing.Size(976, 263);
+            this.tabPage_PauseEvent.Size = new System.Drawing.Size(1271, 263);
             this.tabPage_PauseEvent.TabIndex = 0;
             this.tabPage_PauseEvent.Text = "Pause";
             this.tabPage_PauseEvent.UseVisualStyleBackColor = true;
@@ -579,7 +579,7 @@
             this.tabPage2_KeyboardEvent.Location = new System.Drawing.Point(4, 22);
             this.tabPage2_KeyboardEvent.Name = "tabPage2_KeyboardEvent";
             this.tabPage2_KeyboardEvent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2_KeyboardEvent.Size = new System.Drawing.Size(976, 263);
+            this.tabPage2_KeyboardEvent.Size = new System.Drawing.Size(1271, 263);
             this.tabPage2_KeyboardEvent.TabIndex = 1;
             this.tabPage2_KeyboardEvent.Text = "Keyboard";
             this.tabPage2_KeyboardEvent.UseVisualStyleBackColor = true;
@@ -644,7 +644,7 @@
             this.tabPage_MouseMoveEvent.Controls.Add(this.groupBox_MouseSpeed);
             this.tabPage_MouseMoveEvent.Location = new System.Drawing.Point(4, 22);
             this.tabPage_MouseMoveEvent.Name = "tabPage_MouseMoveEvent";
-            this.tabPage_MouseMoveEvent.Size = new System.Drawing.Size(976, 263);
+            this.tabPage_MouseMoveEvent.Size = new System.Drawing.Size(1271, 263);
             this.tabPage_MouseMoveEvent.TabIndex = 2;
             this.tabPage_MouseMoveEvent.Text = "Mouse move";
             this.tabPage_MouseMoveEvent.UseVisualStyleBackColor = true;
@@ -961,7 +961,7 @@
             this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox15);
             this.tabPage_MouseMoveToColour.Location = new System.Drawing.Point(4, 22);
             this.tabPage_MouseMoveToColour.Name = "tabPage_MouseMoveToColour";
-            this.tabPage_MouseMoveToColour.Size = new System.Drawing.Size(976, 263);
+            this.tabPage_MouseMoveToColour.Size = new System.Drawing.Size(1271, 263);
             this.tabPage_MouseMoveToColour.TabIndex = 4;
             this.tabPage_MouseMoveToColour.Text = "Mouse move to colour";
             this.tabPage_MouseMoveToColour.UseVisualStyleBackColor = true;
