@@ -33,10 +33,12 @@ namespace DolphinScript.Forms.UtilityForms
             var windowedProcesses = _windowControlService.GetOpenWindows();
             var orderedWindows = windowedProcesses.OrderBy(x => x.Value).ToList();
 
-            ImageList iconList = new ImageList();
-            iconList.ColorDepth = ColorDepth.Depth16Bit;
-            iconList.ImageSize = new Size(48, 48);
-            iconList.TransparentColor = Color.Transparent;
+            ImageList iconList = new ImageList
+            {
+                ColorDepth = ColorDepth.Depth16Bit,
+                ImageSize = new Size(48, 48),
+                TransparentColor = Color.Transparent
+            };
 
             windowComboBox.ImageList = iconList;
             windowComboBox.DrawMode = DrawMode.OwnerDrawFixed;
@@ -66,10 +68,10 @@ namespace DolphinScript.Forms.UtilityForms
             Width = width + 40;
             windowComboBox.Width = width;
             windowComboBox.DropDownWidth = width;
-            useSelectedWindowButton.Left = (width / 2) - (useSelectedWindowButton.Width / 2);
+            UseSelectedWindowButton.Left = (width / 2) - (UseSelectedWindowButton.Width / 2);
         }
 
-        private void useSelectedWindowButton_Click(object sender, EventArgs e)
+        private void UseSelectedWindowButton_Click(object sender, EventArgs e)
         {
             var selected = (ImageComboBoxItem)windowComboBox.SelectedItem;
             var windowTitle = selected.Text;
@@ -85,7 +87,7 @@ namespace DolphinScript.Forms.UtilityForms
             {
                 ((OverlayForm) nextForm).NextFormModel = new NextFormModel(NextFormModel.EventType, NextFormModel.UseAreaSelection, true);
             }
-            this.Close();
+            Close();
             nextForm.Show();
             _windowControlService.BringWindowToFront(nextForm.Handle);
         }

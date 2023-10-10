@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using DolphinScript.Core.Classes;
+﻿using DolphinScript.Core.Classes;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.WindowsApi;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -22,6 +20,24 @@ namespace DolphinScript.Core.Concrete
             _screenCaptureService = screenCaptureService;
         }
 
+        public List<Color> GetPixelColours(CommonTypes.Rect region)
+        {
+            List<Color> pixelColors = new List<Color>();
+            using (Bitmap screenCapture = _screenCaptureService.ScreenshotArea(region))
+            using (Graphics g = Graphics.FromImage(screenCapture))
+            {
+                g.CopyFromScreen(region.Location, Point.Empty, region.Size);
+                for (int i = 0; i < region.Width; i++)
+                {
+                    for (int j = 0; j < region.Height; j++)
+                    {
+                        pixelColors.Add(screenCapture.GetPixel(i, j));
+                    }
+                }
+            }
+            return pixelColors;
+        }
+
         /// <summary>
         /// gets the pixel colour at a point
         /// </summary>
@@ -36,7 +52,7 @@ namespace DolphinScript.Core.Concrete
             var dc = PInvokeReferences.GetWindowDC(desk);
 
             // gets an unsigned int pixel at the selected position
-            var a = (int) PInvokeReferences.GetPixel(dc, position.X, position.Y);
+            var a = (int)PInvokeReferences.GetPixel(dc, position.X, position.Y);
 
             // frees the device context memory
             PInvokeReferences.ReleaseDC(desk, dc);
@@ -105,7 +121,7 @@ namespace DolphinScript.Core.Concrete
                     lockBitmap.UnlockBits();
                 }
             }
-            
+
             // we finished searching all pixels without finding a matching pixel
             return false;
         }
@@ -122,38 +138,34 @@ namespace DolphinScript.Core.Concrete
             var matchingColourPixels = new List<Point>();
 
             // create a bitmap to use in the search process
-            var b = _screenCaptureService.ScreenshotArea(colourSearchArea);
+            var image = _screenCaptureService.ScreenshotArea(colourSearchArea);
 
             // lock the bitmap image memory
-            lock (b)
+            lock (image)
             {
                 // create a lockbitmap object to use in the search process
-                var lockBitmap = new LockBitmap(b);
+                var lockBitmap = new LockBitmap(image);
 
-                try
+                // lock the bitmap memory
+                lockBitmap.LockBits();
+
+                // loop through all pixels on the image
+                for (var y = 0; y < lockBitmap.Height; y++)
                 {
-                    // lock the bitmap memory
-                    lockBitmap.LockBits();
-
-                    // loop through all pixels on the image
-                    for (var y = 0; y < lockBitmap.Height; y++)
+                    for (var x = 0; x < lockBitmap.Width; x++)
                     {
-                        for (var x = 0; x < lockBitmap.Width; x++)
+                        // check if the current pixel matches the search colour
+                        var pixelColour = lockBitmap.GetPixel(x, y).ToArgb();
+                        if (pixelColour == searchColour)
                         {
-                            // check if the current pixel matches the search colour
-                            if (lockBitmap.GetPixel(x, y).ToArgb() == searchColour)
-                            {
-                                // if it matches then add the pixel to the matching pixels list
-                                matchingColourPixels.Add(new Point(colourSearchArea.left + x, colourSearchArea.top + y));
-                            }
+                            // if it matches then add the pixel to the matching pixels list
+                            matchingColourPixels.Add(new Point(colourSearchArea.Left + x, colourSearchArea.Top + y));
                         }
                     }
                 }
-                finally
-                {
-                    // when we're done, unlock the memory region
-                    lockBitmap.UnlockBits();
-                }
+
+                // when we're done, unlock the memory region
+                lockBitmap.UnlockBits();
             }
 
             // return the list of matching pixels we found (if any)
@@ -171,7 +183,7 @@ namespace DolphinScript.Core.Concrete
         {
             // create a copy of the bitmap image we're going to edit
             var temp = b;
-            
+
             // lock the bitmap memory region
             lock (temp)
             {

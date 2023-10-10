@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DolphinScript.Core.Classes;
 using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
@@ -11,25 +12,32 @@ namespace DolphinScript.Core.Events.Mouse
     {
         public MouseMoveToColourOnWindow() { }
 
-        public MouseMoveToColourOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        public MouseMoveToColourOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService, IColourService colourService) : base(mouseMovementService, pointService, windowControlService, randomService, colourService)
         {
             EventType = ScriptEventConstants.EventType.MouseMoveToColourOnWindow;
         }
 
-        /// <summary>
-        /// main overriden method used to perform this script event
-        /// </summary>
-        public override void Execute()
+        public override void Setup()
         {
-            ScriptState.CurrentAction = $"Mouse move to colour: {SearchColour} on window: {EventProcess.WindowTitle}.";
+            // don't override original click area or it will cause the mouse position to increment every time this method is called
+            var newSearchArea = PointService.GetClickAreaPositionOnWindow(EventProcess.WindowHandle, ClickArea);
 
             // bring the window associated with this event to the front
             WindowControlService.BringWindowToFront(EventProcess.WindowHandle);
 
-            // don't override original click area or it will cause the mouse position to increment every time this method is called
-            var newSearchArea = PointService.GetClickAreaPositionOnWindow(EventProcess.WindowHandle, ClickArea);
+            SearchColour = SearchColours[RandomService.GetRandomNumber(0, SearchColours.Count - 1)];
 
-            MouseMovementService.MoveMouseToColour(newSearchArea, SearchColour);
+            var matchingPixelList = ColourService.GetMatchingPixelList(ColourSearchArea, SearchColour);
+
+            if (!matchingPixelList.Any())
+            {
+                ScriptState.CurrentAction = $"No pixels matching colour: {SearchColourHex} found in area {newSearchArea} on window: {EventProcess.WindowTitle}.";
+                return;
+            }
+
+            CoordsToMoveTo = matchingPixelList[RandomService.GetRandomNumber(0, matchingPixelList.Count - 1)];
+
+            ScriptState.CurrentAction = $"Mouse move to colour: {SearchColourHex} on window: {EventProcess.WindowTitle} in area {newSearchArea}.";
         }
 
         /// <summary>
@@ -38,7 +46,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Move mouse to random pixel matching colour " + SearchColour + " in area " + ClickArea.PrintArea() + " on " + EventProcess.WindowTitle + " window.";
+            return $"Move mouse to a pixel matching colour {SearchColourHex} in area {ColourSearchArea} on {EventProcess.WindowTitle} window.";
         }
     }
 }

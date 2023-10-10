@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WindowSelectionForm));
             this.windowComboBox = new ImageComboBox.ImageComboBox();
-            this.useSelectedWindowButton = new System.Windows.Forms.Button();
+            this.UseSelectedWindowButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // windowComboBox
@@ -44,22 +44,22 @@
             this.windowComboBox.Size = new System.Drawing.Size(137, 21);
             this.windowComboBox.TabIndex = 0;
             // 
-            // useSelectedWindowButton
+            // UseSelectedWindowButton
             // 
-            this.useSelectedWindowButton.Location = new System.Drawing.Point(12, 39);
-            this.useSelectedWindowButton.Name = "useSelectedWindowButton";
-            this.useSelectedWindowButton.Size = new System.Drawing.Size(137, 23);
-            this.useSelectedWindowButton.TabIndex = 1;
-            this.useSelectedWindowButton.Text = "Use selected window";
-            this.useSelectedWindowButton.UseVisualStyleBackColor = true;
-            this.useSelectedWindowButton.Click += new System.EventHandler(this.useSelectedWindowButton_Click);
+            this.UseSelectedWindowButton.Location = new System.Drawing.Point(12, 39);
+            this.UseSelectedWindowButton.Name = "UseSelectedWindowButton";
+            this.UseSelectedWindowButton.Size = new System.Drawing.Size(137, 23);
+            this.UseSelectedWindowButton.TabIndex = 1;
+            this.UseSelectedWindowButton.Text = "Use selected window";
+            this.UseSelectedWindowButton.UseVisualStyleBackColor = true;
+            this.UseSelectedWindowButton.Click += new System.EventHandler(this.UseSelectedWindowButton_Click);
             // 
             // WindowSelectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(164, 69);
-            this.Controls.Add(this.useSelectedWindowButton);
+            this.Controls.Add(this.UseSelectedWindowButton);
             this.Controls.Add(this.windowComboBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -74,6 +74,6 @@
         #endregion
 
         private ImageComboBox.ImageComboBox windowComboBox;
-        private System.Windows.Forms.Button useSelectedWindowButton;
+        private System.Windows.Forms.Button UseSelectedWindowButton;
     }
 }

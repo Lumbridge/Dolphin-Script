@@ -232,13 +232,17 @@ namespace DolphinScript.Core.WindowsApi
         [StructLayout(LayoutKind.Sequential)]
         public struct Rect
         {
-            public int left;
-            public int top;
-            public int right;
-            public int bottom;
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
 
-            public int Height => Math.Abs(bottom - top);
-            public int Width => left < 0 && right > 0 ? right : Math.Abs(right - left);
+            public int Height => Math.Abs(Bottom - Top);
+            public int Width => Left < 0 && Right > 0 ? Right : Math.Abs(Right - Left);
+
+            public Point Location => new Point(Left, Top);
+
+            public Size Size => new Size(Width, Height);
 
             /// <summary>
             /// RECT constructor which takes two points (TopLeft & BottomRight points)
@@ -247,10 +251,10 @@ namespace DolphinScript.Core.WindowsApi
             /// <param name="bottomRight"></param>
             public Rect(Point topLeft, Point bottomRight)
             {
-                top = topLeft.Y;
-                left = topLeft.X;
-                bottom = bottomRight.Y;
-                right = bottomRight.X;
+                Top = topLeft.Y;
+                Left = topLeft.X;
+                Bottom = bottomRight.Y;
+                Right = bottomRight.X;
             }
 
             /// <summary>
@@ -262,22 +266,16 @@ namespace DolphinScript.Core.WindowsApi
             /// <param name="right"></param>
             public Rect(int top, int left, int bottom, int right)
             {
-                this.top = top;
-                this.left = left;
-                this.bottom = bottom;
-                this.right = right;
+                Top = top;
+                Left = left;
+                Bottom = bottom;
+                Right = right;
             }
 
-            /// <summary>
-            /// prints the area of the rect
-            /// </summary>
-            /// <returns></returns>
-            public string PrintArea()
+            public override string ToString()
             {
-                return "Top-Left XY: " + left + ", " + top + " Bottom-Right XY: " + right + ", " + bottom;
+                return "Top-Left XY: " + Left + ", " + Top + " Bottom-Right XY: " + Right + ", " + Bottom;
             }
         }
-
-
     }
 }

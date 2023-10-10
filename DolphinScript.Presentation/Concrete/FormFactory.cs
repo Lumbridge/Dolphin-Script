@@ -34,10 +34,12 @@ namespace DolphinScript.Concrete
                 case ScriptEventConstants.EventType.PauseWhileColourDoesntExistInArea:
                     break;
                 case ScriptEventConstants.EventType.PauseWhileColourDoesntExistInAreaOnWindow:
+                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.PauseWhileColourExistsInArea:
                     break;
                 case ScriptEventConstants.EventType.PauseWhileColourExistsInAreaOnWindow:
+                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.PauseWhileWindowNotFound:
                     break;
@@ -60,8 +62,7 @@ namespace DolphinScript.Concrete
                 case ScriptEventConstants.EventType.MouseMoveToColour:
                     break;
                 case ScriptEventConstants.EventType.MouseMoveToColourOnWindow:
-                    break;
-                case ScriptEventConstants.EventType.MouseMoveToMultiColourOnWindow:
+                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.MouseMoveToPointOnWindow:
                     form = _objectFactory.CreateObject<OverlayForm>();

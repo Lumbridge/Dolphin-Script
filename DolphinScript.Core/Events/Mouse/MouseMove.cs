@@ -14,7 +14,7 @@ namespace DolphinScript.Core.Events.Mouse
     {
         public MouseMove() { }
 
-        public MouseMove(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        public MouseMove(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService, IColourService colourService) : base(mouseMovementService, pointService, windowControlService, randomService, colourService)
         {
             EventType = ScriptEventConstants.EventType.MouseMove;
         }

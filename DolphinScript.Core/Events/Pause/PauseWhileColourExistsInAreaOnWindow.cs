@@ -27,7 +27,7 @@ namespace DolphinScript.Core.Events.Pause
 
             ExecuteWhileLoop(() =>
             {
-                ScriptState.CurrentAction = $"Pause while colour: {SearchColour} is found in area: {newSearchArea.PrintArea()} on window: {EventProcess.WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching";
+                ScriptState.CurrentAction = $"Pause while colour: {SearchColour} is found in area: {newSearchArea} on window: {EventProcess.WindowTitle}, waiting {ScriptState.SearchPause} seconds before re-searching";
                 WindowControlService.BringWindowToFront(EventProcess.WindowHandle);
                 ScriptState.AllEvents.ResetBindings();
                 Thread.Sleep(TimeSpan.FromSeconds(ScriptState.SearchPause));
@@ -42,7 +42,7 @@ namespace DolphinScript.Core.Events.Pause
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Pause while colour " + SearchColour + " exists in area " + ColourSearchArea.PrintArea() + " on " + EventProcess.WindowTitle + " window";
+            return $"Pause while colour {SearchColour} exists in area {ColourSearchArea} on {EventProcess.WindowTitle} window";
         }
     }
 }

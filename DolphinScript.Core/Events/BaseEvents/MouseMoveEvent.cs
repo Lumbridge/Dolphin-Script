@@ -9,15 +9,17 @@ namespace DolphinScript.Core.Events.BaseEvents
         protected readonly IPointService PointService;
         protected readonly IWindowControlService WindowControlService;
         protected readonly IRandomService RandomService;
+        protected readonly IColourService ColourService;
 
         public MouseMoveEvent() { }
 
-        public MouseMoveEvent(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService)
+        public MouseMoveEvent(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService, IColourService colourService)
         {
             MouseMovementService = mouseMovementService;
             PointService = pointService;
             WindowControlService = windowControlService;
             RandomService = randomService;
+            ColourService = colourService;
         }
 
         public override void Setup()

@@ -6,7 +6,5 @@ namespace DolphinScript.Core.Interfaces
     public interface IMouseMovementService
     {
         void MoveMouseToPoint(Point target);
-
-        void MoveMouseToColour(CommonTypes.Rect searchArea, int searchColour);
     }
 }

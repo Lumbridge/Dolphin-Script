@@ -25,7 +25,6 @@ namespace DolphinScript.Core.Events.BaseEvents
     [XmlInclude(typeof(MouseMoveToAreaOnWindow))]
     [XmlInclude(typeof(MouseMoveToColour))]
     [XmlInclude(typeof(MouseMoveToColourOnWindow))]
-    [XmlInclude(typeof(MouseMoveToMultiColourOnWindow))]
     [XmlInclude(typeof(MouseMoveToPointOnWindow))]
     [XmlInclude(typeof(MoveWindowToFront))]
     [XmlInclude(typeof(PauseWhileColourDoesntExistInArea))]
@@ -95,8 +94,9 @@ namespace DolphinScript.Core.Events.BaseEvents
         // colour specific properties
         public CommonTypes.Rect ColourSearchArea { get; set; }
         public int SearchColour { get; set; }
+        public string SearchColourHex => SearchColour != 0 ? ColorTranslator.ToHtml(Color.FromArgb(SearchColour)) : string.Empty;
         // list of search colours for multi-colour search events
-        public List<int> SearchColours { get; set; }
+        public List<int> SearchColours { get; set; } = new List<int>();
 
         public ScriptEventConstants.EventType EventType { get; set; }
     }

@@ -102,8 +102,6 @@
             this.Button_ColourPreview3 = new System.Windows.Forms.Button();
             this.groupBox24 = new System.Windows.Forms.GroupBox();
             this.Picturebox_ColourSelectionArea = new System.Windows.Forms.PictureBox();
-            this.groupBox23 = new System.Windows.Forms.GroupBox();
-            this.Button_InsertMultiColourSearchAreaWindowEvent = new System.Windows.Forms.Button();
             this.groupBox22 = new System.Windows.Forms.GroupBox();
             this.Button_InsertColourSearchAreaWindowEvent = new System.Windows.Forms.Button();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
@@ -177,7 +175,6 @@
             this.groupBox21.SuspendLayout();
             this.groupBox24.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).BeginInit();
-            this.groupBox23.SuspendLayout();
             this.groupBox22.SuspendLayout();
             this.groupBox16.SuspendLayout();
             this.groupBox19.SuspendLayout();
@@ -955,7 +952,6 @@
             // 
             this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox21);
             this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox24);
-            this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox23);
             this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox22);
             this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox16);
             this.tabPage_MouseMoveToColour.Controls.Add(this.groupBox15);
@@ -1003,26 +999,6 @@
             this.Picturebox_ColourSelectionArea.TabIndex = 50;
             this.Picturebox_ColourSelectionArea.TabStop = false;
             // 
-            // groupBox23
-            // 
-            this.groupBox23.Controls.Add(this.Button_InsertMultiColourSearchAreaWindowEvent);
-            this.groupBox23.Location = new System.Drawing.Point(3, 139);
-            this.groupBox23.Name = "groupBox23";
-            this.groupBox23.Size = new System.Drawing.Size(256, 71);
-            this.groupBox23.TabIndex = 71;
-            this.groupBox23.TabStop = false;
-            this.groupBox23.Text = "Move cursor to any matching colour in an area on a window";
-            // 
-            // Button_InsertMultiColourSearchAreaWindowEvent
-            // 
-            this.Button_InsertMultiColourSearchAreaWindowEvent.Location = new System.Drawing.Point(6, 28);
-            this.Button_InsertMultiColourSearchAreaWindowEvent.Name = "Button_InsertMultiColourSearchAreaWindowEvent";
-            this.Button_InsertMultiColourSearchAreaWindowEvent.Size = new System.Drawing.Size(242, 34);
-            this.Button_InsertMultiColourSearchAreaWindowEvent.TabIndex = 68;
-            this.Button_InsertMultiColourSearchAreaWindowEvent.Text = "Multi colour search area on specific window";
-            this.Button_InsertMultiColourSearchAreaWindowEvent.UseVisualStyleBackColor = true;
-            this.Button_InsertMultiColourSearchAreaWindowEvent.Click += new System.EventHandler(this.Button_InsertMultiColourSearchAreaWindowEvent_Click);
-            // 
             // groupBox22
             // 
             this.groupBox22.Controls.Add(this.Button_InsertColourSearchAreaWindowEvent);
@@ -1031,7 +1007,7 @@
             this.groupBox22.Size = new System.Drawing.Size(256, 63);
             this.groupBox22.TabIndex = 70;
             this.groupBox22.TabStop = false;
-            this.groupBox22.Text = "Move cursor to a colour in an area on a window";
+            this.groupBox22.Text = "Move cursor to colours in an area on a window";
             // 
             // Button_InsertColourSearchAreaWindowEvent
             // 
@@ -1195,7 +1171,7 @@
             this.groupBox15.Size = new System.Drawing.Size(256, 61);
             this.groupBox15.TabIndex = 69;
             this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "Move cursor to a colour in an area on screen";
+            this.groupBox15.Text = "Move cursor to colours in an area on screen";
             // 
             // Button_InsertColourSearchAreaEvent
             // 
@@ -1504,7 +1480,6 @@
             this.groupBox21.ResumeLayout(false);
             this.groupBox24.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Picturebox_ColourSelectionArea)).EndInit();
-            this.groupBox23.ResumeLayout(false);
             this.groupBox22.ResumeLayout(false);
             this.groupBox16.ResumeLayout(false);
             this.groupBox19.ResumeLayout(false);
@@ -1600,7 +1575,6 @@
         private System.Windows.Forms.TabPage tabPage_MouseMoveToColour;
         private System.Windows.Forms.GroupBox groupBox15;
         private System.Windows.Forms.Button Button_InsertColourSearchAreaEvent;
-        private System.Windows.Forms.Button Button_InsertMultiColourSearchAreaWindowEvent;
         private System.Windows.Forms.Button Button_InsertColourSearchAreaWindowEvent;
         private System.Windows.Forms.GroupBox groupBox16;
         private System.Windows.Forms.GroupBox groupBox20;
@@ -1619,7 +1593,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox TextBox_MousePosY_2;
         private System.Windows.Forms.TextBox TextBox_MousePosX_2;
-        private System.Windows.Forms.GroupBox groupBox23;
         private System.Windows.Forms.GroupBox groupBox22;
         private System.Windows.Forms.Button button_RemoveRepeatGroup;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;

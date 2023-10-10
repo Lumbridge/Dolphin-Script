@@ -87,7 +87,6 @@
     <Compile Include="Events\Mouse\MouseMoveToAreaOnWindow.cs" />
     <Compile Include="Events\Mouse\MouseMoveToColour.cs" />
     <Compile Include="Events\Mouse\MouseMoveToColourOnWindow.cs" />
-    <Compile Include="Events\Mouse\MouseMoveToMultiColourOnWindow.cs" />
     <Compile Include="Events\Mouse\MouseMoveToPointOnWindow.cs" />
     <Compile Include="Events\Pause\FixedPause.cs" />
     <Compile Include="Events\Pause\PauseWhileColourDoesntExistInArea.cs" />

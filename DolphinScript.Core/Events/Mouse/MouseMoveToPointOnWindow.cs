@@ -12,7 +12,7 @@ namespace DolphinScript.Core.Events.Mouse
     {
         public MouseMoveToPointOnWindow() { }
 
-        public MouseMoveToPointOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        public MouseMoveToPointOnWindow(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService, IColourService colourService) : base(mouseMovementService, pointService, windowControlService, randomService, colourService)
         {
             EventType = ScriptEventConstants.EventType.MouseMoveToPointOnWindow;
         }
@@ -29,7 +29,7 @@ namespace DolphinScript.Core.Events.Mouse
 
             var windowLocation = PointService.GetWindowPosition(EventProcess.WindowHandle);
 
-            var newClickPoint = new Point(windowLocation.left + CoordsToMoveTo.X, windowLocation.top + CoordsToMoveTo.Y);
+            var newClickPoint = new Point(windowLocation.Left + CoordsToMoveTo.X, windowLocation.Top + CoordsToMoveTo.Y);
 
             MouseMovementService.MoveMouseToPoint(newClickPoint);
         }
@@ -40,7 +40,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Move mouse to Point X: " + CoordsToMoveTo.X + " Y: " + CoordsToMoveTo.Y + " on " + EventProcess.WindowTitle + " window.";
+            return $"Move mouse to Point X: {CoordsToMoveTo.X} Y: {CoordsToMoveTo.Y} on {EventProcess.WindowTitle} window.";
         }
     }
 }

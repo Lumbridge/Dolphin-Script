@@ -7,6 +7,7 @@ using DolphinScript.Interfaces;
 using DolphinScript.Models;
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DolphinScript.Forms.UtilityForms
@@ -206,9 +207,11 @@ namespace DolphinScript.Forms.UtilityForms
         private void OverlayPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             var p1 = PointToClient(MousePosition);
+
             _zoomPictureBox.Location = new Point(
                 p1.X + MainFormConstants.ZoomPreviewPositionCursorRelativeX, 
                 p1.Y + MainFormConstants.ZoomPreviewPositionCursorRelativeY);
+
             _zoomPictureBox.BringToFront();
             _zoomPictureBox.Invalidate();
 
@@ -256,11 +259,14 @@ namespace DolphinScript.Forms.UtilityForms
 
         private void RightClickMenu_Save_Click(object sender, EventArgs e)
         {
-            SaveClickAreaToScript();
-            Close();
+            var closeOverlay = SaveClickAreaToScript();
+            if (closeOverlay)
+            {
+                Close();
+            }
         }
 
-        private void SaveClickAreaToScript()
+        private bool SaveClickAreaToScript()
         {
             var ev = _objectFactory.CreateObject(NextFormModel.EventType);
 
@@ -270,7 +276,7 @@ namespace DolphinScript.Forms.UtilityForms
             }
             else
             {
-                ev.CoordsToMoveTo = new Point(ScriptState.LastSavedArea.left, ScriptState.LastSavedArea.top);
+                ev.CoordsToMoveTo = new Point(ScriptState.LastSavedArea.Left, ScriptState.LastSavedArea.Top);
             }
 
             if (NextFormModel.UseWindowSelector)
@@ -278,7 +284,30 @@ namespace DolphinScript.Forms.UtilityForms
                 ev.EventProcess = ScriptState.LastSelectedProcess;
             }
 
+            var eventType = NextFormModel.EventType.ToString("G").ToLowerInvariant();
+
+            if (eventType.Contains("colour"))
+            {
+                _drawingRect = new Rectangle();
+                _overlayPictureBox.Invalidate();
+
+                // gives a chance for the overlay to close before the colour selection form opens
+                Task.WaitAll(Task.Delay(100));
+
+                var colourSelectionForm = _objectFactory.CreateObject<ColourSelectionForm>();
+                colourSelectionForm.NextFormModel = new NextFormModel(NextFormModel.EventType)
+                {
+                    UseAreaSelection = NextFormModel.UseAreaSelection,
+                    UseWindowSelector = NextFormModel.UseWindowSelector
+                };
+                colourSelectionForm.Show();
+                Close();
+                return false;
+            }
+
             ScriptState.AllEvents.Add(ev);
+
+            return true;
         }
 
         private void RightClickMenu_Cancel_Click(object sender, EventArgs e)

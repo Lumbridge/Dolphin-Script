@@ -6,6 +6,7 @@ namespace DolphinScript.Core.Interfaces
 {
     public interface IColourService
     {
+        List<Color> GetPixelColours(CommonTypes.Rect region);
         Color GetColourAtPoint(Point position);
         Color SaveSearchColour();
         bool ColourExistsInArea(CommonTypes.Rect colourSearchArea, int searchColour);

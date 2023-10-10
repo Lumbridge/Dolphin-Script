@@ -107,6 +107,12 @@
     <Compile Include="Forms\PauseForms\RandomPauseInRangeForm.Designer.cs">
       <DependentUpon>RandomPauseInRangeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\UtilityForms\ColourSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UtilityForms\ColourSelectionForm.Designer.cs">
+      <DependentUpon>ColourSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UtilityForms\OverlayForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,6 +128,7 @@
     <Compile Include="Interfaces\IEventForm.cs" />
     <Compile Include="Interfaces\IFormFactory.cs" />
     <Compile Include="Interfaces\IFormManager.cs" />
+    <Compile Include="Models\ColourSelectionDataGridRow.cs" />
     <Compile Include="Models\NextFormModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -134,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PauseForms\RandomPauseInRangeForm.resx">
       <DependentUpon>RandomPauseInRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UtilityForms\ColourSelectionForm.resx">
+      <DependentUpon>ColourSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UtilityForms\OverlayForm.resx">
       <DependentUpon>OverlayForm.cs</DependentUpon>

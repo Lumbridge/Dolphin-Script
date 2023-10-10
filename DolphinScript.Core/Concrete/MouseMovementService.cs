@@ -1,11 +1,11 @@
-﻿using DolphinScript.Core.Interfaces;
+﻿using DolphinScript.Core.Classes;
+using DolphinScript.Core.Interfaces;
+using DolphinScript.Core.Models;
 using DolphinScript.Core.WindowsApi;
 using System;
 using System.Drawing;
-using System.Threading.Tasks;
-using DolphinScript.Core.Classes;
 using System.Threading;
-using DolphinScript.Core.Models;
+using System.Threading.Tasks;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -14,7 +14,6 @@ namespace DolphinScript.Core.Concrete
         private readonly IRandomService _randomService;
         private readonly IPointService _pointService;
         private readonly IMouseMathService _mouseMathService;
-        private readonly IColourService _colourService;
 
         public enum MouseMovementMode
         {
@@ -23,12 +22,11 @@ namespace DolphinScript.Core.Concrete
             Teleport
         }
 
-        public MouseMovementService(IRandomService randomService, IPointService pointService, IMouseMathService mouseMathService, IColourService colourService)
+        public MouseMovementService(IRandomService randomService, IPointService pointService, IMouseMathService mouseMathService)
         {
             _randomService = randomService;
             _pointService = pointService;
             _mouseMathService = mouseMathService;
-            _colourService = colourService;
         }
 
         // mouse movement variables
@@ -76,36 +74,6 @@ namespace DolphinScript.Core.Concrete
                     throw new ArgumentOutOfRangeException(nameof(ScriptState.MouseMovementMode), ScriptState.MouseMovementMode, null);
             }
             
-        }
-
-        /// <summary>
-        /// Moves mouse to a colour in a given search area
-        /// </summary>
-        /// <param name="searchArea"></param>
-        /// <param name="searchColour"></param>
-        /// <returns></returns>
-        public void MoveMouseToColour(CommonTypes.Rect searchArea, int searchColour)
-        {
-            var temp = _colourService.GetMatchingPixelList(searchArea, searchColour); // add matching colour pixels to list
-            var pos = _pointService.GetCursorPosition();
-
-            while (_colourService.GetColourAtPoint(pos).ToArgb() != searchColour)
-            {
-                if (temp.Count > 0)
-                {
-                    temp = _colourService.GetMatchingPixelList(searchArea, searchColour); // add matching colour pixels to list
-
-                    var endPoint = temp[_randomService.GetRandomNumber(0, temp.Count - 1)];
-
-                    MoveMouseToPoint(endPoint); // move mouse to picked pixel
-
-                    PInvokeReferences.GetCursorPos(out pos);
-                }
-                else
-                {
-                    break;
-                }
-            }
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DolphinScript.Core.Classes;
 using DolphinScript.Core.Concrete;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Events.Keyboard;
 using DolphinScript.Core.Events.Mouse;
@@ -9,19 +10,17 @@ using DolphinScript.Core.Extensions;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.Models;
 using DolphinScript.Core.WindowsApi;
+using DolphinScript.Forms.UtilityForms;
 using DolphinScript.Interfaces;
+using DolphinScript.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
+using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Management;
-using DolphinScript.Core.Constants;
-using DolphinScript.Forms.UtilityForms;
-using DolphinScript.Models;
 
 namespace DolphinScript.Forms
 {
@@ -32,7 +31,6 @@ namespace DolphinScript.Forms
         private readonly IWindowControlService _windowControlService;
         private readonly IGlobalMethodService _globalMethodService;
         private readonly IListService _listService;
-        private readonly IScreenCaptureService _screenCaptureService;
         private readonly IObjectFactory _objectFactory;
         private readonly IUserInterfaceService _userInterfaceService;
         private readonly IMapper _mapper;
@@ -49,7 +47,7 @@ namespace DolphinScript.Forms
         /// </summary>
         public MainForm(IColourService colourService, IPointService pointService,
             IWindowControlService windowControlService, IGlobalMethodService globalMethodService,
-            IListService listService, IScreenCaptureService screenCaptureService, IObjectFactory objectFactory,
+            IListService listService, IObjectFactory objectFactory,
             IUserInterfaceService userInterfaceService, IMapper mapper, IFormManager formManager, IFormFactory formFactory)
         {
             InitializeComponent();
@@ -59,7 +57,6 @@ namespace DolphinScript.Forms
             _windowControlService = windowControlService;
             _globalMethodService = globalMethodService;
             _listService = listService;
-            _screenCaptureService = screenCaptureService;
             _objectFactory = objectFactory;
             _userInterfaceService = userInterfaceService;
             _mapper = mapper;
@@ -762,22 +759,30 @@ namespace DolphinScript.Forms
 
         private void Button_InsertPauseWhileColourExistsInArea_Click(object sender, EventArgs e)
         {
-            Task.Run(PauseWhileColourExistsInAreaLoop);
+            var form = _objectFactory.CreateObject<OverlayForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.PauseWhileColourExistsInArea, true);
+            form.Show();
         }
 
         private void Button_InsertPauseWhileColourDoesntExistInArea_Click(object sender, EventArgs e)
         {
-            Task.Run(PauseWhileColourDoesntExistInAreaLoop);
+            var form = _objectFactory.CreateObject<OverlayForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.PauseWhileColourDoesntExistInArea, true);
+            form.Show();
         }
 
         private void Button_InsertPauseWhileColourExistsInAreaOnWindow_Click(object sender, EventArgs e)
         {
-            Task.Run(PauseWhileColourExistsInAreaOnWindowLoop);
+            var form = _objectFactory.CreateObject<OverlayForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.PauseWhileColourExistsInAreaOnWindow, true, true);
+            form.Show();
         }
 
         private void Button_InsertPauseWhileColourDoesntExistInAreaOnWindow_Click(object sender, EventArgs e)
         {
-            Task.Run(PauseWhileColourDoesntExistInAreaOnWindowLoop);
+            var form = _objectFactory.CreateObject<OverlayForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.PauseWhileColourDoesntExistInAreaOnWindow, true, true);
+            form.Show();
         }
 
         #endregion
@@ -834,17 +839,16 @@ namespace DolphinScript.Forms
 
         private void Button_InsertColourSearchAreaEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(MouseMoveToColourInAreaLoop);
+            var form = _objectFactory.CreateObject<OverlayForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.MouseMoveToColour, true);
+            form.Show();
         }
 
         private void Button_InsertColourSearchAreaWindowEvent_Click(object sender, EventArgs e)
         {
-            Task.Run(MouseMoveToColourInAreaOnWindowLoop);
-        }
-
-        private void Button_InsertMultiColourSearchAreaWindowEvent_Click(object sender, EventArgs e)
-        {
-            Task.Run(MouseMoveToMultiColourInAreaOnWindowLoop);
+            var form = _objectFactory.CreateObject<WindowSelectionForm>();
+            form.NextFormModel = new NextFormModel(ScriptEventConstants.EventType.MouseMoveToColourOnWindow, true, true);
+            form.Show();
         }
 
         #endregion
@@ -915,540 +919,6 @@ namespace DolphinScript.Forms
         }
 
         #endregion Mouse Click Button Events
-
-        #region Pause Event Register Loops
-
-        /// <summary>
-        /// this function will be called when the user is registering a
-        /// pause while colour exists in area event, it should be run in a thread
-        /// to prevent the UI from locking up...
-        /// </summary>
-        void PauseWhileColourExistsInAreaLoop()
-        {
-            Point p1 = new Point(), p2 = new Point();
-            var searchColour = Color.Empty;
-
-            bool xChosen = false, colourChosen = false;
-
-            var temp = Button_InsertPauseWhileColourExistsInArea.Text;
-
-            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
-
-            while (xChosen == false)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    p1 = _pointService.GetCursorPosition();
-
-                    xChosen = true;
-
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
-                    return;
-                }
-
-                while (xChosen)
-                {
-                    p2 = _pointService.GetCursorPosition();
-
-                    break;
-                }
-            }
-
-            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
-
-            while (!colourChosen)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    searchColour = _colourService.GetColourAtPoint(Cursor.Position);
-                    colourChosen = true;
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
-                    return;
-                }
-            }
-
-            var ev = _objectFactory.CreateObject<PauseWhileColourExistsInArea>();
-            ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
-            ev.SearchColour = searchColour.ToArgb();
-            ScriptState.AllEvents.Add(ev);
-
-            Button_InsertPauseWhileColourExistsInArea.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        /// <summary>
-        /// this function will be called when the user is registering a
-        /// pause while colour doesn't exist in area event, it should be run in a thread
-        /// to prevent the UI from locking up...
-        /// </summary>
-        void PauseWhileColourDoesntExistInAreaLoop()
-        {
-            Point p1 = new Point(), p2 = new Point();
-            var searchColour = Color.Empty;
-
-            bool xChosen = false, colourChosen = false;
-
-            var temp = Button_InsertPauseWhileColourDoesntExistInArea.Text;
-
-            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
-
-            while (xChosen == false)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    p1 = _pointService.GetCursorPosition();
-
-                    xChosen = true;
-
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
-                    return;
-                }
-
-                while (xChosen)
-                {
-                    p2 = _pointService.GetCursorPosition();
-                    break;
-                }
-            }
-
-            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
-
-            while (!colourChosen)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    searchColour = _colourService.GetColourAtPoint(Cursor.Position);
-                    colourChosen = true;
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
-                    return;
-                }
-            }
-
-            var ev = _objectFactory.CreateObject<PauseWhileColourDoesntExistInArea>();
-            ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
-            ev.SearchColour = searchColour.ToArgb();
-            ScriptState.AllEvents.Add(ev);
-
-            Button_InsertPauseWhileColourDoesntExistInArea.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        /// <summary>
-        /// this function will be called when the user is registering a
-        /// pause while colour exists in area on window event, it should be run in a thread
-        /// to prevent the UI from locking up...
-        /// </summary>
-        void PauseWhileColourExistsInAreaOnWindowLoop()
-        {
-            Point p1 = new Point(), p2 = new Point();
-            var searchColour = Color.Empty;
-
-            bool xChosen = false, colourChosen = false;
-
-            var temp = Button_InsertPauseWhileColourExistsInAreaOnWindow.Text;
-
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
-
-            while (xChosen == false)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    xChosen = true;
-
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
-                    return;
-                }
-
-                while (xChosen)
-                {
-                    p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    break;
-                }
-            }
-
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
-
-            while (!colourChosen)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    searchColour = _colourService.GetColourAtPoint(Cursor.Position);
-                    colourChosen = true;
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
-                    return;
-                }
-            }
-
-            var ev = _objectFactory.CreateObject<PauseWhileColourExistsInAreaOnWindow>();
-            ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
-            ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
-            ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
-            ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
-            ev.ClickArea = new CommonTypes.Rect(p1, p2);
-            ev.SearchColour = searchColour.ToArgb();
-            ScriptState.AllEvents.Add(ev);
-
-            Button_InsertPauseWhileColourExistsInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        /// <summary>
-        /// this function will be called when the user is registering a
-        /// pause while colour doesn't exist in area on window event, it should be run in a thread
-        /// to prevent the UI from locking up...
-        /// </summary>
-        void PauseWhileColourDoesntExistInAreaOnWindowLoop()
-        {
-            Point p1 = new Point(), p2 = new Point();
-            var searchColour = Color.Empty;
-
-            bool xChosen = false, colourChosen = false;
-
-            var temp = Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.Text;
-
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
-
-            while (xChosen == false)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    xChosen = true;
-
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
-                    return;
-                }
-
-                while (xChosen)
-                {
-                    p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    break;
-                }
-            }
-
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
-
-            while (!colourChosen)
-            {
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    searchColour = _colourService.GetColourAtPoint(Cursor.Position);
-                    colourChosen = true;
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
-                    return;
-                }
-            }
-
-            var ev = _objectFactory.CreateObject<PauseWhileColourDoesntExistInAreaOnWindow>();
-            ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
-            ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
-            ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
-            ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
-            ev.ClickArea = new CommonTypes.Rect(p1, p2);
-            ev.SearchColour = searchColour.ToArgb();
-            ScriptState.AllEvents.Add(ev);
-
-            Button_InsertPauseWhileColourDoesntExistInAreaOnWindow.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        #endregion
-
-        #region Mouse Move Event Register Loops
-        
-        /// <summary>
-        /// this is the register loop used to register a mouse move to colour in area event
-        /// </summary>
-        void MouseMoveToColourInAreaLoop()
-        {
-            ScriptState.IsRegistering = true;
-
-            var temp = Button_InsertColourSearchAreaEvent.Text;
-
-            Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
-
-            while (ScriptState.IsRegistering)
-            {
-                var colourPicked = false;
-
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    var p1 = _pointService.GetCursorPosition();
-
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-
-                    var p2 = _pointService.GetCursorPosition();
-
-                    Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
-
-                    while (!colourPicked)
-                    {
-                        if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                        {
-                            colourPicked = true;
-
-                            Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
-
-                            var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
-
-                            var ev = _objectFactory.CreateObject<MouseMoveToColour>();
-                            ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
-                            ev.ClickArea = new CommonTypes.Rect(p1, p2);
-                            ev.SearchColour = searchColour.ToArgb();
-                            ScriptState.AllEvents.Add(ev);
-
-                            Thread.Sleep(DelayConstants.EventRegisterWaitMs);
-                        }
-                        else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                        {
-                            Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, temp);
-                            ScriptState.IsRegistering = false;
-                            return;
-                        }
-                    }
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, temp);
-                    ScriptState.IsRegistering = false;
-                    return;
-                }
-            }
-
-            Button_InsertColourSearchAreaEvent.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        /// <summary>
-        /// this is the register loop used to register a mouse move to colour in area on window event
-        /// </summary>
-        void MouseMoveToColourInAreaOnWindowLoop()
-        {
-            ScriptState.IsRegistering = true;
-
-            var temp = Button_InsertColourSearchAreaWindowEvent.Text;
-
-            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
-
-            while (ScriptState.IsRegistering)
-            {
-                var colourPicked = false;
-
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    var p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-
-                    var p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                    Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingColourToSearchForInArea);
-
-                    while (!colourPicked)
-                    {
-                        if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                        {
-                            colourPicked = true;
-
-                            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, MainFormConstants.SelectingAreaToSearch);
-
-                            var searchColour = _colourService.GetColourAtPoint(Cursor.Position);
-
-                            var ev = _objectFactory.CreateObject<MouseMoveToColourOnWindow>();
-                            ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
-                            ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
-                            ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
-                            ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
-                            ev.ClickArea = new CommonTypes.Rect(p1, p2);
-                            ev.SearchColour = searchColour.ToArgb();
-
-                            ScriptState.AllEvents.Add(ev);
-
-                            Thread.Sleep(DelayConstants.EventRegisterWaitMs);
-                        }
-                        else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                        {
-                            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-
-                            ScriptState.IsRegistering = false;
-
-                            return;
-                        }
-                    }
-                }
-                else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                {
-                    Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-
-                    ScriptState.IsRegistering = false;
-
-                    return;
-                }
-            }
-
-            Button_InsertColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        /// <summary>
-        /// this is the register loop used to register a mouse move to multi colour in area on window event
-        /// </summary>
-        void MouseMoveToMultiColourInAreaOnWindowLoop()
-        {
-            // will store the colours we will be searching for
-            var searchColours = new List<int>();
-
-            // will store the screenshot we take of the search area
-            Bitmap colourSelectionScreenshot;
-
-            // set global registering to true
-            ScriptState.IsRegistering = true;
-
-            // these will be used to control register flow later
-            bool areaPicked = false;
-
-            // store the original text of the button we just clicked
-            var temp = Button_InsertMultiColourSearchAreaWindowEvent.Text;
-
-            // change the button text to show we're currently registering
-            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, $@"Selecting area to search... ({MainFormConstants.DefaultSecondaryStopCancelButton} to cancel).");
-
-            // register loop
-            while (ScriptState.IsRegistering)
-            {
-                // listen for the left shift key
-                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                {
-                    // store the top left of the search area
-                    var p1 = _pointService.GetCursorPosition();
-
-                    // pause here while the user is still holding shift
-                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-
-                    // store bottom left of search area after user lets go of shift key
-                    var p2 = _pointService.GetCursorPosition();
-
-                    // take a screen shot of the search area and store it in our bitmap
-                    colourSelectionScreenshot = _screenCaptureService.ScreenshotArea(new CommonTypes.Rect(p1, p2));
-
-                    // set the picturebox image to the screenshot we took
-                    Picturebox_ColourSelectionArea.Image = colourSelectionScreenshot;
-
-                    // change the button text to show we've moved on to selecting the search colours
-                    Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, $@"Selecting colours to search for in area... ({MainFormConstants.DefaultStopCancelButton} to continue).");
-
-                    // loop here while we're not done selecting colours to search for
-                    while (true)
-                    {
-                        // listen for the shift key
-                        if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                        {
-                            // each time we hit shift key we add the colour under the mouse to the search colours list
-                            searchColours.Add(_colourService.GetColourAtPoint(Cursor.Position).ToArgb());
-
-                            // change the colour we selected on the screenshot to red to show we've added it to the search list
-                            colourSelectionScreenshot = _colourService.SetMatchingColourPixels(colourSelectionScreenshot, searchColours[searchColours.Count - 1], Color.Red);
-
-                            // override the original picturebox image with the new one to show the selected colours
-                            Picturebox_ColourSelectionArea.Image = colourSelectionScreenshot;
-
-                            // sleep here so we don't add more than one colour when we press shift once
-                            Thread.Sleep(DelayConstants.EventRegisterWaitMs);
-                        }
-                        else if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultStopCancelButton) < 0)
-                        {
-                            // we change the button text to ask the user to choose the area on the window they'd like to search for these colours on
-                            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, "Selecting area & window to search for colour in.... (Make sure window is top-most)");
-
-                            // loop here while the area hasn't been selected
-                            while (!areaPicked)
-                            {
-                                // listen for the shift key
-                                if (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0)
-                                {
-                                    // set the top left of the search area to the point under the mouse
-                                    p1 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                                    // wait here while the user holds shift key
-                                    while (PInvokeReferences.GetAsyncKeyState(CommonTypes.VirtualKeyStates.Lshift) < 0) { /*Pauses until user has let go of left shift button...*/ }
-
-                                    // set the bottom right of the search area to the point under the mouse
-                                    p2 = _pointService.GetCursorPositionOnWindow(PInvokeReferences.GetForegroundWindow());
-
-                                    // set the area marked as complete
-                                    areaPicked = true;
-                                }
-                            }
-
-                            var ev = _objectFactory.CreateObject<MouseMoveToMultiColourOnWindow>();
-                            ev.EventProcess = _objectFactory.CreateObject<EventProcess>();
-                            ev.EventProcess.WindowTitle = _windowControlService.GetActiveWindowTitle();
-                            ev.EventProcess.ProcessName = _windowControlService.GetProcessName(ev.EventProcess.WindowHandle);
-                            ev.ColourSearchArea = new CommonTypes.Rect(p1, p2);
-                            ev.ClickArea = new CommonTypes.Rect(p1, p2);
-                            ev.SearchColours = new List<int>(searchColours);
-
-                            // add the event to the event list
-                            ScriptState.AllEvents.Add(ev);
-
-                            // set the button text back to normal
-                            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-
-                            // set global registering as false
-                            ScriptState.IsRegistering = false;
-
-                            // clear the search colours list
-                            searchColours.Clear();
-
-                            return;
-                        }
-                    }
-                }
-
-                if (PInvokeReferences.GetAsyncKeyState(MainFormConstants.DefaultSecondaryStopCancelButton) < 0)
-                {
-                    // set the button text back to normal
-                    Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-
-                    // set global registering as false
-                    ScriptState.IsRegistering = false;
-
-                    return;
-                }
-            }
-
-            // set the button text back to normal if the normal operation fails somehow
-            Button_InsertMultiColourSearchAreaWindowEvent.SetPropertyThreadSafe(() => Text, temp);
-        }
-
-        #endregion
 
         private void ComboBox_MouseMovementMode_SelectedIndexChanged(object sender, EventArgs e)
         {

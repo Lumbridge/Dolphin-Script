@@ -9,6 +9,7 @@ using Unity;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Models;
 using DolphinScript.Interfaces;
+using DolphinScript.Models;
 
 namespace DolphinScript
 {
@@ -29,6 +30,10 @@ namespace DolphinScript
                     .ForMember(x => x.GroupSiblings, y => y.Ignore());
                 cfg.CreateMap<SaveFileDialog, FileDialogModel>().ReverseMap();
                 cfg.CreateMap<OpenFileDialog, FileDialogModel>().ReverseMap();
+                cfg.CreateMap<DataGridViewRow, ColourSelectionDataGridRow>()
+                    .ForMember(x=>x.ColourHex, y => y.MapFrom(z => z.Cells[0].Value))
+                    .ForMember(x => x.Preview, y => y.MapFrom(z => z.Cells[1].Value))
+                    .ForMember(x => x.Selected, y => y.MapFrom(z => z.Cells[2].Value));
             });
 
             IMapper mapper = mapperConfiguration.CreateMapper();

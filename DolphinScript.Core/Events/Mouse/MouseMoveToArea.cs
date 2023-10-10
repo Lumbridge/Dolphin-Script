@@ -15,7 +15,7 @@ namespace DolphinScript.Core.Events.Mouse
     {
         public MouseMoveToArea() { }
 
-        public MouseMoveToArea(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        public MouseMoveToArea(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService, IColourService colourService) : base(mouseMovementService, pointService, windowControlService, randomService, colourService)
         {
             EventType = ScriptEventConstants.EventType.MouseMoveToArea;
         }
@@ -25,7 +25,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// </summary>
         public override void Execute()
         {
-            ScriptState.CurrentAction = $"Mouse move to random point in area: {ClickArea.PrintArea()}.";
+            ScriptState.CurrentAction = $"Mouse move to random point in area: {ClickArea}";
             CoordsToMoveTo = PointService.GetRandomPointInArea(ClickArea);
             base.Execute();
         }
@@ -36,7 +36,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Move mouse to random point in area " + ClickArea.PrintArea() + ".";
+            return $"Move mouse to random point in area {ClickArea}";
         }
     }
 }

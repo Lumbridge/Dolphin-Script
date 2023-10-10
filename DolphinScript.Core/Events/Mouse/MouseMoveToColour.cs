@@ -1,8 +1,8 @@
-﻿using System;
-using DolphinScript.Core.Classes;
+﻿using DolphinScript.Core.Classes;
 using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
+using System;
 
 namespace DolphinScript.Core.Events.Mouse
 {
@@ -11,18 +11,17 @@ namespace DolphinScript.Core.Events.Mouse
     {
         public MouseMoveToColour() { }
 
-        public MouseMoveToColour(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService) : base(mouseMovementService, pointService, windowControlService, randomService)
+        public MouseMoveToColour(IMouseMovementService mouseMovementService, IPointService pointService, IWindowControlService windowControlService, IRandomService randomService, IColourService colourService) : base(mouseMovementService, pointService, windowControlService, randomService, colourService)
         {
             EventType = ScriptEventConstants.EventType.MouseMoveToColour;
         }
 
-        /// <summary>
-        /// main overriden method used to perform this script event
-        /// </summary>
-        public override void Execute()
+        public override void Setup()
         {
-            ScriptState.CurrentAction = $"Mouse move to colour: {SearchColour} in area: {ColourSearchArea.PrintArea()}.";
-            MouseMovementService.MoveMouseToColour(ColourSearchArea, SearchColour);
+            SearchColour = SearchColours[RandomService.GetRandomNumber(0, SearchColours.Count - 1)];
+            var temp = ColourService.GetMatchingPixelList(ColourSearchArea, SearchColour);
+            CoordsToMoveTo = temp[RandomService.GetRandomNumber(0, temp.Count - 1)];
+            ScriptState.CurrentAction = $"Mouse move to colour {SearchColourHex} at coordinate: {CoordsToMoveTo}";
         }
 
         /// <summary>
@@ -31,7 +30,7 @@ namespace DolphinScript.Core.Events.Mouse
         /// <returns></returns>
         public override string EventDescription()
         {
-            return "Move mouse to random pixel of colour " + SearchColour + " in area " + ColourSearchArea.PrintArea() + ".";
+            return $"Mouse move to any colour in list of selected colours in area: {ColourSearchArea}";
         }
     }
 }
