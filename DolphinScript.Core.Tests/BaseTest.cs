@@ -5,6 +5,7 @@ using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.Models;
 using DolphinScript.Interfaces;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Windows.Forms;
 using Unity;
 
@@ -21,7 +22,7 @@ namespace DolphinScript.Core.Tests
                 cfg.CreateMap<ScriptEvent, ScriptEvent>().ReverseMap();
                 cfg.CreateMap<SaveFileDialog, FileDialogModel>().ReverseMap();
                 cfg.CreateMap<OpenFileDialog, FileDialogModel>().ReverseMap();
-            });
+            }, NullLoggerFactory.Instance);
 
             IMapper mapper = mapperConfiguration.CreateMapper();
 

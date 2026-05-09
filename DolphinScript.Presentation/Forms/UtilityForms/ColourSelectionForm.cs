@@ -3,6 +3,7 @@ using DolphinScript.Core.Classes;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Models;
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace DolphinScript.Forms.UtilityForms
         private readonly IMapper _mapper;
         private readonly IObjectFactory _objectFactory;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public NextFormModel NextFormModel { get; set; }
 
         public ColourSelectionForm(IColourService colourService, IMapper mapper, IObjectFactory objectFactory)

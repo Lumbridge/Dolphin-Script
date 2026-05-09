@@ -6,6 +6,7 @@ using DolphinScript.Core.WindowsApi;
 using DolphinScript.Interfaces;
 using DolphinScript.Models;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -34,6 +35,7 @@ namespace DolphinScript.Forms.UtilityForms
         private readonly PictureBox _overlayPictureBox = new PictureBox();
         private readonly PictureBox _zoomPictureBox = new PictureBox();
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public NextFormModel NextFormModel { get; set; }
 
         private Point _topLeftPoint;

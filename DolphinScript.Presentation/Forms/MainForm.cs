@@ -41,6 +41,8 @@ namespace DolphinScript.Forms
 
         private readonly ManagementEventWatcher _processStartEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStartTrace");
         private readonly ManagementEventWatcher _processStopEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStopTrace");
+        private bool _processStartWatcherStarted;
+        private bool _processStopWatcherStarted;
 
         /// <summary>
         /// main form constructor
@@ -71,11 +73,55 @@ namespace DolphinScript.Forms
             // run the start script hotkey listener
             Task.Run(StartScriptHotkeyListener);
 
-            _processStartEvent.EventArrived += ProcessEventChange_EventArrived;
-            _processStopEvent.EventArrived += ProcessEventChange_EventArrived;
+            StartProcessWatchers();
+        }
 
-            _processStartEvent.Start();
-            _processStopEvent.Start();
+        private void StartProcessWatchers()
+        {
+            try
+            {
+                _processStartEvent.EventArrived += ProcessEventChange_EventArrived;
+                _processStopEvent.EventArrived += ProcessEventChange_EventArrived;
+
+                _processStartEvent.Start();
+                _processStartWatcherStarted = true;
+
+                _processStopEvent.Start();
+                _processStopWatcherStarted = true;
+            }
+            catch (ManagementException ex)
+            {
+                DisableProcessWatchers(ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                DisableProcessWatchers(ex);
+            }
+        }
+
+        private void DisableProcessWatchers(Exception ex)
+        {
+            Debug.WriteLine($"Process watcher startup failed: {ex.Message}");
+
+            _processStartEvent.EventArrived -= ProcessEventChange_EventArrived;
+            _processStopEvent.EventArrived -= ProcessEventChange_EventArrived;
+
+            StopProcessWatchers();
+        }
+
+        private void StopProcessWatchers()
+        {
+            if (_processStartWatcherStarted)
+            {
+                _processStartEvent.Stop();
+                _processStartWatcherStarted = false;
+            }
+
+            if (_processStopWatcherStarted)
+            {
+                _processStopEvent.Stop();
+                _processStopWatcherStarted = false;
+            }
         }
 
         private void SetFormDefaults()
@@ -268,6 +314,7 @@ namespace DolphinScript.Forms
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            StopProcessWatchers();
             Process.GetCurrentProcess().Kill();
         }
 

@@ -10,6 +10,7 @@ using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Models;
 using DolphinScript.Interfaces;
 using DolphinScript.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DolphinScript
 {
@@ -34,7 +35,7 @@ namespace DolphinScript
                     .ForMember(x=>x.ColourHex, y => y.MapFrom(z => z.Cells[0].Value))
                     .ForMember(x => x.Preview, y => y.MapFrom(z => z.Cells[1].Value))
                     .ForMember(x => x.Selected, y => y.MapFrom(z => z.Cells[2].Value));
-            });
+            }, NullLoggerFactory.Instance);
 
             IMapper mapper = mapperConfiguration.CreateMapper();
 

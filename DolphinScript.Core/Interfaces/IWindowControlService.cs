@@ -14,6 +14,7 @@ namespace DolphinScript.Core.Interfaces
         void BringWindowToFront(IntPtr handle);
         IntPtr GetActiveWindowHandle();
         IntPtr GetWindowHandle(string windowTitle);
+        IntPtr GetWindowHandle(int pid);
         IDictionary<IntPtr, string> GetOpenWindows();
     }
 }

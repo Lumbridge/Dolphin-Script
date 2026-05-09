@@ -6,6 +6,7 @@ using DolphinScript.Interfaces;
 using DolphinScript.Models;
 using ImageComboBox;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace DolphinScript.Forms.UtilityForms
         private readonly IWindowControlService _windowControlService;
         private readonly IObjectFactory _objectFactory;
         private readonly IFormFactory _formFactory;
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public NextFormModel NextFormModel { get; set; }
 
         public WindowSelectionForm(IWindowControlService windowControlService, IObjectFactory objectFactory, IFormFactory formFactory)
@@ -59,7 +62,7 @@ namespace DolphinScript.Forms.UtilityForms
 
                 Icon icon = Icon.ExtractAssociatedIcon(process.MainModule.FileName);
                 iconList.Images.Add(icon);
-                windowComboBox.Items.Add(new ImageComboBoxItem(imageCounter, windowTitle, 1));
+                windowComboBox.Items.Add(new ImageComboBoxItem(imageCounter, $"[{pid}] {windowTitle}", 1));
                 imageCounter++;
             }
 
@@ -74,10 +77,12 @@ namespace DolphinScript.Forms.UtilityForms
         private void UseSelectedWindowButton_Click(object sender, EventArgs e)
         {
             var selected = (ImageComboBoxItem)windowComboBox.SelectedItem;
-            var windowTitle = selected.Text;
-            var windowHandle = _windowControlService.GetWindowHandle(windowTitle);
+            int pid = int.Parse(selected.Text.Substring(1, selected.Text.IndexOf(']') - 1));
+            var windowTitle = selected.Text.Substring(selected.Text.IndexOf(' ') + 1);
+            var windowHandle = _windowControlService.GetWindowHandle(pid);
             var processName = _windowControlService.GetProcessName(windowHandle);
             EventProcess ep = _objectFactory.CreateObject<EventProcess>();
+            ep.ProcessId = pid;
             ep.WindowTitle = windowTitle;
             ep.ProcessName = processName;
             ScriptState.LastSelectedProcess = ep;

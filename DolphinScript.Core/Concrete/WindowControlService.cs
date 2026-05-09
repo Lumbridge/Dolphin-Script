@@ -159,6 +159,19 @@ namespace DolphinScript.Core.Concrete
             return IntPtr.Zero;
         }
 
+        public IntPtr GetWindowHandle(int pid)
+        {
+            foreach (Process pList in Process.GetProcesses())
+            {
+                if (pList.Id == pid)
+                {
+                    return pList.MainWindowHandle;
+                }
+            }
+
+            return IntPtr.Zero;
+        }
+
         public IDictionary<IntPtr, string> GetOpenWindows()
         {
             IntPtr shellWindow = PInvokeReferences.GetShellWindow();
