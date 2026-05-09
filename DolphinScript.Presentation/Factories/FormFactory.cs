@@ -1,15 +1,13 @@
-﻿using DolphinScript.Core.Classes;
+using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
+using DolphinScript.Core.Interfaces;
 using DolphinScript.Forms.PauseForms;
+using DolphinScript.Forms.UtilityForms;
 using DolphinScript.Interfaces;
 using System;
 using System.Windows.Forms;
-using DolphinScript.Core.Constants;
-using DolphinScript.Core.Events.Mouse;
-using DolphinScript.Core.Interfaces;
-using DolphinScript.Forms.UtilityForms;
 
-namespace DolphinScript.Concrete
+namespace DolphinScript.Factories
 {
     public class FormFactory : IFormFactory
     {

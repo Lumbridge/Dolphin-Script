@@ -5,6 +5,7 @@
     <RootNamespace>DolphinScript</RootNamespace>
     <AssemblyName>DolphinScript</AssemblyName>
     <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\dolphin_vmz_icon.ico</ApplicationIcon>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
