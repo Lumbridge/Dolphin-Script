@@ -43,6 +43,7 @@ namespace DolphinScript.ViewModels
         private readonly IMapper _mapper;
         private readonly IFormFactory _formFactory;
         private readonly ISelectionOverlayService _selectionOverlayService;
+        private readonly IAlertService _alertService;
         private readonly IProcessChangeNotifier _processChangeNotifier;
         private readonly IScriptRunner _scriptRunner;
         private readonly IScriptState _scriptState;
@@ -72,7 +73,7 @@ namespace DolphinScript.ViewModels
         public MainWindowViewModel(IColourService colourService, IPointService pointService,
             IWindowControlService windowControlService, IListService listService, IObjectFactory objectFactory,
             IUserInterfaceService userInterfaceService, IMapper mapper, IFormFactory formFactory,
-            ISelectionOverlayService selectionOverlayService, IProcessChangeNotifier processChangeNotifier, IScriptRunner scriptRunner, IScriptState scriptState,
+            ISelectionOverlayService selectionOverlayService, IAlertService alertService, IProcessChangeNotifier processChangeNotifier, IScriptRunner scriptRunner, IScriptState scriptState,
             IScriptProgressReporter scriptProgressReporter)
         {
             _colourService = colourService;
@@ -84,6 +85,7 @@ namespace DolphinScript.ViewModels
             _mapper = mapper;
             _formFactory = formFactory;
             _selectionOverlayService = selectionOverlayService;
+            _alertService = alertService;
             _processChangeNotifier = processChangeNotifier;
             _scriptRunner = scriptRunner;
             _scriptState = scriptState;
@@ -98,7 +100,7 @@ namespace DolphinScript.ViewModels
             RefreshCommand = new RelayCommand(_ => RefreshApplicationState());
             SaveCommand = new RelayCommand(_ => SaveScript(), _ => !IsRunning);
             LoadCommand = new RelayCommand(_ => LoadScript(), _ => !IsRunning);
-            AboutCommand = new RelayCommand(_ => MessageBox.Show(MainFormConstants.AboutString, "About Dolphin Script"));
+            AboutCommand = new RelayCommand(_ => ShowInfo("About Dolphin Script", MainFormConstants.AboutString, TimeSpan.FromSeconds(12)));
             WikiCommand = new RelayCommand(_ => OpenWiki());
             MoveEventUpCommand = new RelayCommand(_ => MoveSelectedEventUp(), _ => CanEditSingleSelectedEvent && SelectedEvent.Index > 0 && !IsRunning);
             MoveEventDownCommand = new RelayCommand(_ => MoveSelectedEventDown(), _ => CanEditSingleSelectedEvent && SelectedEvent.Index < _scriptState.AllEvents.Count - 1 && !IsRunning);
@@ -112,6 +114,7 @@ namespace DolphinScript.ViewModels
             AddOverlayEventCommand = new RelayCommand(AddOverlayEvent, _ => !IsRunning);
             AddWindowSelectionEventCommand = new RelayCommand(AddWindowSelectionEvent, _ => !IsRunning);
             AddMouseClickCommand = new RelayCommand(AddMouseClick, _ => !IsRunning);
+            DismissAlertCommand = new RelayCommand(DismissAlert);
 
             InitialiseDefaults();
             RefreshEvents();
@@ -136,6 +139,7 @@ namespace DolphinScript.ViewModels
         public ObservableCollection<ScriptEventRow> Events { get; }
         public ObservableCollection<string> SpecialKeys { get; }
         public ObservableCollection<string> MouseMovementModes { get; }
+        public ObservableCollection<AlertNotification> Alerts => _alertService.Alerts;
 
         public ICommand StartScriptCommand { get; }
         public ICommand RefreshCommand { get; }
@@ -155,6 +159,7 @@ namespace DolphinScript.ViewModels
         public ICommand AddOverlayEventCommand { get; }
         public ICommand AddWindowSelectionEventCommand { get; }
         public ICommand AddMouseClickCommand { get; }
+        public ICommand DismissAlertCommand { get; }
 
         public ScriptEventRow SelectedEvent
         {
@@ -432,7 +437,7 @@ namespace DolphinScript.ViewModels
         {
             if (_scriptState.AllEvents.Count == 0)
             {
-                MessageBox.Show(MainFormConstants.NoEventsAdded, "Dolphin Script");
+                ShowWarning("Nothing to run", MainFormConstants.NoEventsAdded);
                 return;
             }
 
@@ -541,7 +546,7 @@ namespace DolphinScript.ViewModels
             }
             else
             {
-                MessageBox.Show(MainFormConstants.ErrorMovingEvent, "Dolphin Script");
+                ShowError("Move failed", MainFormConstants.ErrorMovingEvent);
             }
 
             SelectEventAt(Math.Max(0, selectedIndex - 1));
@@ -572,7 +577,7 @@ namespace DolphinScript.ViewModels
             }
             else
             {
-                MessageBox.Show(MainFormConstants.ErrorMovingEvent, "Dolphin Script");
+                ShowError("Move failed", MainFormConstants.ErrorMovingEvent);
             }
 
             SelectEventAt(Math.Min(_scriptState.AllEvents.Count - 1, selectedIndex + 1));
@@ -590,13 +595,13 @@ namespace DolphinScript.ViewModels
             var selectedIndices = _selectedEvents.Select(x => x.Index).OrderBy(x => x).ToList();
             if (selectedIndices.Last() - selectedIndices.First() + 1 != selectedIndices.Count)
             {
-                MessageBox.Show("Select adjacent events to create a repeat group.", "Dolphin Script");
+                ShowWarning("Repeat group needs adjacent events", "Select adjacent events to create a repeat group.");
                 return;
             }
 
             if (selectedIndices.Any(index => _scriptState.AllEvents[index].IsPartOfGroup))
             {
-                MessageBox.Show(MainFormConstants.OneGroupMaxError, "Dolphin Script");
+                ShowWarning("Repeat group already exists", MainFormConstants.OneGroupMaxError);
                 return;
             }
 
@@ -618,7 +623,7 @@ namespace DolphinScript.ViewModels
             var selectedEvent = SelectedEvent.ScriptEvent;
             if (!selectedEvent.IsPartOfGroup)
             {
-                MessageBox.Show("Error: Event not part of group.", "Dolphin Script");
+                ShowWarning("No group selected", "Event is not part of a group.");
                 return;
             }
 
@@ -632,6 +637,29 @@ namespace DolphinScript.ViewModels
             }
 
             RefreshEvents();
+        }
+
+        private void ShowInfo(string title, string message, TimeSpan? duration = null)
+        {
+            _alertService.Show(AlertSeverity.Info, title, message, duration);
+        }
+
+        private void ShowWarning(string title, string message)
+        {
+            _alertService.Show(AlertSeverity.Warning, title, message);
+        }
+
+        private void ShowError(string title, string message)
+        {
+            _alertService.Show(AlertSeverity.Error, title, message, TimeSpan.FromSeconds(8));
+        }
+
+        private void DismissAlert(object parameter)
+        {
+            if (parameter is AlertNotification alert)
+            {
+                _alertService.Dismiss(alert);
+            }
         }
 
         private void AddFixedPause()

@@ -34,6 +34,7 @@ namespace DolphinScript.Composition
             container.RegisterType<IWindowControlService, WindowControlService>();
             container.RegisterType<IFormFactory, FormFactory>();
             container.RegisterType<ISelectionOverlayService, SelectionOverlayService>();
+            container.RegisterType<IAlertService, AlertService>(TypeLifetime.Singleton);
             container.RegisterType<IScreenService, ScreenService>();
             container.RegisterType<IProcessChangeNotifier, WmiProcessChangeNotifier>();
             container.RegisterType<IScriptProgressReporter, ScriptProgressReporter>(TypeLifetime.Singleton);
