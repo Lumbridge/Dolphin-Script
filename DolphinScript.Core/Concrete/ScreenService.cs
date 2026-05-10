@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DolphinScript.Core.Interfaces;
@@ -17,6 +18,11 @@ namespace DolphinScript.Core.Concrete
         public Size GetTotalScreenSize()
         {
             return Screen.AllScreens.Select(screen => screen.Bounds).Aggregate(Rectangle.Union).Size;
+        }
+
+        public IReadOnlyList<Rectangle> GetScreenBounds()
+        {
+            return Screen.AllScreens.Select(screen => screen.Bounds).ToList();
         }
     }
 }

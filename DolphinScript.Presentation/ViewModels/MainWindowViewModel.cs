@@ -42,6 +42,7 @@ namespace DolphinScript.ViewModels
         private readonly IUserInterfaceService _userInterfaceService;
         private readonly IMapper _mapper;
         private readonly IFormFactory _formFactory;
+        private readonly ISelectionOverlayService _selectionOverlayService;
         private readonly IProcessChangeNotifier _processChangeNotifier;
         private readonly IScriptRunner _scriptRunner;
         private readonly IScriptState _scriptState;
@@ -71,7 +72,7 @@ namespace DolphinScript.ViewModels
         public MainWindowViewModel(IColourService colourService, IPointService pointService,
             IWindowControlService windowControlService, IListService listService, IObjectFactory objectFactory,
             IUserInterfaceService userInterfaceService, IMapper mapper, IFormFactory formFactory,
-            IProcessChangeNotifier processChangeNotifier, IScriptRunner scriptRunner, IScriptState scriptState,
+            ISelectionOverlayService selectionOverlayService, IProcessChangeNotifier processChangeNotifier, IScriptRunner scriptRunner, IScriptState scriptState,
             IScriptProgressReporter scriptProgressReporter)
         {
             _colourService = colourService;
@@ -82,6 +83,7 @@ namespace DolphinScript.ViewModels
             _userInterfaceService = userInterfaceService;
             _mapper = mapper;
             _formFactory = formFactory;
+            _selectionOverlayService = selectionOverlayService;
             _processChangeNotifier = processChangeNotifier;
             _scriptRunner = scriptRunner;
             _scriptState = scriptState;
@@ -664,13 +666,14 @@ namespace DolphinScript.ViewModels
                 return;
             }
 
-            var useAreaSelection = eventType != ScriptEventConstants.EventType.MouseMove;
-            var useWindowSelector = eventType == ScriptEventConstants.EventType.PauseWhileColourExistsInAreaOnWindow
-                || eventType == ScriptEventConstants.EventType.PauseWhileColourDoesntExistInAreaOnWindow;
+            if (RequiresWindowSelection(eventType))
+            {
+                ShowWindowSelection(eventType);
+                return;
+            }
 
-            var form = _objectFactory.CreateObject<OverlayForm>();
-            form.NextFormModel = new NextFormModel(eventType, useAreaSelection, useWindowSelector);
-            form.Show();
+            var useAreaSelection = eventType != ScriptEventConstants.EventType.MouseMove;
+            _selectionOverlayService.Show(new NextFormModel(eventType, useAreaSelection));
         }
 
         private void AddWindowSelectionEvent(object parameter)
@@ -680,13 +683,22 @@ namespace DolphinScript.ViewModels
                 return;
             }
 
-            var useAreaSelection = eventType == ScriptEventConstants.EventType.MouseMoveToAreaOnWindow
-                || eventType == ScriptEventConstants.EventType.MouseMoveToColourOnWindow;
-            var useWindowSelector = eventType == ScriptEventConstants.EventType.MouseMoveToColourOnWindow;
+            ShowWindowSelection(eventType);
+        }
+
+        private void ShowWindowSelection(ScriptEventConstants.EventType eventType)
+        {
+            var useAreaSelection = eventType != ScriptEventConstants.EventType.MouseMoveToPointOnWindow;
 
             var form = _objectFactory.CreateObject<WindowSelectionForm>();
-            form.NextFormModel = new NextFormModel(eventType, useAreaSelection, useWindowSelector);
+            form.NextFormModel = new NextFormModel(eventType, useAreaSelection, true);
             form.Show();
+        }
+
+        private static bool RequiresWindowSelection(ScriptEventConstants.EventType eventType)
+        {
+            return eventType == ScriptEventConstants.EventType.PauseWhileColourExistsInAreaOnWindow
+                || eventType == ScriptEventConstants.EventType.PauseWhileColourDoesntExistInAreaOnWindow;
         }
 
         private void AddMouseClick(object parameter)

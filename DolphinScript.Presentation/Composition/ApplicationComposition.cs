@@ -27,10 +27,13 @@ namespace DolphinScript.Composition
             container.RegisterType<IMouseMathService, MouseMathService>();
             container.RegisterType<IPointService, PointService>();
             container.RegisterType<IMouseMovementService, MouseMovementService>();
+            container.RegisterType<IHumanMouseTrajectoryPlanner, HumanMouseTrajectoryPlanner>();
+            container.RegisterType<ICursorController, CursorController>();
             container.RegisterType<IScreenCaptureService, ScreenCaptureService>();
             container.RegisterType<IColourService, ColourService>();
             container.RegisterType<IWindowControlService, WindowControlService>();
             container.RegisterType<IFormFactory, FormFactory>();
+            container.RegisterType<ISelectionOverlayService, SelectionOverlayService>();
             container.RegisterType<IScreenService, ScreenService>();
             container.RegisterType<IProcessChangeNotifier, WmiProcessChangeNotifier>();
             container.RegisterType<IScriptProgressReporter, ScriptProgressReporter>(TypeLifetime.Singleton);

@@ -2,7 +2,6 @@ using DolphinScript.Core.Constants;
 using DolphinScript.Core.Events.BaseEvents;
 using DolphinScript.Core.Interfaces;
 using DolphinScript.Forms.PauseForms;
-using DolphinScript.Forms.UtilityForms;
 using DolphinScript.Interfaces;
 using System;
 using System.Windows.Forms;
@@ -32,12 +31,10 @@ namespace DolphinScript.Factories
                 case ScriptEventConstants.EventType.PauseWhileColourDoesntExistInArea:
                     break;
                 case ScriptEventConstants.EventType.PauseWhileColourDoesntExistInAreaOnWindow:
-                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.PauseWhileColourExistsInArea:
                     break;
                 case ScriptEventConstants.EventType.PauseWhileColourExistsInAreaOnWindow:
-                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.PauseWhileWindowNotFound:
                     break;
@@ -49,21 +46,16 @@ namespace DolphinScript.Factories
                 case ScriptEventConstants.EventType.MouseClick:
                     break;
                 case ScriptEventConstants.EventType.MouseMove:
-                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.MouseMoveToArea:
-                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.MouseMoveToAreaOnWindow:
-                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.MouseMoveToColour:
                     break;
                 case ScriptEventConstants.EventType.MouseMoveToColourOnWindow:
-                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.MouseMoveToPointOnWindow:
-                    form = _objectFactory.CreateObject<OverlayForm>();
                     break;
                 case ScriptEventConstants.EventType.KeyboardHoldKey:
                     break;

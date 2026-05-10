@@ -1,11 +1,10 @@
-﻿using DolphinScript.Core.Classes;
-using DolphinScript.Core.Interfaces;
+﻿using DolphinScript.Core.Interfaces;
 using DolphinScript.Core.Models;
-using DolphinScript.Core.WindowsApi;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DolphinScript.Core.Concrete
 {
@@ -14,6 +13,10 @@ namespace DolphinScript.Core.Concrete
         private readonly IRandomService _randomService;
         private readonly IPointService _pointService;
         private readonly IMouseMathService _mouseMathService;
+        private readonly IHumanMouseTrajectoryPlanner _trajectoryPlanner;
+        private readonly ICursorController _cursorController;
+        private readonly IScreenService _screenService;
+        private readonly IScriptState _scriptState;
 
         public enum MouseMovementMode
         {
@@ -22,169 +25,298 @@ namespace DolphinScript.Core.Concrete
             Teleport
         }
 
-        public MouseMovementService(IRandomService randomService, IPointService pointService, IMouseMathService mouseMathService)
+        public MouseMovementService(IRandomService randomService, IPointService pointService, IMouseMathService mouseMathService,
+            IHumanMouseTrajectoryPlanner trajectoryPlanner, ICursorController cursorController, IScreenService screenService, IScriptState scriptState)
         {
             _randomService = randomService;
             _pointService = pointService;
             _mouseMathService = mouseMathService;
+            _trajectoryPlanner = trajectoryPlanner;
+            _cursorController = cursorController;
+            _screenService = screenService;
+            _scriptState = scriptState;
         }
 
-        // mouse movement variables
-        private double Gravity => _randomService.GetRandomDouble(8.0, 10.0); // default 9.0
-        private double PushForce => _randomService.GetRandomDouble(2.0, 4.0); // default 3.0
-        private double MinWait => _randomService.GetRandomDouble(9.0, 11.0); // default 8.0
-        private double MaxWait => _randomService.GetRandomDouble(14.0, 16.0); // default 15.0
-        private double MaxStep => _randomService.GetRandomDouble(9.0, 11.0); // default 10.0
-        private double TargetArea => _randomService.GetRandomDouble(13.0, 15.0); // default 10.0
-
-        /// <summary>
-        /// moves the mouse from it's current location to the target point passed in
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="mode">mouse movement mode to use</param>
         public void MoveMouseToPoint(Point target)
         {
-            // store the current mouse position to pass into the core mouse move loop
             var start = _pointService.GetCursorPosition();
+            if (start == target)
+            {
+                return;
+            }
 
-            // generate a random mouse speed close to the one set on the form
-            var randomSpeed = Math.Max((_randomService.GetRandomNumber(0, ScriptState.MinimumMouseSpeed) / 2.0 + ScriptState.MaximumMouseSpeed) / 10.0, 0.1);
-
-            // call the main mouse move loop and pass in the global params
-            switch (ScriptState.MouseMovementMode)
+            switch (_scriptState.MouseMovementMode)
             {
                 case MouseMovementMode.Realistic:
-                    WindMouse(
-                        start,
-                        target,
-                        Gravity,
-                        PushForce,
-                        MinWait / randomSpeed,
-                        MaxWait / randomSpeed,
-                        MaxStep * randomSpeed,
-                        TargetArea * randomSpeed);
+                    HumanMotorMove(start, target);
                     break;
                 case MouseMovementMode.Linear:
-                    LinearSmoothMove(target);
+                    LinearSmoothMove(start, target);
                     break;
                 case MouseMovementMode.Teleport:
                     TeleportMouse(target);
                     break;
-                default:    
-                    throw new ArgumentOutOfRangeException(nameof(ScriptState.MouseMovementMode), ScriptState.MouseMovementMode, null);
-            }
-            
-        }
-
-        /// <summary>
-        /// this function is the core mouse moving method, needs to be cleaned up...
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="target"></param>
-        /// <param name="gravity"></param>
-        /// <param name="pushForce"></param>
-        /// <param name="minWait"></param>
-        /// <param name="maxWait"></param>
-        /// <param name="maxStep"></param>
-        /// <param name="targetArea"></param>
-        private void WindMouse(
-            Point start,
-            Point target,
-            double gravity,
-            double pushForce,
-            double minWait, double maxWait,
-            double maxStep, double targetArea)
-        {
-            double xStart = start.X, yStart = start.Y;
-            double xEnd = target.X, yEnd = target.Y;
-
-            double windX = 0, windY = 0, veloX = 0, veloY = 0;
-            int newX = (int)Math.Round(xStart), newY = (int)Math.Round(yStart);
-
-            var waitDiff = maxWait - minWait;
-            var sqrt2 = Math.Sqrt(2.0);
-            var sqrt3 = Math.Sqrt(3.0);
-            var sqrt5 = Math.Sqrt(5.0);
-
-            var distanceFromTargetPixel = _mouseMathService.CalculateHypotenuse(start, target);
-
-            while (distanceFromTargetPixel > 1.0 && ScriptState.IsRunning)
-            {
-                pushForce = Math.Min(pushForce, distanceFromTargetPixel);
-
-                if (distanceFromTargetPixel >= targetArea)
-                {
-                    var w = _randomService.GetRandomNumber(0, (int)Math.Round(pushForce) * 2 + 1);
-                    windX = windX / sqrt3 + (w - pushForce) / sqrt5;
-                    windY = windY / sqrt3 + (w - pushForce) / sqrt5;
-                }
-                else
-                {
-                    windX /= sqrt2;
-                    windY /= sqrt2;
-                    if (maxStep < 3)
-                    {
-                        maxStep = _randomService.GetRandomNumber(0, 3) + 3.0;
-                    }
-                    else
-                    {
-                        maxStep /= sqrt5;
-                    }
-                }
-
-                veloX += windX;
-                veloY += windY;
-                veloX += gravity * (xEnd - xStart) / distanceFromTargetPixel;
-                veloY += gravity * (yEnd - yStart) / distanceFromTargetPixel;
-
-                if (_mouseMathService.CalculateHypotenuse(veloX, veloY) > maxStep)
-                {
-                    var randomDist = maxStep / 2.0 + _randomService.GetRandomNumber(0, (int)Math.Round(maxStep) / 2);
-                    var veloMag = _mouseMathService.CalculateHypotenuse(veloX, veloY);
-                    veloX = (veloX / veloMag) * randomDist;
-                    veloY = (veloY / veloMag) * randomDist;
-                }
-
-                var oldX = (int)Math.Round(xStart);
-                var oldY = (int)Math.Round(yStart);
-
-                xStart += veloX;
-                yStart += veloY;
-
-                distanceFromTargetPixel = _mouseMathService.CalculateHypotenuse(xEnd - xStart, yEnd - yStart);
-
-                newX = (int)Math.Round(xStart);
-                newY = (int)Math.Round(yStart);
-
-                if (oldX != newX || oldY != newY)
-                {
-                    PInvokeReferences.SetCursorPos(newX, newY);
-                }
-
-                var step = _mouseMathService.CalculateHypotenuse(xStart - oldX, yStart - oldY);
-                var wait = (int)Math.Round(waitDiff * (step / maxStep) + minWait);
-
-                Task.WaitAll(Task.Delay(wait));
-            }
-
-            var endX = (int)Math.Round(xEnd);
-            var endY = (int)Math.Round(yEnd);
-
-            if (endX != newX || endY != newY)
-            {
-                PInvokeReferences.SetCursorPos(endX, endY);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(_scriptState.MouseMovementMode), _scriptState.MouseMovementMode, null);
             }
         }
 
-        private void LinearSmoothMove(Point target)
+        private void HumanMotorMove(Point start, Point target)
         {
-            Point start = _pointService.GetCursorPosition();
-            
+            var screenBounds = _screenService.GetScreenBounds();
+            var route = CreateMovementRoute(start, target, screenBounds);
+            var profile = CreateMovementProfile();
+
+            for (var index = 0; index < route.Count - 1; index++)
+            {
+                var segmentStart = route[index];
+                var segmentTarget = route[index + 1];
+                if (segmentStart == segmentTarget)
+                {
+                    continue;
+                }
+
+                var segmentProfile = index < route.Count - 2 ? CreateTransitionProfile(profile) : profile;
+                MoveAlongTrajectory(CreateSegmentTrajectory(segmentStart, segmentTarget, segmentProfile), segmentStart, segmentTarget, screenBounds);
+            }
+        }
+
+        private MouseMovementProfile CreateMovementProfile()
+        {
+            return new MouseMovementProfile
+            {
+                MinimumSpeed = Math.Min(_scriptState.MinimumMouseSpeed, _scriptState.MaximumMouseSpeed),
+                MaximumSpeed = Math.Max(_scriptState.MinimumMouseSpeed, _scriptState.MaximumMouseSpeed)
+            };
+        }
+
+        private static MouseMovementProfile CreateTransitionProfile(MouseMovementProfile profile)
+        {
+            return new MouseMovementProfile
+            {
+                MinimumSpeed = profile.MinimumSpeed,
+                MaximumSpeed = profile.MaximumSpeed,
+                MinimumDelayMilliseconds = profile.MinimumDelayMilliseconds,
+                MaximumDelayMilliseconds = profile.MaximumDelayMilliseconds,
+                AllowCorrectiveOvershoot = false
+            };
+        }
+
+        private IReadOnlyList<MouseMovementStep> CreateSegmentTrajectory(Point start, Point target, MouseMovementProfile profile)
+        {
+            if (_mouseMathService.LineLength(start, target) <= 2.0)
+            {
+                return new List<MouseMovementStep> { new MouseMovementStep(target, 0) };
+            }
+
+            return _trajectoryPlanner.CreateTrajectory(start, target, profile);
+        }
+
+        private void MoveAlongTrajectory(IEnumerable<MouseMovementStep> trajectory, Point start, Point target, IReadOnlyList<Rectangle> screenBounds)
+        {
+            var movementDistance = _mouseMathService.LineLength(start, target);
+            var unitX = movementDistance > 0 ? (target.X - start.X) / movementDistance : 0.0;
+            var unitY = movementDistance > 0 ? (target.Y - start.Y) / movementDistance : 0.0;
+            var previousRawProgress = 0.0;
+            var previousVisibleProgress = 0.0;
+            var hasPreviousProgress = false;
+            Point? lastPosition = null;
+
+            foreach (var step in trajectory)
+            {
+                if (!_scriptState.IsRunning)
+                {
+                    return;
+                }
+
+                var rawProgress = ProjectProgress(step.Position, start, unitX, unitY);
+                var isIntentionalCorrection = hasPreviousProgress && rawProgress < previousRawProgress;
+                var minimumProgress = isIntentionalCorrection ? double.NegativeInfinity : previousVisibleProgress;
+                var visiblePosition = ResolveVisiblePoint(step.Position, screenBounds, start, unitX, unitY, minimumProgress);
+                var visibleProgress = ProjectProgress(visiblePosition, start, unitX, unitY);
+
+                if (!lastPosition.HasValue || visiblePosition != lastPosition.Value)
+                {
+                    _cursorController.SetPosition(visiblePosition);
+                    lastPosition = visiblePosition;
+                }
+
+                previousRawProgress = rawProgress;
+                previousVisibleProgress = visibleProgress;
+                hasPreviousProgress = true;
+
+                if (step.DelayMilliseconds > 0)
+                {
+                    Thread.Sleep(step.DelayMilliseconds);
+                }
+            }
+        }
+
+        private static IReadOnlyList<Point> CreateMovementRoute(Point start, Point target, IReadOnlyList<Rectangle> screenBounds)
+        {
+            if (screenBounds == null || screenBounds.Count == 0)
+            {
+                return new List<Point> { start, target };
+            }
+
+            var startScreen = FindContainingScreen(start, screenBounds);
+            var targetScreen = FindContainingScreen(target, screenBounds);
+            if (!startScreen.HasValue || !targetScreen.HasValue || startScreen.Value == targetScreen.Value)
+            {
+                return new List<Point> { start, target };
+            }
+
+            if (!TryCreateSeamCrossing(start, target, startScreen.Value, targetScreen.Value, out var startSeam, out var targetSeam))
+            {
+                return new List<Point> { start, target };
+            }
+
+            return CreateDistinctRoute(start, startSeam, targetSeam, target);
+        }
+
+        private static Rectangle? FindContainingScreen(Point point, IEnumerable<Rectangle> screenBounds)
+        {
+            foreach (var screen in screenBounds)
+            {
+                if (screen.Left <= point.X && point.X < screen.Right && screen.Top <= point.Y && point.Y < screen.Bottom)
+                {
+                    return screen;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool TryCreateSeamCrossing(Point start, Point target, Rectangle startScreen, Rectangle targetScreen,
+            out Point startSeam, out Point targetSeam)
+        {
+            if (TryCreateHorizontalSeamCrossing(start, target, startScreen, targetScreen, out startSeam, out targetSeam))
+            {
+                return true;
+            }
+
+            return TryCreateVerticalSeamCrossing(start, target, startScreen, targetScreen, out startSeam, out targetSeam);
+        }
+
+        private static bool TryCreateHorizontalSeamCrossing(Point start, Point target, Rectangle startScreen, Rectangle targetScreen,
+            out Point startSeam, out Point targetSeam)
+        {
+            startSeam = default;
+            targetSeam = default;
+
+            var targetIsRight = startScreen.Right == targetScreen.Left;
+            var targetIsLeft = targetScreen.Right == startScreen.Left;
+            if (!targetIsRight && !targetIsLeft)
+            {
+                return false;
+            }
+
+            var overlapTop = Math.Max(startScreen.Top, targetScreen.Top);
+            var overlapBottom = Math.Min(startScreen.Bottom, targetScreen.Bottom) - 1;
+            if (overlapTop > overlapBottom)
+            {
+                return false;
+            }
+
+            var boundaryX = targetIsRight ? startScreen.Right : startScreen.Left;
+            var seamY = Clamp(EstimateLineYAtX(start, target, boundaryX), overlapTop, overlapBottom);
+
+            startSeam = targetIsRight
+                ? new Point(startScreen.Right - 1, seamY)
+                : new Point(startScreen.Left, seamY);
+            targetSeam = targetIsRight
+                ? new Point(targetScreen.Left, seamY)
+                : new Point(targetScreen.Right - 1, seamY);
+
+            return true;
+        }
+
+        private static bool TryCreateVerticalSeamCrossing(Point start, Point target, Rectangle startScreen, Rectangle targetScreen,
+            out Point startSeam, out Point targetSeam)
+        {
+            startSeam = default;
+            targetSeam = default;
+
+            var targetIsBelow = startScreen.Bottom == targetScreen.Top;
+            var targetIsAbove = targetScreen.Bottom == startScreen.Top;
+            if (!targetIsBelow && !targetIsAbove)
+            {
+                return false;
+            }
+
+            var overlapLeft = Math.Max(startScreen.Left, targetScreen.Left);
+            var overlapRight = Math.Min(startScreen.Right, targetScreen.Right) - 1;
+            if (overlapLeft > overlapRight)
+            {
+                return false;
+            }
+
+            var boundaryY = targetIsBelow ? startScreen.Bottom : startScreen.Top;
+            var seamX = Clamp(EstimateLineXAtY(start, target, boundaryY), overlapLeft, overlapRight);
+
+            startSeam = targetIsBelow
+                ? new Point(seamX, startScreen.Bottom - 1)
+                : new Point(seamX, startScreen.Top);
+            targetSeam = targetIsBelow
+                ? new Point(seamX, targetScreen.Top)
+                : new Point(seamX, targetScreen.Bottom - 1);
+
+            return true;
+        }
+
+        private static int EstimateLineYAtX(Point start, Point target, int x)
+        {
+            if (target.X == start.X)
+            {
+                return start.Y;
+            }
+
+            return (int)Math.Round(start.Y + (x - start.X) * (target.Y - start.Y) / (double)(target.X - start.X));
+        }
+
+        private static int EstimateLineXAtY(Point start, Point target, int y)
+        {
+            if (target.Y == start.Y)
+            {
+                return start.X;
+            }
+
+            return (int)Math.Round(start.X + (y - start.Y) * (target.X - start.X) / (double)(target.Y - start.Y));
+        }
+
+        private static IReadOnlyList<Point> CreateDistinctRoute(params Point[] points)
+        {
+            var route = new List<Point>();
+            foreach (var point in points)
+            {
+                if (route.Count == 0 || route[route.Count - 1] != point)
+                {
+                    route.Add(point);
+                }
+            }
+
+            return route;
+        }
+
+        private void LinearSmoothMove(Point start, Point target)
+        {
+            var route = CreateMovementRoute(start, target, _screenService.GetScreenBounds());
+            for (var index = 0; index < route.Count - 1; index++)
+            {
+                LinearSmoothMoveSegment(route[index], route[index + 1]);
+            }
+        }
+
+        private void LinearSmoothMoveSegment(Point start, Point target)
+        {
             var totalDistance = _mouseMathService.LineLength(start, target);
+            if (totalDistance <= 1)
+            {
+                TeleportMouse(target);
+                return;
+            }
 
             PointF currentPoint = start;
-
-            // Find the slope of the line segment defined by start and newPosition
             PointF slope = new PointF(target.X - start.X, target.Y - start.Y);
 
             var stepsBoxPlotResult = _randomService.GetRandomNumberBoxPlot(new BoxPlotModel
@@ -196,32 +328,97 @@ namespace DolphinScript.Core.Concrete
                 OutlierSkewPercentage = 20
             });
 
-            var steps = (int)Math.Round(stepsBoxPlotResult.Result) / 2;
+            var steps = Math.Max((int)Math.Round(stepsBoxPlotResult.Result) / 2, 1);
 
-            // Divide by the number of steps
             slope.X /= steps;
             slope.Y /= steps;
 
-            // Move the mouse to each iterative point.
             for (var i = 0; i < steps; i++)
             {
-                if (!ScriptState.IsRunning)
+                if (!_scriptState.IsRunning)
                 {
                     return;
                 }
 
                 currentPoint = new PointF(currentPoint.X + slope.X, currentPoint.Y + slope.Y);
-                PInvokeReferences.SetCursorPos(Point.Round(currentPoint));
+                SetVisiblePosition(Point.Round(currentPoint));
                 Thread.Sleep(1);
             }
 
-            // Move the mouse to the final destination.
-            PInvokeReferences.SetCursorPos(target);
+            TeleportMouse(target);
         }
 
         private void TeleportMouse(Point target)
         {
-            PInvokeReferences.SetCursorPos(target);
+            if (_scriptState.IsRunning)
+            {
+                SetVisiblePosition(target);
+            }
+        }
+
+        private void SetVisiblePosition(Point point)
+        {
+            _cursorController.SetPosition(ResolveVisiblePoint(point, _screenService.GetScreenBounds(), point, 0.0, 0.0, double.NegativeInfinity));
+        }
+
+        private static Point ResolveVisiblePoint(Point point, IReadOnlyList<Rectangle> screenBounds, Point progressOrigin,
+            double unitX, double unitY, double minimumProgress)
+        {
+            if (screenBounds == null || screenBounds.Count == 0)
+            {
+                return point;
+            }
+
+            if (IsOnScreen(point, screenBounds) && ProjectProgress(point, progressOrigin, unitX, unitY) >= minimumProgress)
+            {
+                return point;
+            }
+
+            var candidates = screenBounds
+                .Select(screen => ClampToScreen(point, screen))
+                .Distinct()
+                .ToList();
+
+            var forwardCandidates = candidates
+                .Where(candidate => ProjectProgress(candidate, progressOrigin, unitX, unitY) >= minimumProgress)
+                .ToList();
+
+            var candidatePool = forwardCandidates.Count > 0 ? forwardCandidates : candidates;
+            return candidatePool
+                .OrderBy(candidate => DistanceSquared(point, candidate))
+                .First();
+        }
+
+        private static bool IsOnScreen(Point point, IEnumerable<Rectangle> screenBounds)
+        {
+            return screenBounds.Any(screen => screen.Left <= point.X
+                && point.X < screen.Right
+                && screen.Top <= point.Y
+                && point.Y < screen.Bottom);
+        }
+
+        private static Point ClampToScreen(Point point, Rectangle screen)
+        {
+            return new Point(
+                Math.Max(screen.Left, Math.Min(point.X, screen.Right - 1)),
+                Math.Max(screen.Top, Math.Min(point.Y, screen.Bottom - 1)));
+        }
+
+        private static double ProjectProgress(Point point, Point origin, double unitX, double unitY)
+        {
+            return (point.X - origin.X) * unitX + (point.Y - origin.Y) * unitY;
+        }
+
+        private static int DistanceSquared(Point start, Point target)
+        {
+            var deltaX = start.X - target.X;
+            var deltaY = start.Y - target.Y;
+            return deltaX * deltaX + deltaY * deltaY;
+        }
+
+        private static int Clamp(int value, int minimum, int maximum)
+        {
+            return Math.Max(minimum, Math.Min(value, maximum));
         }
     }
 }

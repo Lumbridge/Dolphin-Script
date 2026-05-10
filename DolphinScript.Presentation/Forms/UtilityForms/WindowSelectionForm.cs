@@ -18,16 +18,16 @@ namespace DolphinScript.Forms.UtilityForms
     {
         private readonly IWindowControlService _windowControlService;
         private readonly IObjectFactory _objectFactory;
-        private readonly IFormFactory _formFactory;
+        private readonly ISelectionOverlayService _selectionOverlayService;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public NextFormModel NextFormModel { get; set; }
 
-        public WindowSelectionForm(IWindowControlService windowControlService, IObjectFactory objectFactory, IFormFactory formFactory)
+        public WindowSelectionForm(IWindowControlService windowControlService, IObjectFactory objectFactory, ISelectionOverlayService selectionOverlayService)
         {
             _windowControlService = windowControlService;
             _objectFactory = objectFactory;
-            _formFactory = formFactory;
+            _selectionOverlayService = selectionOverlayService;
             InitializeComponent();
         }
 
@@ -86,15 +86,10 @@ namespace DolphinScript.Forms.UtilityForms
             ep.WindowTitle = windowTitle;
             ep.ProcessName = processName;
             ScriptState.LastSelectedProcess = ep;
+            Hide();
             _windowControlService.BringWindowToFront(ep.WindowHandle);
-            var nextForm = _formFactory.GetForm(NextFormModel.EventType);
-            if (nextForm.GetType() == typeof(OverlayForm))
-            {
-                ((OverlayForm) nextForm).NextFormModel = new NextFormModel(NextFormModel.EventType, NextFormModel.UseAreaSelection, true);
-            }
+            _selectionOverlayService.Show(new NextFormModel(NextFormModel.EventType, NextFormModel.UseAreaSelection, true));
             Close();
-            nextForm.Show();
-            _windowControlService.BringWindowToFront(nextForm.Handle);
         }
     }
 }

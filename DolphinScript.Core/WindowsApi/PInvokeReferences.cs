@@ -97,13 +97,6 @@ namespace DolphinScript.Core.WindowsApi
         [DllImport("User32.Dll")]
         public static extern long SetCursorPos(int x, int y);
 
-        /// <summary>
-        /// Imported method which allows us to set the position of the mouse cursor.
-        /// </summary>
-        /// <returns></returns>
-        [DllImport("User32.Dll")]
-        public static extern long SetCursorPos(Point point);
-
         [DllImport("User32.dll")]
         public static extern bool IsIconic(IntPtr handle);
 
