@@ -1,0 +1,102 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, with or without a leading v'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    env:
+      PACKAGE_ID: DolphinScript
+      PROJECT_PATH: DolphinScript.Presentation/DolphinScript.Presentation.csproj
+      PUBLISH_DIR: artifacts/publish
+      RELEASE_DIR: artifacts/velopack
+      VPK_VERSION: 1.2.0
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $version = "${{ inputs.version }}".Trim()
+          } else {
+            $version = "${{ github.ref_name }}".Trim()
+          }
+
+          $version = $version.TrimStart("v")
+          if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') {
+            throw "Version '$version' must be SemVer, for example 1.2.3 or 1.2.3-beta.1."
+          }
+
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore "Dolphin Script.sln"
+
+      - name: Test
+        run: dotnet test "Dolphin Script.sln" --configuration Release --no-restore
+
+      - name: Publish Windows app
+        run: dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release --runtime win-x64 --self-contained true --output "${{ env.PUBLISH_DIR }}" /p:PublishSingleFile=false
+
+      - name: Install Velopack CLI
+        run: dotnet tool install --global vpk --version "${{ env.VPK_VERSION }}"
+
+      - name: Download previous Velopack release
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "${{ env.RELEASE_DIR }}" | Out-Null
+          vpk --yes true --legacyConsole true download github `
+            --repoUrl "https://github.com/${{ github.repository }}" `
+            --token "${{ secrets.GITHUB_TOKEN }}" `
+            --outputDir "${{ env.RELEASE_DIR }}"
+
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "No previous Velopack release was downloaded. Continuing with a full package only."
+            $global:LASTEXITCODE = 0
+          }
+
+      - name: Package Velopack release
+        run: >
+          vpk --yes true --legacyConsole true pack
+          --packId "${{ env.PACKAGE_ID }}"
+          --packVersion "${{ steps.version.outputs.version }}"
+          --packDir "${{ env.PUBLISH_DIR }}"
+          --mainExe DolphinScript.exe
+          --outputDir "${{ env.RELEASE_DIR }}"
+          --packTitle "Dolphin Script"
+          --packAuthors "Ryan Sainty"
+          --icon "DolphinScript.Presentation/Resources/dolphin_vmz_icon.ico"
+
+      - name: Upload GitHub Release
+        run: >
+          vpk --yes true --legacyConsole true upload github
+          --repoUrl "https://github.com/${{ github.repository }}"
+          --token "${{ secrets.GITHUB_TOKEN }}"
+          --outputDir "${{ env.RELEASE_DIR }}"
+          --publish true
+          --merge true
+          --releaseName "Dolphin Script ${{ steps.version.outputs.version }}"
+          --tag "${{ steps.version.outputs.tag }}"
+          --targetCommitish "${{ github.sha }}"

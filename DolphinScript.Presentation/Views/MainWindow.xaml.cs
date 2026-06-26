@@ -19,6 +19,7 @@ namespace DolphinScript.Views
 
             _viewModel = viewModel;
             DataContext = _viewModel;
+            Loaded += MainWindow_Loaded;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -38,6 +39,11 @@ namespace DolphinScript.Views
         private void EventsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             _viewModel.EditSelectedEvent();
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _viewModel.CheckForUpdatesOnStartup();
         }
     }
 }

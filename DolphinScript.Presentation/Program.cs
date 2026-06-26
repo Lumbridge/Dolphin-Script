@@ -3,6 +3,7 @@ using DolphinScript.Views;
 using System;
 using System.Windows;
 using Unity;
+using Velopack;
 using WinFormsApplication = System.Windows.Forms.Application;
 
 namespace DolphinScript
@@ -17,6 +18,8 @@ namespace DolphinScript
         [STAThread]
         static void Main()
         {
+            VelopackApp.Build().Run();
+
             _container = new UnityContainer();
             ApplicationComposition.Configure(_container);
 

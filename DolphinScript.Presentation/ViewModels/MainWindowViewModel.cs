@@ -48,9 +48,11 @@ namespace DolphinScript.ViewModels
         private readonly IScriptRunner _scriptRunner;
         private readonly IScriptState _scriptState;
         private readonly IScriptProgressReporter _scriptProgressReporter;
+        private readonly IUpdateService _updateService;
         private readonly Dispatcher _dispatcher;
         private readonly DispatcherTimer _statusTimer;
         private readonly CancellationTokenSource _shutdownCancellationTokenSource = new CancellationTokenSource();
+        private readonly SemaphoreSlim _updateOperationSemaphore = new SemaphoreSlim(1, 1);
         private readonly List<ScriptEventRow> _selectedEvents = new List<ScriptEventRow>();
 
         private ScriptEventRow _selectedEvent;
@@ -69,12 +71,13 @@ namespace DolphinScript.ViewModels
         private string _activeWindowTitle = string.Empty;
         private string _currentColourHex = string.Empty;
         private MediaBrush _currentColourBrush = MediaBrushes.Transparent;
+        private bool _isUpdateOperationInProgress;
 
         public MainWindowViewModel(IColourService colourService, IPointService pointService,
             IWindowControlService windowControlService, IListService listService, IObjectFactory objectFactory,
             IUserInterfaceService userInterfaceService, IMapper mapper, IFormFactory formFactory,
             ISelectionOverlayService selectionOverlayService, IAlertService alertService, IProcessChangeNotifier processChangeNotifier, IScriptRunner scriptRunner, IScriptState scriptState,
-            IScriptProgressReporter scriptProgressReporter)
+            IScriptProgressReporter scriptProgressReporter, IUpdateService updateService)
         {
             _colourService = colourService;
             _pointService = pointService;
@@ -90,6 +93,7 @@ namespace DolphinScript.ViewModels
             _scriptRunner = scriptRunner;
             _scriptState = scriptState;
             _scriptProgressReporter = scriptProgressReporter;
+            _updateService = updateService;
             _dispatcher = Application.Current.Dispatcher;
 
             SpecialKeys = new ObservableCollection<string>(MainFormConstants.SpecialKeys);
@@ -102,6 +106,7 @@ namespace DolphinScript.ViewModels
             LoadCommand = new RelayCommand(_ => LoadScript(), _ => !IsRunning);
             AboutCommand = new RelayCommand(_ => ShowInfo("About Dolphin Script", MainFormConstants.AboutString, TimeSpan.FromSeconds(12)));
             WikiCommand = new RelayCommand(_ => OpenWiki());
+            CheckForUpdatesCommand = new RelayCommand(_ => CheckForUpdatesFromUserAsync(), _ => CanCheckForUpdates);
             MoveEventUpCommand = new RelayCommand(_ => MoveSelectedEventUp(), _ => CanEditSingleSelectedEvent && SelectedEvent.Index > 0 && !IsRunning);
             MoveEventDownCommand = new RelayCommand(_ => MoveSelectedEventDown(), _ => CanEditSingleSelectedEvent && SelectedEvent.Index < _scriptState.AllEvents.Count - 1 && !IsRunning);
             RemoveEventCommand = new RelayCommand(_ => RemoveSelectedEvent(), _ => CanEditSingleSelectedEvent && !IsRunning);
@@ -147,6 +152,7 @@ namespace DolphinScript.ViewModels
         public ICommand LoadCommand { get; }
         public ICommand AboutCommand { get; }
         public ICommand WikiCommand { get; }
+        public ICommand CheckForUpdatesCommand { get; }
         public ICommand MoveEventUpCommand { get; }
         public ICommand MoveEventDownCommand { get; }
         public ICommand RemoveEventCommand { get; }
@@ -192,11 +198,13 @@ namespace DolphinScript.ViewModels
                 OnPropertyChanged(nameof(StartButtonText));
                 OnPropertyChanged(nameof(StatusText));
                 OnPropertyChanged(nameof(CanEditEvents));
+                OnPropertyChanged(nameof(CanCheckForUpdates));
                 InvalidateCommands();
             }
         }
 
         public bool CanEditEvents => !IsRunning;
+        public bool CanCheckForUpdates => !IsRunning && !IsUpdateOperationInProgress;
         public string StartButtonText => IsRunning ? MainFormConstants.ScriptRunning : MainFormConstants.StartScript;
         public string StatusText => IsRunning ? "Running" : "Ready";
 
@@ -388,6 +396,31 @@ namespace DolphinScript.ViewModels
         }
 
         private bool CanEditSingleSelectedEvent => SelectedEvent != null && _selectedEvents.Count == 1;
+        private bool IsUpdateOperationInProgress
+        {
+            get => _isUpdateOperationInProgress;
+            set
+            {
+                if (_isUpdateOperationInProgress == value)
+                {
+                    return;
+                }
+
+                _isUpdateOperationInProgress = value;
+                OnPropertyChanged(nameof(CanCheckForUpdates));
+                InvalidateCommands();
+            }
+        }
+
+        public void CheckForUpdatesOnStartup()
+        {
+            if (!CanCheckForUpdates)
+            {
+                return;
+            }
+
+            _ = CheckForUpdatesAsync(false);
+        }
 
         public void SetSelectedEvents(IEnumerable<ScriptEventRow> selectedEvents)
         {
@@ -519,6 +552,86 @@ namespace DolphinScript.ViewModels
             {
                 UseShellExecute = true
             });
+        }
+
+        private async void CheckForUpdatesFromUserAsync()
+        {
+            await CheckForUpdatesAsync(true);
+        }
+
+        private async Task CheckForUpdatesAsync(bool showNoUpdateStatus)
+        {
+            if (IsRunning)
+            {
+                if (showNoUpdateStatus)
+                {
+                    ShowWarning("Updates unavailable", "Stop the running script before checking for updates.");
+                }
+
+                return;
+            }
+
+            if (!await _updateOperationSemaphore.WaitAsync(0))
+            {
+                if (showNoUpdateStatus)
+                {
+                    ShowInfo("Update check already running", "Dolphin Script is already checking for updates.");
+                }
+
+                return;
+            }
+
+            IsUpdateOperationInProgress = true;
+            try
+            {
+                if (showNoUpdateStatus)
+                {
+                    ShowInfo("Checking for updates", "Looking for a newer GitHub release.", TimeSpan.FromSeconds(3));
+                }
+
+                var updateCheckResult = await _updateService.CheckForUpdatesAsync(_shutdownCancellationTokenSource.Token);
+                if (!updateCheckResult.IsInstalled)
+                {
+                    if (showNoUpdateStatus)
+                    {
+                        ShowInfo("Updates unavailable", "Auto updates are available after installing Dolphin Script from a release installer.", TimeSpan.FromSeconds(8));
+                    }
+
+                    return;
+                }
+
+                if (!updateCheckResult.IsUpdateAvailable)
+                {
+                    if (showNoUpdateStatus)
+                    {
+                        ShowInfo("Dolphin Script is up to date", $"Version {updateCheckResult.CurrentVersion} is the latest release.");
+                    }
+
+                    return;
+                }
+
+                var message = $"Dolphin Script {updateCheckResult.LatestVersion} is available. You are running {updateCheckResult.CurrentVersion}.\n\nDownload and restart now?";
+                var result = MessageBox.Show(message, "Update available", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (result != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                ShowInfo("Downloading update", $"Downloading version {updateCheckResult.LatestVersion}. Dolphin Script will restart when it is ready.", TimeSpan.FromSeconds(12));
+                await _updateService.DownloadAndApplyAsync(updateCheckResult, null, _shutdownCancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException) when (_shutdownCancellationTokenSource.IsCancellationRequested)
+            {
+            }
+            catch (Exception ex)
+            {
+                ShowError("Update failed", $"Could not update Dolphin Script. {ex.Message}");
+            }
+            finally
+            {
+                IsUpdateOperationInProgress = false;
+                _updateOperationSemaphore.Release();
+            }
         }
 
         private void MoveSelectedEventUp()

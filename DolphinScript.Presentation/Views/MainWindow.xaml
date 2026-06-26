@@ -191,6 +191,8 @@
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="Wiki" Command="{Binding WikiCommand}" />
+                <MenuItem Header="Check for Updates" Command="{Binding CheckForUpdatesCommand}" />
+                <Separator />
                 <MenuItem Header="About" Command="{Binding AboutCommand}" />
             </MenuItem>
         </Menu>

@@ -39,6 +39,8 @@ namespace DolphinScript.Composition
             container.RegisterType<IProcessChangeNotifier, WmiProcessChangeNotifier>();
             container.RegisterType<IScriptProgressReporter, ScriptProgressReporter>(TypeLifetime.Singleton);
             container.RegisterType<IScriptRunner, ScriptRunner>();
+            container.RegisterType<IUpdateClient, VelopackUpdateClient>(TypeLifetime.Singleton);
+            container.RegisterType<IUpdateService, UpdateService>();
             container.RegisterType<MainWindowViewModel>();
             container.RegisterType<MainWindow>();
         }
