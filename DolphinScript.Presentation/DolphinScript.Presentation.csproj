@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="16.1.1" />
+    <PackageReference Include="AutoMapper" Version="16.3.0" />
     <PackageReference Include="System.Management" Version="10.0.7" />
     <PackageReference Include="Unity" Version="5.11.10" />
     <PackageReference Include="Velopack" Version="1.2.0" />
